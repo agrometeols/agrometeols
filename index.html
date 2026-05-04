@@ -7,23 +7,35 @@
 <script src="https://cdn.rawgit.com/Mikhus/canvas-gauges/gh-pages/download/2.1.7/all/gauge.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
-body { margin: 0; padding: 0; background: #2d5a27 url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1920&q=80') no-repeat center center fixed; background-size: cover; font-family: sans-serif; overflow-x: hidden; }
-.overlay { min-height: 100vh; background: rgba(0,0,0,0.4); padding: 20px; box-sizing: border-box; position: relative; z-index: 1; }
+/* Προσθήκη transition για το εφέ νύχτας */
+body {
+margin: 0;
+padding: 0;
+background: #2d5a27 url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1920&q=80') no-repeat center center fixed;
+background-size: cover;
+font-family: sans-serif;
+transition: filter 2s ease-in-out;
+}
 
-/* --- STAR EFFECT --- */
+/* Κλάση που ενεργοποιείται τη νύχτα */
+.night-mode { filter: brightness(0.5) contrast(1.1); }
+
+/* Στυλ για τα αστέρια */
 .star {
 position: fixed;
 background: white;
 border-radius: 50%;
-opacity: 0.5;
+opacity: 0.8;
 animation: fall linear infinite;
 pointer-events: none;
-z-index: 0;
+z-index: 9999;
 }
 @keyframes fall {
-from { transform: translateY(-10vh) translateX(0); }
-to { transform: translateY(110vh) translateX(20px); }
+from { transform: translateY(-10vh) translateX(0); opacity: 1; }
+to { transform: translateY(110vh) translateX(100px); opacity: 0; }
 }
+
+.overlay { min-height: 100vh; background: rgba(0,0,0,0.4); padding: 20px; box-sizing: border-box; }
 
 /* --- PREMIUM LOGO SECTION --- */
 header { text-align: center; color: white; margin-bottom: 30px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
@@ -180,8 +192,8 @@ max-width: 1200px; font-size: 0.9rem; border: 1px solid rgba(255, 255, 255, 0.2)
 </style>
 </head>
 <body>
-
-<div id="star-container"></div>
+<!-- Container για τα αστέρια -->
+<div id="star-field"></div>
 
 <div class="overlay">
 <header>
@@ -222,7 +234,6 @@ max-width: 1200px; font-size: 0.9rem; border: 1px solid rgba(255, 255, 255, 0.2)
 <p>Υψηλότερη Πίεση: <span id="p-max">--</span> <span id="p-max-t"></span> | Χαμηλότερη: <span id="p-min">--</span> <span id="p-min-t"></span></p>
 
 <div class="rain-gauges-container">
-<!-- DAY RAIN -->
 <div class="rain-box">
 <div class="rain-box-title">Σημερινός Υετός</div>
 <div class="rain-visual">
@@ -234,7 +245,6 @@ max-width: 1200px; font-size: 0.9rem; border: 1px solid rgba(255, 255, 255, 0.2)
 </div>
 <div class="rain-box-footer"><span id="val-day">0.0</span> mm</div>
 </div>
-<!-- STORM -->
 <div class="rain-box">
 <div class="rain-box-title">Τρέ/Kακοκαιρία</div>
 <div class="rain-visual">
@@ -246,7 +256,6 @@ max-width: 1200px; font-size: 0.9rem; border: 1px solid rgba(255, 255, 255, 0.2)
 </div>
 <div class="rain-box-footer"><span id="val-storm">0.0</span> mm</div>
 </div>
-<!-- RATE -->
 <div class="rain-box">
 <div class="rain-box-title">Ραγδαιότητα</div>
 <div class="rain-visual">
@@ -258,7 +267,6 @@ max-width: 1200px; font-size: 0.9rem; border: 1px solid rgba(255, 255, 255, 0.2)
 </div>
 <div class="rain-box-footer"><span id="val-rate">0.0</span> mm/h</div>
 </div>
-<!-- MONTH -->
 <div class="rain-box">
 <div class="rain-box-title">Μηνιαίος Υετός</div>
 <div class="rain-visual">
@@ -270,7 +278,6 @@ max-width: 1200px; font-size: 0.9rem; border: 1px solid rgba(255, 255, 255, 0.2)
 </div>
 <div class="rain-box-footer"><span id="val-month">0.0</span> mm</div>
 </div>
-<!-- YEAR -->
 <div class="rain-box">
 <div class="rain-box-title">Ετήσιος Yετός</div>
 <div class="rain-visual">
@@ -299,17 +306,14 @@ max-width: 1200px; font-size: 0.9rem; border: 1px solid rgba(255, 255, 255, 0.2)
 <h3>Θερμοκρασία</h3>
 <canvas id="gauge-temp" style="max-width: 240px; width: 100%; height: auto;"></canvas>
 </div>
-
 <div class="card">
 <h3>Υγρασία</h3>
 <canvas id="gauge-hum" style="max-width: 240px; width: 100%; height: auto;"></canvas>
 </div>
-
 <div class="card">
 <h3>Βαρομετρική πίεση</h3>
 <canvas id="gauge-press" style="max-width: 240px; width: 100%; height: auto;"></canvas>
 </div>
-
 <div class="card" style="display: flex; flex-direction: column; justify-content: center; min-height: 270px;">
 <h3>Βροχόπτωση (Live)</h3>
 <div style="font-size: 4rem; font-weight: bold; margin: 20px 0;"><span id="r-val">--</span><span style="font-size: 1.5rem;">mm</span></div>
@@ -323,7 +327,6 @@ max-width: 1200px; font-size: 0.9rem; border: 1px solid rgba(255, 255, 255, 0.2)
 <h3 class="widget-title">Πρόγνωση: Νέος Μυλότοπος</h3>
 <iframe class="forecast-frame" src="https://www.meteoblue.com/el/weather/widget/three/neos-mylon-topos_%ce%95%ce%bb%ce%bb%ce%ac%ce%b4%ce%b1_844962?geoloc=fixed&nocurrent=0&noforecast=0&days=4&tempunit=CELSIUS&windunit=KILOMETER_PER_HOUR&layout=light" frameborder="0" scrolling="NO" allowtransparency="true" sandbox="allow-same-origin allow-scripts allow-popups allow-popups-to-escape-sandbox"></iframe>
 </div>
-
 <div class="card widget-card">
 <h3 class="widget-title">Ζωντανό Ραντάρ Βροχής</h3>
 <iframe class="radar-frame" src="https://www.rainviewer.com/map.html?loc=40.7922,22.39,11&oFa=0&oC=1&oU=0&oF=0&oSt=1&oT=1&oB=1&oP=1&oR=1&oS=0&oW=0&mT=3&ls=1&lm=1&th=1&oN=1" allowfullscreen></iframe>
@@ -343,25 +346,10 @@ max-width: 1200px; font-size: 0.9rem; border: 1px solid rgba(255, 255, 255, 0.2)
 
 <h2 class="section-title">Ιστορικά Γραφήματα</h2>
 <div class="charts-dashboard">
-<div class="card">
-<h3>Πορεία Θερμοκρασία</h3>
-<div class="chart-container"><canvas id="chart-temp"></canvas></div>
-</div>
-
-<div class="card">
-<h3>Πορεία Υγρασία</h3>
-<div class="chart-container"><canvas id="chart-hum"></canvas></div>
-</div>
-
-<div class="card">
-<h3>Πoρεία Πίεσης</h3>
-<div class="chart-container"><canvas id="chart-press"></canvas></div>
-</div>
-
-<div class="card">
-<h3>Πορεία Βροχόπτωσης</h3>
-<div class="chart-container"><canvas id="chart-rain"></canvas></div>
-</div>
+<div class="card"><div class="chart-container"><canvas id="chart-temp"></canvas></div></div>
+<div class="card"><div class="chart-container"><canvas id="chart-hum"></canvas></div></div>
+<div class="card"><div class="chart-container"><canvas id="chart-press"></canvas></div></div>
+<div class="card"><div class="chart-container"><canvas id="chart-rain"></canvas></div></div>
 </div>
 
 <div class="bottom-dashboard">
@@ -376,23 +364,31 @@ max-width: 1200px; font-size: 0.9rem; border: 1px solid rgba(255, 255, 255, 0.2)
 </div>
 
 <script>
-// STAR GENERATOR
-function createStars() {
-const container = document.getElementById('star-container');
-const starCount = 50;
-for (let i = 0; i < starCount; i++) {
-const star = document.createElement('div');
+// Λειτουργία για Νύχτα και Αστέρια
+function applyNightEffects() {
+const hour = new Date().getHours();
+const isNight = (hour >= 20 || hour < 6);
+const body = document.body;
+const starField = document.getElementById('star-field');
+
+if (isNight) {
+body.classList.add('night-mode');
+if (starField.innerHTML === "") {
+for (let i = 0; i < 20; i++) {
+let star = document.createElement('div');
 star.className = 'star';
-const size = Math.random() * 3 + 'px';
-star.style.width = size;
-star.style.height = size;
 star.style.left = Math.random() * 100 + 'vw';
+star.style.width = star.style.height = (Math.random() * 3 + 1) + 'px';
 star.style.animationDuration = (Math.random() * 3 + 2) + 's';
-star.style.animationDelay = Math.random() * 5 + 's';
-container.appendChild(star);
+star.style.animationDelay = (Math.random() * 10) + 's';
+starField.appendChild(star);
 }
 }
-createStars();
+} else {
+body.classList.remove('night-mode');
+starField.innerHTML = "";
+}
+}
 
 let currentSlide = 0;
 const slides = document.querySelectorAll('#ad-slider img');
@@ -453,12 +449,7 @@ responsive: true,
 maintainAspectRatio: false,
 scales: {
 x: { grid: { display: false }, ticks: { color: '#ffffff' } },
-y: {
-min: minVal,
-max: maxVal,
-grid: { color: 'rgba(255,255,255,0.1)' },
-ticks: { color: '#ffffff' }
-}
+y: { min: minVal, max: maxVal, grid: { color: 'rgba(255,255,255,0.1)' }, ticks: { color: '#ffffff' } }
 },
 plugins: { legend: { labels: { color: '#fff' } } }
 }
@@ -471,6 +462,7 @@ var cPress = createChart('chart-press', 'Πίεση (hPa)', '#ff9f43');
 var cRain = createChart('chart-rain', 'Βροχόπτωση (mm)', '#28a745', 0, 50);
 
 function update() {
+applyNightEffects();
 const d = new Date();
 const curHour = d.getHours();
 const curMin = d.getMinutes();
@@ -495,7 +487,6 @@ try {
 let meta = JSON.parse(data.channel.metadata);
 let mVal = parseFloat(meta.month) || 0;
 let yVal = parseFloat(meta.year) || 0;
-
 document.getElementById('val-month').innerText = mVal.toFixed(1);
 document.getElementById('val-year').innerText = yVal.toFixed(1);
 document.getElementById('bar-month').style.height = Math.min((mVal / 150) * 100, 100) + "%";
@@ -507,30 +498,17 @@ const lastSeen = new Date(last.created_at);
 const now = new Date();
 const diffMinutes = (now - lastSeen) / 1000 / 60;
 const statusBadge = document.getElementById('status-badge');
-
-if (diffMinutes < 20) {
-statusBadge.innerText = "ONLINE";
-statusBadge.style.backgroundColor = "#00ff00";
-} else {
-statusBadge.innerText = "OFFLINE";
-statusBadge.style.backgroundColor = "#ff0000";
-}
+if (diffMinutes < 20) { statusBadge.innerText = "ONLINE"; statusBadge.style.backgroundColor = "#00ff00"; }
+else { statusBadge.innerText = "OFFLINE"; statusBadge.style.backgroundColor = "#ff0000"; }
 
 if(last.field1) gTemp.value = last.field1;
 if(last.field2) gHum.value = last.field2;
 if(last.field3) gPress.value = last.field3;
 
 const alertBox = document.getElementById('alert-box');
-if (temp <= 2) {
-alertBox.innerText = "⚠️ ΠΡΟΣΟΧΗ: Κίνδυνος Παγετού!";
-alertBox.className = "alert-danger";
-} else if (hum > 85) {
-alertBox.innerText = "💧 Υψηλή Υγρασία: Κίνδυνος για Μύκητες.";
-alertBox.className = "alert-warning";
-} else {
-alertBox.innerText = "✅ Ομαλές Συνθήκες.";
-alertBox.className = "alert-normal";
-}
+if (temp <= 2) { alertBox.innerText = "⚠️ ΠΡΟΣΟΧΗ: Κίνδυνος Παγετού!"; alertBox.className = "alert-danger"; }
+else if (hum > 85) { alertBox.innerText = "💧 Υψηλή Υγρασία: Κίνδυνος για Μύκητες."; alertBox.className = "alert-warning"; }
+else { alertBox.innerText = "✅ Ομαλές Συνθήκες."; alertBox.className = "alert-normal"; }
 
 let currentRainValue = 0;
 if(last.field4) {
@@ -551,18 +529,10 @@ else if(b > 30) { lbl.innerText="ΜΕΤΡΙΑ"; lbl.style.color="orange"; }
 else { lbl.innerText="ΧΑΜΗΛΗ"; lbl.style.color="red"; }
 
 let labels = feeds.map(f => new Date(f.created_at).toLocaleTimeString('el-GR', {hour: '2-digit', minute:'2-digit'}));
-cTemp.data.labels = labels;
-cTemp.data.datasets[0].data = feeds.map(f => f.field1);
-cTemp.update();
-cHum.data.labels = labels;
-cHum.data.datasets[0].data = feeds.map(f => f.field2);
-cHum.update();
-cPress.data.labels = labels;
-cPress.data.datasets[0].data = feeds.map(f => f.field3);
-cPress.update();
-cRain.data.labels = labels;
-cRain.data.datasets[0].data = feeds.map(f => f.field4);
-cRain.update();
+cTemp.data.labels = labels; cTemp.data.datasets[0].data = feeds.map(f => f.field1); cTemp.update();
+cHum.data.labels = labels; cHum.data.datasets[0].data = feeds.map(f => f.field2); cHum.update();
+cPress.data.labels = labels; cPress.data.datasets[0].data = feeds.map(f => f.field3); cPress.update();
+cRain.data.labels = labels; cRain.data.datasets[0].data = feeds.map(f => f.field4); cRain.update();
 
 let tArr = feeds.filter(f => f.field1 != null).map(f => ({v: parseFloat(f.field1), t: f.created_at}));
 let hArr = feeds.filter(f => f.field2 != null).map(f => ({v: parseFloat(f.field2), t: f.created_at}));
