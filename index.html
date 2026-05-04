@@ -7,30 +7,25 @@
 <script src="https://cdn.rawgit.com/Mikhus/canvas-gauges/gh-pages/download/2.1.7/all/gauge.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
-/* --- DYNAMIC ENVIRONMENT CSS (ΠΡΟΣΘΗΚΗ) --- */
-#env-container {
+/* --- ΠΡΟΣΘΗΚΗ ΔΥΝΑΜΙΚΟΥ ΟΥΡΑΝΟΥ (ΧΩΡΙΣ ΝΑ ΑΛΛΑΞΩ ΤΟ BACKGROUND ΣΟΥ) --- */
+#sky-system {
 position: fixed;
 top: 0; left: 0; width: 100%; height: 100%;
-z-index: -1;
-overflow: hidden;
+z-index: -1; /* Πίσω από όλα */
+pointer-events: none;
 }
-
-#sky {
+#sky-overlay {
 position: absolute;
 width: 100%; height: 100%;
 transition: background 3s ease-in-out;
 }
-
 #sun-moon {
 position: absolute;
-width: 150px; height: 150px;
+width: 100px; height: 100px;
 border-radius: 50%;
 left: 50%;
-transform: translateX(-50%);
 transition: all 2s linear;
 }
-
-/* Εφέ για αστέρια */
 .star {
 position: absolute;
 background: white;
@@ -38,38 +33,11 @@ border-radius: 50%;
 opacity: 0;
 animation: twinkle 3s infinite;
 }
+@keyframes twinkle { 0%, 100% { opacity: 0.2; } 50% { opacity: 1; } }
 
-@keyframes twinkle {
-0%, 100% { opacity: 0.3; }
-50% { opacity: 1; }
-}
-
-/* Πεσούμενα αστέρια */
-.shooting-star {
-position: absolute;
-width: 2px; height: 2px;
-background: linear-gradient(to right, white, transparent);
-opacity: 0;
-z-index: 1;
-}
-
-@keyframes shoot {
-0% { transform: translateX(0) translateY(0) rotate(-45deg); opacity: 1; width: 0; }
-70% { opacity: 1; width: 100px; }
-100% { transform: translateX(-500px) translateY(500px) rotate(-45deg); opacity: 0; width: 0; }
-}
-
-#landscape {
-position: absolute;
-bottom: 0; width: 100%; height: 50vh;
-background: url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1920&q=80') no-repeat bottom center;
-background-size: cover;
-z-index: 2;
-}
-
-/* --- Ο ΔΙΚΟΣ ΣΟΥ CSS (ΑΝΕΠΑΦΟΣ) --- */
-body { margin: 0; padding: 0; font-family: sans-serif; background: transparent; }
-.overlay { min-height: 100vh; background: rgba(0,0,0,0.3); padding: 20px; box-sizing: border-box; position: relative; z-index: 10; }
+/* --- Ο ΔΙΚΟΣ ΣΟΥ ΚΩΔΙΚΑΣ CSS (ΑΝΕΠΑΦΟΣ) --- */
+body { margin: 0; padding: 0; background: #2d5a27 url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1920&q=80') no-repeat center center fixed; background-size: cover; font-family: sans-serif; }
+.overlay { min-height: 100vh; background: rgba(0,0,0,0.4); padding: 20px; box-sizing: border-box; position: relative; z-index: 1; }
 
 header { text-align: center; color: white; margin-bottom: 30px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
 .logo-container { display: flex; align-items: center; gap: 15px; background: rgba(255,255,255,0.1); padding: 15px 30px; border-radius: 50px; backdrop-filter: blur(5px); border: 1px solid rgba(255,255,255,0.2); box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
@@ -84,7 +52,7 @@ header { text-align: center; color: white; margin-bottom: 30px; display: flex; f
 .bottom-dashboard { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px; max-width: 1200px; margin: 0 auto; justify-content: center; }
 
 .card {
-background: rgba(0, 0, 0, 0.5);
+background: rgba(255, 255, 255, 0.15);
 backdrop-filter: blur(10px);
 border-radius: 12px;
 padding: 15px;
@@ -98,7 +66,7 @@ color: white;
 }
 
 .card:hover { transform: translateY(-10px); box-shadow: 0 15px 40px rgba(0,0,0,0.5); }
-.info-card { background: rgba(45, 90, 39, 0.6) !important; color: white !important; text-align: left !important; }
+.info-card { background: rgba(45, 90, 39, 0.7) !important; color: white !important; text-align: left !important; }
 
 .rain-gauges-container { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: 10px; background: rgba(255,255,255,0.1); padding: 10px 5px; border-radius: 8px; }
 .rain-box { flex: 1; min-width: 100px; display: flex; flex-direction: column; align-items: center; border: 1px solid rgba(255,255,255,0.3); }
@@ -111,25 +79,32 @@ color: white;
 .rain-ticks span { width: 5px; height: 1px; background: rgba(255,255,255,0.5); }
 .rain-box-footer { font-size: 0.7rem; font-weight: bold; color: white; padding: 3px 0; }
 
+.slideshow-container { position: relative; width: 100%; height: 200px; max-height: 250px; overflow: hidden; border-radius: 8px; margin-top: 10px; display: flex; justify-content: center; align-items: center; background: rgba(255,255,255,0.1); }
+.slideshow-container img { max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain; display: none; transition: opacity 0.5s ease-in-out; }
+.slideshow-container img.active { display: block; }
+
 .chart-container { position: relative; height: 240px; width: 100%; margin-top: 10px; }
+#status-badge { font-weight: bold; padding: 5px 15px; border-radius: 4px; color: white !important; text-transform: uppercase; display: inline-block; margin-left: 5px; }
 .section-title { width: 100%; max-width: 1200px; margin: 20px auto 10px auto; color: white; border-left: 5px solid #fff; padding-left: 10px; }
 #alert-box { font-weight: bold; padding: 15px; border-radius: 8px; margin-top: 10px; border: 2px solid transparent; color: white !important; }
-.alert-normal { background: rgba(0, 128, 0, 0.4); }
-.alert-danger { background: rgba(255, 0, 0, 0.5); animation: blink 2s infinite; }
-.alert-warning { background: rgba(255, 165, 0, 0.5); }
+.alert-normal { background: rgba(0, 128, 0, 0.4); border-color: rgba(255,255,255,0.2) !important; }
+.alert-danger { background: rgba(255, 0, 0, 0.5); border-color: rgba(255,255,255,0.2) !important; animation: blink 2s infinite; }
+.alert-warning { background: rgba(255, 165, 0, 0.5); border-color: rgba(255,255,255,0.2) !important; }
 
-footer { text-align: center; color: #ffffff; margin: 30px auto 10px auto; padding: 12px 25px; background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(5px); border-radius: 10px; max-width: 1200px; font-size: 0.9rem; border: 1px solid rgba(255, 255, 255, 0.2); }
-.forecast-frame, .radar-frame { width: 100%; height: 380px; border: none; border-radius: 12px; }
+footer { text-align: center; color: #ffffff; margin: 30px auto 10px auto; padding: 12px 25px; background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(5px); border-radius: 10px; max-width: 1200px; font-size: 0.9rem; border: 1px solid rgba(255, 255, 255, 0.2); box-sizing: border-box; }
+.widget-card { padding: 0 !important; background: transparent !important; box-shadow: none !important; border-radius: 12px; min-height: 450px; }
+.widget-title { margin: 15px 0; font-size: 1.2rem; color: #ffffff !important; text-align: center; }
+.forecast-frame { width: 100%; height: 380px; border: none; border-radius: 12px; }
+.radar-frame { width: 100%; height: 380px; border: none; border-radius: 12px; }
 </style>
 </head>
 <body>
 
-<!-- ΠΡΟΣΘΗΚΗ ΠΕΡΙΒΑΛΛΟΝΤΟΣ -->
-<div id="env-container">
-<div id="sky"></div>
-<div id="stars-layer"></div>
+<!-- ΤΟ ΣΥΣΤΗΜΑ ΟΥΡΑΝΟΥ ΜΠΑΙΝΕΙ ΕΔΩ -->
+<div id="sky-system">
+<div id="sky-overlay"></div>
+<div id="stars-container"></div>
 <div id="sun-moon"></div>
-<div id="landscape"></div>
 </div>
 
 <div class="overlay">
@@ -171,11 +146,61 @@ footer { text-align: center; color: #ffffff; margin: 30px auto 10px auto; paddin
 <p>Υψηλότερη Πίεση: <span id="p-max">--</span> <span id="p-max-t"></span> | Χαμηλότερη: <span id="p-min">--</span> <span id="p-min-t"></span></p>
 
 <div class="rain-gauges-container">
-<div class="rain-box"><div class="rain-box-title">Σημερινός Υετός</div><div class="rain-visual"><div class="rain-num-scale"><span>50</span><span>25</span><span>0</span></div><div class="rain-ticks"><span></span><span></span><span></span><span></span><span></span></div><div class="rain-bar-container"><div id="bar-day" class="rain-bar-fill"></div></div><div class="rain-ticks"><span></span><span></span><span></span><span></span><span></span></div><div class="rain-num-scale"><span>50</span><span>25</span><span>0</span></div></div><div class="rain-box-footer"><span id="val-day">0.0</span> mm</div></div>
-<div class="rain-box"><div class="rain-box-title">Τρέ/Kακοκαιρία</div><div class="rain-visual"><div class="rain-num-scale"><span>50</span><span>25</span><span>0</span></div><div class="rain-ticks"><span></span><span></span><span></span><span></span><span></span></div><div class="rain-bar-container"><div id="bar-storm" class="rain-bar-fill"></div></div><div class="rain-ticks"><span></span><span></span><span></span><span></span><span></span></div><div class="rain-num-scale"><span>50</span><span>25</span><span>0</span></div></div><div class="rain-box-footer"><span id="val-storm">0.0</span> mm</div></div>
-<div class="rain-box"><div class="rain-box-title">Ραγδαιότητα</div><div class="rain-visual"><div class="rain-num-scale"><span>50</span><span>25</span><span>0</span></div><div class="rain-ticks"><span></span><span></span><span></span><span></span><span></span></div><div class="rain-bar-container"><div id="bar-rate" class="rain-bar-fill"></div></div><div class="rain-ticks"><span></span><span></span><span></span><span></span><span></span></div><div class="rain-num-scale"><span>50</span><span>25</span><span>0</span></div></div><div class="rain-box-footer"><span id="val-rate">0.0</span> mm/h</div></div>
-<div class="rain-box"><div class="rain-box-title">Μηνιαίος Υετός</div><div class="rain-visual"><div class="rain-num-scale"><span>150</span><span>75</span><span>0</span></div><div class="rain-ticks"><span></span><span></span><span></span><span></span><span></span></div><div class="rain-bar-container"><div id="bar-month" class="rain-bar-fill"></div></div><div class="rain-ticks"><span></span><span></span><span></span><span></span><span></span></div><div class="rain-num-scale"><span>150</span><span>75</span><span>0</span></div></div><div class="rain-box-footer"><span id="val-month">0.0</span> mm</div></div>
-<div class="rain-box"><div class="rain-box-title">Ετήσιος Yετός</div><div class="rain-visual"><div class="rain-num-scale"><span>600</span><span>300</span><span>0</span></div><div class="rain-ticks"><span></span><span></span><span></span><span></span><span></span></div><div class="rain-bar-container"><div id="bar-year" class="rain-bar-fill"></div></div><div class="rain-ticks"><span></span><span></span><span></span><span></span><span></span></div><div class="rain-num-scale"><span>600</span><span>300</span><span>0</span></div></div><div class="rain-box-footer"><span id="val-year">0.0</span> mm</div></div>
+<div class="rain-box">
+<div class="rain-box-title">Σημερινός Υετός</div>
+<div class="rain-visual">
+<div class="rain-num-scale"><span>50</span><span>25</span><span>0</span></div>
+<div class="rain-ticks"><span></span><span></span><span></span><span></span><span></span></div>
+<div class="rain-bar-container"><div id="bar-day" class="rain-bar-fill"></div></div>
+<div class="rain-ticks"><span></span><span></span><span></span><span></span><span></span></div>
+<div class="rain-num-scale"><span>50</span><span>25</span><span>0</span></div>
+</div>
+<div class="rain-box-footer"><span id="val-day">0.0</span> mm</div>
+</div>
+<div class="rain-box">
+<div class="rain-box-title">Τρέ/Kακοκαιρία</div>
+<div class="rain-visual">
+<div class="rain-num-scale"><span>50</span><span>25</span><span>0</span></div>
+<div class="rain-ticks"><span></span><span></span><span></span><span></span><span></span></div>
+<div class="rain-bar-container"><div id="bar-storm" class="rain-bar-fill"></div></div>
+<div class="rain-ticks"><span></span><span></span><span></span><span></span><span></span></div>
+<div class="rain-num-scale"><span>50</span><span>25</span><span>0</span></div>
+</div>
+<div class="rain-box-footer"><span id="val-storm">0.0</span> mm</div>
+</div>
+<div class="rain-box">
+<div class="rain-box-title">Ραγδαιότητα</div>
+<div class="rain-visual">
+<div class="rain-num-scale"><span>50</span><span>25</span><span>0</span></div>
+<div class="rain-ticks"><span></span><span></span><span></span><span></span><span></span></div>
+<div class="rain-bar-container"><div id="bar-rate" class="rain-bar-fill"></div></div>
+<div class="rain-ticks"><span></span><span></span><span></span><span></span><span></span></div>
+<div class="rain-num-scale"><span>50</span><span>25</span><span>0</span></div>
+</div>
+<div class="rain-box-footer"><span id="val-rate">0.0</span> mm/h</div>
+</div>
+<div class="rain-box">
+<div class="rain-box-title">Μηνιαίος Υετός</div>
+<div class="rain-visual">
+<div class="rain-num-scale"><span>150</span><span>75</span><span>0</span></div>
+<div class="rain-ticks"><span></span><span></span><span></span><span></span><span></span></div>
+<div class="rain-bar-container"><div id="bar-month" class="rain-bar-fill"></div></div>
+<div class="rain-ticks"><span></span><span></span><span></span><span></span><span></span></div>
+<div class="rain-num-scale"><span>150</span><span>75</span><span>0</span></div>
+</div>
+<div class="rain-box-footer"><span id="val-month">0.0</span> mm</div>
+</div>
+<div class="rain-box">
+<div class="rain-box-title">Ετήσιος Yετός</div>
+<div class="rain-visual">
+<div class="rain-num-scale"><span>600</span><span>300</span><span>0</span></div>
+<div class="rain-ticks"><span></span><span></span><span></span><span></span><span></span></div>
+<div class="rain-bar-container"><div id="bar-year" class="rain-bar-fill"></div></div>
+<div class="rain-ticks"><span></span><span></span><span></span><span></span><span></span></div>
+<div class="rain-num-scale"><span>600</span><span>300</span><span>0</span></div>
+</div>
+<div class="rain-box-footer"><span id="val-year">0.0</span> mm</div>
+</div>
 </div>
 </div>
 </div>
@@ -201,16 +226,22 @@ footer { text-align: center; color: #ffffff; margin: 30px auto 10px auto; paddin
 
 <h2 class="section-title">Πρόγνωση & Ραντάρ</h2>
 <div class="dashboard">
-<div class="card"><iframe class="forecast-frame" src="https://www.meteoblue.com/el/weather/widget/three/neos-mylon-topos_%ce%95%ce%bb%ce%bb%ce%ac%ce%b4%ce%b1_844962?geoloc=fixed&days=4&tempunit=CELSIUS&layout=light"></iframe></div>
-<div class="card"><iframe class="radar-frame" src="https://www.rainviewer.com/map.html?loc=40.7922,22.39,11&mT=3&ls=1&lm=1&th=1"></iframe></div>
+<div class="card widget-card">
+<h3 class="widget-title">Πρόγνωση: Νέος Μυλότοπος</h3>
+<iframe class="forecast-frame" src="https://www.meteoblue.com/el/weather/widget/three/neos-mylon-topos_%ce%95%ce%bb%ce%bb%ce%ac%ce%b4%ce%b1_844962?geoloc=fixed&nocurrent=0&noforecast=0&days=4&tempunit=CELSIUS&windunit=KILOMETER_PER_HOUR&layout=light"></iframe>
+</div>
+<div class="card widget-card">
+<h3 class="widget-title">Ζωντανό Ραντάρ Βροχής</h3>
+<iframe class="radar-frame" src="https://www.rainviewer.com/map.html?loc=40.7922,22.39,11&oFa=0&oC=1&oU=0&oF=0&oSt=1&oT=1&oB=1&oP=1&oR=1&oS=0&oW=0&mT=3&ls=1&lm=1&th=1&oN=1"></iframe>
+</div>
 </div>
 
 <h2 class="section-title">Ιστορικά Γραφήματα</h2>
 <div class="charts-dashboard">
-<div class="card"><h3>Θερμοκρασία</h3><div class="chart-container"><canvas id="chart-temp"></canvas></div></div>
-<div class="card"><h3>Υγρασία</h3><div class="chart-container"><canvas id="chart-hum"></canvas></div></div>
-<div class="card"><h3>Πίεση</h3><div class="chart-container"><canvas id="chart-press"></canvas></div></div>
-<div class="card"><h3>Βροχόπτωση</h3><div class="chart-container"><canvas id="chart-rain"></canvas></div></div>
+<div class="card"><h3>Πορεία Θερμοκρασία</h3><div class="chart-container"><canvas id="chart-temp"></canvas></div></div>
+<div class="card"><h3>Πορεία Υγρασία</h3><div class="chart-container"><canvas id="chart-hum"></canvas></div></div>
+<div class="card"><h3>Πoρεία Πίεσης</h3><div class="chart-container"><canvas id="chart-press"></canvas></div></div>
+<div class="card"><h3>Πορεία Βροχόπτωσης</h3><div class="chart-container"><canvas id="chart-rain"></canvas></div></div>
 </div>
 
 <div class="bottom-dashboard">
@@ -225,86 +256,61 @@ footer { text-align: center; color: #ffffff; margin: 30px auto 10px auto; paddin
 </div>
 
 <script>
-/* --- ENVIRONMENT LOGIC (ΝΕΟ) --- */
-function updateSky() {
+/* --- ENVIRONMENT SCRIPT (ΠΡΟΣΘΗΚΗ ΜΟΝΟ ΑΥΤΟΥ) --- */
+function updateEnvironment() {
 const now = new Date();
-const hour = now.getHours();
-const min = now.getMinutes();
-const sky = document.getElementById('sky');
+const hr = now.getHours();
+const sky = document.getElementById('sky-overlay');
 const sunMoon = document.getElementById('sun-moon');
-const starsLayer = document.getElementById('stars-layer');
+const stars = document.getElementById('stars-container');
 
-// 1. Sky Colors & Stars
-if (hour >= 6 && hour < 10) { // Πρωί
-sky.style.background = "linear-gradient(to bottom, #4facfe 0%, #00f2fe 100%)";
-starsLayer.innerHTML = "";
-} else if (hour >= 10 && hour < 18) { // Μεσημέρι
-sky.style.background = "linear-gradient(to bottom, #2980b9, #6dd5fa, #ffffff)";
-starsLayer.innerHTML = "";
-} else if (hour >= 18 && hour < 21) { // Δύση
-sky.style.background = "linear-gradient(to bottom, #1e3c72, #f12711, #f5af19)";
-starsLayer.innerHTML = "";
+// Χρώματα ανάλογα με την ώρα
+if (hr >= 6 && hr < 10) { // Πρωί
+sky.style.background = "rgba(255, 150, 50, 0.3)";
+sunMoon.style.background = "radial-gradient(circle, #ffd700, #ff8c00)";
+sunMoon.style.boxShadow = "0 0 50px #ff8c00";
+stars.innerHTML = "";
+} else if (hr >= 10 && hr < 18) { // Μεσημέρι
+sky.style.background = "rgba(0, 150, 255, 0.1)";
+sunMoon.style.background = "radial-gradient(circle, #fff, #ffd700)";
+sunMoon.style.boxShadow = "0 0 80px #ffd700";
+stars.innerHTML = "";
+} else if (hr >= 18 && hr < 21) { // Δύση
+sky.style.background = "rgba(255, 50, 0, 0.4)";
+sunMoon.style.background = "radial-gradient(circle, #ff4500, #8b0000)";
+sunMoon.style.boxShadow = "0 0 50px #ff4500";
+stars.innerHTML = "";
 } else { // Νύχτα
-sky.style.background = "linear-gradient(to bottom, #000428, #004e92)";
-if (starsLayer.innerHTML === "") createStars();
-}
-
-// 2. Sun/Moon Position (Arc)
-let totalMin = (hour * 60) + min;
-let dayPercent = (totalMin / 1440);
-let angle = dayPercent * Math.PI * 2 - Math.PI/2;
-let x = 50 + 40 * Math.cos(angle);
-let y = 60 + 50 * Math.sin(angle);
-
-sunMoon.style.left = x + "%";
-sunMoon.style.top = y + "%";
-
-if (hour >= 6 && hour < 20) {
-sunMoon.style.background = "radial-gradient(circle, #fff700 0%, #ffae00 70%)";
-sunMoon.style.boxShadow = "0 0 80px #ffae00";
-} else {
-sunMoon.style.background = "radial-gradient(circle, #fdfdfd 0%, #bdc3c7 100%)";
-sunMoon.style.boxShadow = "0 0 40px #ffffff";
+sky.style.background = "rgba(0, 10, 50, 0.7)";
+sunMoon.style.background = "radial-gradient(circle, #ddd, #888)";
+sunMoon.style.boxShadow = "0 0 30px #fff";
+if (!stars.hasChildNodes()) {
+for(let i=0; i<50; i++) {
+let s = document.createElement('div');
+s.className = 'star';
+s.style.left = Math.random()*100+'%';
+s.style.top = Math.random()*50+'%';
+s.style.width = Math.random()*3+'px';
+s.style.height = s.style.width;
+s.style.animationDelay = Math.random()*3+'s';
+stars.appendChild(s);
 }
 }
-
-function createStars() {
-const layer = document.getElementById('stars-layer');
-for (let i = 0; i < 150; i++) {
-let star = document.createElement('div');
-star.className = 'star';
-star.style.width = Math.random() * 3 + 'px';
-star.style.height = star.style.width;
-star.style.left = Math.random() * 100 + '%';
-star.style.top = Math.random() * 60 + '%';
-star.style.animationDelay = Math.random() * 3 + 's';
-layer.appendChild(star);
 }
+// Κίνηση Ήλιου
+let percent = ((hr * 60 + now.getMinutes()) / 1440) * 100;
+sunMoon.style.left = percent + "%";
+sunMoon.style.top = (20 + Math.sin(percent/100 * Math.PI) * -15) + "%";
 }
-
-function createShootingStar() {
-if (new Date().getHours() < 6 || new Date().getHours() > 20) {
-const star = document.createElement('div');
-star.className = 'shooting-star';
-star.style.left = Math.random() * 100 + '%';
-star.style.top = Math.random() * 40 + '%';
-star.style.animation = "shoot 2s linear forwards";
-document.getElementById('env-container').appendChild(star);
-setTimeout(() => star.remove(), 2000);
-}
-}
-
-setInterval(updateSky, 60000);
-setInterval(createShootingStar, 8000);
-updateSky();
+setInterval(updateEnvironment, 60000); updateEnvironment();
 
 /* --- Ο ΔΙΚΟΣ ΣΟΥ JS ΚΩΔΙΚΑΣ (ΑΝΕΠΑΦΟΣ) --- */
-var gTemp = new RadialGauge({ renderTo: 'gauge-temp', width: 240, height: 240, units: "°C", minValue: -10, maxValue: 60, majorTicks: ["-10","0","10","20","30","40","50","60"], minorTicks: 2, strokeTicks: true, highlights: [{ "from": -10, "to": 0, "color": "rgba(0,255,255,.5)" },{ "from": 0, "to": 10, "color": "rgba(0,128,255,.5)" },{ "from": 10, "to": 20, "color": "rgba(154,205,50,.5)" },{ "from": 20, "to": 30, "color": "rgba(255,215,0,.5)" },{ "from": 30, "to": 40, "color": "rgba(255,165,0,.5)" },{ "from": 40, "to": 60, "color": "rgba(255,0,0,.5)" }], colorPlate: "#fff", borderShadowWidth: 0, borders: true, needleType: "arrow", needleWidth: 4, needleCircleSize: 7, needleCircleOuter: true, needleCircleInner: false, animationDuration: 1500, animationRule: "linear" }).draw();
-var gHum = new RadialGauge({ renderTo: 'gauge-hum', width: 240, height: 240, units: "%", minValue: 0, maxValue: 100, majorTicks: ["0","10","20","30","40","50","60","70","80","90","100"], minorTicks: 2, strokeTicks: true, highlights: [{ "from": 0, "to": 20, "color": "rgba(255,140,0,.5)" },{ "from": 20, "to": 40, "color": "rgba(255,165,0,.5)" },{ "from": 40, "to": 60, "color": "rgba(50,205,50,.5)" },{ "from": 60, "to": 80, "color": "rgba(0,191,255,.5)" },{ "from": 80, "to": 100, "color": "rgba(0,0,255,.5)" }], colorPlate: "#fff", borders: true, needleType: "arrow", needleWidth: 4, animationDuration: 1500 }).draw();
-var gPress = new RadialGauge({ renderTo: 'gauge-press', width: 240, height: 240, units: "hPa", minValue: 950, maxValue: 1050, majorTicks: ["950","960","970","980","990","1000","1010","1020","1030","1040","1050"], minorTicks: 2, strokeTicks: true, highlights: [{ "from": 950, "to": 1000, "color": "rgba(255,0,0,.5)" },{ "from": 1000, "to": 1020, "color": "rgba(0,255,0,.5)" },{ "from": 1020, "to": 1050, "color": "rgba(0,0,255,.5)" }], colorPlate: "#fff", borders: true, needleType: "arrow", needleWidth: 4, animationDuration: 1500 }).draw();
+var gTemp = new RadialGauge({ renderTo: 'gauge-temp', width: 240, height: 240, units: "°C", minValue: -10, maxValue: 60, majorTicks: ["-10","0","10","20","30","40","50","60"], highlights: [{ "from": -10, "to": 0, "color": "rgba(0,255,255,.5)" },{ "from": 0, "to": 10, "color": "rgba(0,128,255,.5)" },{ "from": 10, "to": 20, "color": "rgba(154,205,50,.5)" },{ "from": 20, "to": 30, "color": "rgba(255,215,0,.5)" },{ "from": 30, "to": 40, "color": "rgba(255,165,0,.5)" },{ "from": 40, "to": 60, "color": "rgba(255,0,0,.5)" }], colorPlate: "#fff", borders: true, needleType: "arrow", animationDuration: 1500 }).draw();
+var gHum = new RadialGauge({ renderTo: 'gauge-hum', width: 240, height: 240, units: "%", minValue: 0, maxValue: 100, majorTicks: ["0","10","20","30","40","50","60","70","80","90","100"], highlights: [{ "from": 0, "to": 20, "color": "rgba(255,140,0,.5)" },{ "from": 20, "to": 40, "color": "rgba(255,165,0,.5)" },{ "from": 40, "to": 60, "color": "rgba(50,205,50,.5)" },{ "from": 60, "to": 80, "color": "rgba(0,191,255,.5)" },{ "from": 80, "to": 100, "color": "rgba(0,0,255,.5)" }], colorPlate: "#fff", borders: true, needleType: "arrow", animationDuration: 1500 }).draw();
+var gPress = new RadialGauge({ renderTo: 'gauge-press', width: 240, height: 240, units: "hPa", minValue: 950, maxValue: 1050, majorTicks: ["950","960","970","980","990","1000","1010","1020","1030","1040","1050"], highlights: [{ "from": 950, "to": 1000, "color": "rgba(255,0,0,.5)" },{ "from": 1000, "to": 1020, "color": "rgba(0,255,0,.5)" },{ "from": 1020, "to": 1050, "color": "rgba(0,0,255,.5)" }], colorPlate: "#fff", borders: true, needleType: "arrow", animationDuration: 1500 }).draw();
 
 function createChart(canvasId, label, color, minVal = null, maxVal = null) {
-return new Chart(document.getElementById(canvasId), { type: 'line', data: { labels: [], datasets: [{ label: label, data: [], borderColor: color, backgroundColor: color + '22', borderWidth: 3, tension: 0.3, fill: true }] }, options: { responsive: true, maintainAspectRatio: false, scales: { x: { grid: { display: false }, ticks: { color: '#ffffff' } }, y: { min: minVal, max: maxVal, grid: { color: 'rgba(255,255,255,0.1)' }, ticks: { color: '#ffffff' } } }, plugins: { legend: { labels: { color: '#fff' } } } } });
+return new Chart(document.getElementById(canvasId), { type: 'line', data: { labels: [], datasets: [{ label: label, data: [], borderColor: color, backgroundColor: color + '22', borderWidth: 3, tension: 0.3, fill: true }] }, options: { responsive: true, maintainAspectRatio: false, scales: { x: { ticks: { color: '#ffffff' } }, y: { min: minVal, max: maxVal, ticks: { color: '#ffffff' } } }, plugins: { legend: { labels: { color: '#fff' } } } } });
 }
 var cTemp = createChart('chart-temp', 'Θερμοκρασία (°C)', '#d53a35');
 var cHum = createChart('chart-hum', 'Υγρασία (%)', '#2f89fc');
@@ -316,26 +322,26 @@ const d = new Date();
 document.getElementById('clock').innerText = d.toLocaleTimeString('el-GR');
 document.getElementById('date').innerText = d.toLocaleDateString('el-GR', {weekday:'long', day:'numeric', month:'long'});
 fetch("https://api.thingspeak.com/channels/3365350/feeds.json?results=80&metadata=true")
-.then(res => res.json())
-.then(data => {
+.then(res => res.json()).then(data => {
 const feeds = data.feeds; const last = feeds[feeds.length - 1];
 const temp = parseFloat(last.field1); const hum = parseFloat(last.field2);
 if(last.field1) gTemp.value = last.field1; if(last.field2) gHum.value = last.field2; if(last.field3) gPress.value = last.field3;
 const statusBadge = document.getElementById('status-badge');
-const diff = (new Date() - new Date(last.created_at)) / 1000 / 60;
-if (diff < 20) { statusBadge.innerText = "ONLINE"; statusBadge.style.backgroundColor = "#00ff00"; }
+if (((new Date() - new Date(last.created_at)) / 60000) < 20) { statusBadge.innerText = "ONLINE"; statusBadge.style.backgroundColor = "#00ff00"; }
 else { statusBadge.innerText = "OFFLINE"; statusBadge.style.backgroundColor = "#ff0000"; }
 const alertBox = document.getElementById('alert-box');
 if (temp <= 2) { alertBox.innerText = "⚠️ ΠΡΟΣΟΧΗ: Κίνδυνος Παγετού!"; alertBox.className = "alert-danger"; }
 else if (hum > 85) { alertBox.innerText = "💧 Υψηλή Υγρασία: Κίνδυνος για Μύκητες."; alertBox.className = "alert-warning"; }
 else { alertBox.innerText = "✅ Ομαλές Συνθήκες."; alertBox.className = "alert-normal"; }
 if(last.field4) {
-let curR = parseFloat(last.field4) - (parseFloat(localStorage.getItem('rain_reset_value')) || 0);
+let liveRain = parseFloat(last.field4);
+let resetVal = parseFloat(localStorage.getItem('rain_reset_value')) || 0;
+let curR = liveRain - resetVal;
 document.getElementById('r-val').innerText = Math.max(0, curR).toFixed(2);
-document.getElementById('bar-day').style.height = Math.min((curR / 50) * 100, 100) + "%";
 document.getElementById('val-day').innerText = Math.max(0, curR).toFixed(1);
+document.getElementById('bar-day').style.height = Math.min((curR / 50) * 100, 100) + "%";
 }
-let b = parseFloat(last.field5); document.getElementById('b-val').innerText = b.toFixed(0);
+document.getElementById('b-val').innerText = parseFloat(last.field5).toFixed(0);
 let labels = feeds.map(f => new Date(f.created_at).toLocaleTimeString('el-GR', {hour: '2-digit', minute:'2-digit'}));
 cTemp.data.labels = labels; cTemp.data.datasets[0].data = feeds.map(f => f.field1); cTemp.update();
 cHum.data.labels = labels; cHum.data.datasets[0].data = feeds.map(f => f.field2); cHum.update();
