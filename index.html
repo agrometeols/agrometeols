@@ -7,18 +7,28 @@
 <script src="https://cdn.rawgit.com/Mikhus/canvas-gauges/gh-pages/download/2.1.7/all/gauge.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
-/* Προσθήκη transition για το εφέ νύχτας */
+/* --- NIGHT MODE & STARS EFFECTS --- */
 body {
 margin: 0;
 padding: 0;
-background: #2d5a27 url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1920&q=80') no-repeat center center fixed;
-background-size: cover;
+background: #000; /* Μαύρο φόντο βάσης */
 font-family: sans-serif;
-transition: filter 2s ease-in-out;
+overflow-x: hidden;
 }
 
-/* Κλάση που ενεργοποιείται τη νύχτα */
-.night-mode { filter: brightness(0.5) contrast(1.1); }
+/* Το layer της εικόνας με πολύ χαμηλή φωτεινότητα */
+body::before {
+content: "";
+position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+background: url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1920&q=80') no-repeat center center fixed;
+background-size: cover;
+filter: brightness(0.1) contrast(1.2); /* Πολύ σκοτεινό για να φαίνονται τα αστέρια */
+z-index: -2;
+}
 
 /* Στυλ για τα αστέρια */
 .star {
@@ -26,165 +36,58 @@ position: fixed;
 background: white;
 border-radius: 50%;
 opacity: 0.8;
+box-shadow: 0 0 4px 1px rgba(255, 255, 255, 0.8); /* Λάμψη στα αστέρια */
 animation: fall linear infinite;
 pointer-events: none;
-z-index: 9999;
+z-index: -1;
 }
+
 @keyframes fall {
 from { transform: translateY(-10vh) translateX(0); opacity: 1; }
 to { transform: translateY(110vh) translateX(100px); opacity: 0; }
 }
 
+/* --- Ο ΔΙΚΟΣ ΣΟΥ ΚΩΔΙΚΑΣ CSS ΑΠΕΙΡΑΧΤΟΣ --- */
 .overlay { min-height: 100vh; background: rgba(0,0,0,0.4); padding: 20px; box-sizing: border-box; }
-
-/* --- PREMIUM LOGO SECTION --- */
 header { text-align: center; color: white; margin-bottom: 30px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
 .logo-container { display: flex; align-items: center; gap: 15px; background: rgba(255,255,255,0.1); padding: 15px 30px; border-radius: 50px; backdrop-filter: blur(5px); border: 1px solid rgba(255,255,255,0.2); box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
 .logo-svg { filter: drop-shadow(0 0 5px rgba(0,255,0,0.5)); }
 .logo-text-wrapper { text-align: left; line-height: 1; }
 .logo-text-wrapper h1 { margin: 0; font-size: 2.2rem; letter-spacing: 1px; text-transform: uppercase; font-weight: 800; }
 .logo-text-wrapper span { color: #00ff00; font-size: 1.1rem; font-weight: bold; letter-spacing: 6px; text-transform: uppercase; }
-
 .top-dashboard { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px; max-width: 1200px; margin: 0 auto 20px auto; }
 .dashboard { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 15px; max-width: 1200px; margin: 0 auto 20px auto; }
 .charts-dashboard { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 15px; max-width: 1200px; margin: 0 auto 20px auto; }
 .bottom-dashboard { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px; max-width: 1200px; margin: 0 auto; justify-content: center; }
-
 .ads-dashboard { max-width: 1200px; margin: 0 auto 20px auto; }
-
-.card {
-background: rgba(255, 255, 255, 0.15);
-backdrop-filter: blur(10px);
-border-radius: 12px;
-padding: 15px;
-text-align: center;
-box-shadow: 0 8px 32px rgba(0,0,0,0.3);
-position: relative;
-overflow: hidden;
-transition: transform 0.3s ease, box-shadow 0.3s ease;
-border: 1px solid rgba(255, 255, 255, 0.1);
-color: white;
-}
-
-.card:hover {
-transform: translateY(-10px);
-box-shadow: 0 15px 40px rgba(0,0,0,0.5);
-}
-
+.card { background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(10px); border-radius: 12px; padding: 15px; text-align: center; box-shadow: 0 8px 32px rgba(0,0,0,0.3); position: relative; overflow: hidden; transition: transform 0.3s ease, box-shadow 0.3s ease; border: 1px solid rgba(255, 255, 255, 0.1); color: white; }
+.card:hover { transform: translateY(-10px); box-shadow: 0 15px 40px rgba(0,0,0,0.5); }
 .card span, .card small { color: white !important; }
 .card h3 { color: white; }
-
 .info-card { background: rgba(45, 90, 39, 0.7) !important; color: white !important; text-align: left !important; }
-
 #clock, #date, #r-val, #b-val, #reset-msg { color: white !important; }
-
-.rain-gauges-container {
-display: flex;
-flex-wrap: wrap;
-justify-content: center;
-gap: 8px;
-margin-top: 10px;
-background: rgba(255,255,255,0.1);
-padding: 10px 5px;
-border-radius: 8px;
-}
-.rain-box {
-flex: 1;
-min-width: 100px;
-display: flex;
-flex-direction: column;
-align-items: center;
-border: 1px solid rgba(255,255,255,0.3);
-}
-.rain-box-title {
-background: #2d5a27;
-color: white;
-width: 100%;
-font-size: 0.65rem;
-font-weight: bold;
-padding: 4px 0;
-text-align: center;
-}
-.rain-visual {
-display: flex;
-align-items: center;
-gap: 4px;
-height: 100px;
-padding: 5px;
-}
-.rain-num-scale {
-display: flex;
-flex-direction: column;
-justify-content: space-between;
-height: 100%;
-font-size: 0.55rem;
-color: #eee;
-text-align: right;
-min-width: 15px;
-}
-.rain-bar-container {
-width: 12px;
-height: 100%;
-background: rgba(255,255,255,0.1);
-border: 1px solid rgba(255,255,255,0.8);
-position: relative;
-}
-.rain-bar-fill {
-position: absolute;
-bottom: 0;
-width: 100%;
-background: #00ccff;
-height: 0%;
-transition: height 0.5s;
-}
-.rain-ticks {
-display: flex;
-flex-direction: column;
-justify-content: space-between;
-height: 100%;
-}
-.rain-ticks span {
-width: 5px;
-height: 1px;
-background: rgba(255,255,255,0.5);
-}
-.rain-box-footer {
-font-size: 0.7rem;
-font-weight: bold;
-color: white;
-padding: 3px 0;
-}
-
+.rain-gauges-container { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: 10px; background: rgba(255,255,255,0.1); padding: 10px 5px; border-radius: 8px; }
+.rain-box { flex: 1; min-width: 100px; display: flex; flex-direction: column; align-items: center; border: 1px solid rgba(255,255,255,0.3); }
+.rain-box-title { background: #2d5a27; color: white; width: 100%; font-size: 0.65rem; font-weight: bold; padding: 4px 0; text-align: center; }
+.rain-visual { display: flex; align-items: center; gap: 4px; height: 100px; padding: 5px; }
+.rain-num-scale { display: flex; flex-direction: column; justify-content: space-between; height: 100%; font-size: 0.55rem; color: #eee; text-align: right; min-width: 15px; }
+.rain-bar-container { width: 12px; height: 100%; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.8); position: relative; }
+.rain-bar-fill { position: absolute; bottom: 0; width: 100%; background: #00ccff; height: 0%; transition: height 0.5s; }
+.rain-ticks { display: flex; flex-direction: column; justify-content: space-between; height: 100%; }
+.rain-ticks span { width: 5px; height: 1px; background: rgba(255,255,255,0.5); }
+.rain-box-footer { font-size: 0.7rem; font-weight: bold; color: white; padding: 3px 0; }
 .slideshow-container { position: relative; width: 100%; height: 200px; max-height: 250px; overflow: hidden; border-radius: 8px; margin-top: 10px; display: flex; justify-content: center; align-items: center; background: rgba(255,255,255,0.1); }
 .slideshow-container img { max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain; display: none; transition: opacity 0.5s ease-in-out; }
 .slideshow-container img.active { display: block; }
-
 .chart-container { position: relative; height: 240px; width: 100%; margin-top: 10px; }
 canvas { max-width: 100%; height: auto; }
-
-#status-badge {
-font-weight: bold;
-padding: 5px 15px;
-border-radius: 4px;
-color: white !important;
-text-transform: uppercase;
-display: inline-block;
-margin-left: 5px;
-}
-
+#status-badge { font-weight: bold; padding: 5px 15px; border-radius: 4px; color: white !important; text-transform: uppercase; display: inline-block; margin-left: 5px; }
 .section-title { width: 100%; max-width: 1200px; margin: 20px auto 10px auto; color: white; border-left: 5px solid #fff; padding-left: 10px; }
-
 #alert-box { font-weight: bold; padding: 15px; border-radius: 8px; margin-top: 10px; border: 2px solid transparent; color: white !important; }
 .alert-normal { background: rgba(0, 128, 0, 0.4); border-color: rgba(255,255,255,0.2) !important; }
 .alert-danger { background: rgba(255, 0, 0, 0.5); border-color: rgba(255,255,255,0.2) !important; animation: blink 2s infinite; }
 .alert-warning { background: rgba(255, 165, 0, 0.5); border-color: rgba(255,255,255,0.2) !important; }
-
-footer {
-text-align: center; color: #ffffff; margin: 30px auto 10px auto; padding: 12px 25px;
-background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(5px); border-radius: 10px;
-max-width: 1200px; font-size: 0.9rem; border: 1px solid rgba(255, 255, 255, 0.2); box-sizing: border-box;
-}
-
+footer { text-align: center; color: #ffffff; margin: 30px auto 10px auto; padding: 12px 25px; background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(5px); border-radius: 10px; max-width: 1200px; font-size: 0.9rem; border: 1px solid rgba(255, 255, 255, 0.2); box-sizing: border-box; }
 .widget-card { padding: 0 !important; background: transparent !important; box-shadow: none !important; border-radius: 12px; min-height: 450px; }
 .widget-title { margin: 15px 0; font-size: 1.2rem; color: #ffffff !important; text-align: center; }
 .forecast-frame { width: 100%; height: 380px; border: none; border-radius: 12px; }
@@ -192,7 +95,7 @@ max-width: 1200px; font-size: 0.9rem; border: 1px solid rgba(255, 255, 255, 0.2)
 </style>
 </head>
 <body>
-<!-- Container για τα αστέρια -->
+<!-- Layer για τα αστέρια -->
 <div id="star-field"></div>
 
 <div class="overlay">
@@ -302,18 +205,9 @@ max-width: 1200px; font-size: 0.9rem; border: 1px solid rgba(255, 255, 255, 0.2)
 
 <h2 class="section-title">Τρέχουσες Ενδείξεις</h2>
 <div class="dashboard">
-<div class="card">
-<h3>Θερμοκρασία</h3>
-<canvas id="gauge-temp" style="max-width: 240px; width: 100%; height: auto;"></canvas>
-</div>
-<div class="card">
-<h3>Υγρασία</h3>
-<canvas id="gauge-hum" style="max-width: 240px; width: 100%; height: auto;"></canvas>
-</div>
-<div class="card">
-<h3>Βαρομετρική πίεση</h3>
-<canvas id="gauge-press" style="max-width: 240px; width: 100%; height: auto;"></canvas>
-</div>
+<div class="card"><h3>Θερμοκρασία</h3><canvas id="gauge-temp" style="max-width: 240px; width: 100%; height: auto;"></canvas></div>
+<div class="card"><h3>Υγρασία</h3><canvas id="gauge-hum" style="max-width: 240px; width: 100%; height: auto;"></canvas></div>
+<div class="card"><h3>Βαρομετρική πίεση</h3><canvas id="gauge-press" style="max-width: 240px; width: 100%; height: auto;"></canvas></div>
 <div class="card" style="display: flex; flex-direction: column; justify-content: center; min-height: 270px;">
 <h3>Βροχόπτωση (Live)</h3>
 <div style="font-size: 4rem; font-weight: bold; margin: 20px 0;"><span id="r-val">--</span><span style="font-size: 1.5rem;">mm</span></div>
@@ -346,10 +240,10 @@ max-width: 1200px; font-size: 0.9rem; border: 1px solid rgba(255, 255, 255, 0.2)
 
 <h2 class="section-title">Ιστορικά Γραφήματα</h2>
 <div class="charts-dashboard">
-<div class="card"><div class="chart-container"><canvas id="chart-temp"></canvas></div></div>
-<div class="card"><div class="chart-container"><canvas id="chart-hum"></canvas></div></div>
-<div class="card"><div class="chart-container"><canvas id="chart-press"></canvas></div></div>
-<div class="card"><div class="chart-container"><canvas id="chart-rain"></canvas></div></div>
+<div class="card"><h3>Πορεία Θερμοκρασία</h3><div class="chart-container"><canvas id="chart-temp"></canvas></div></div>
+<div class="card"><h3>Πορεία Υγρασία</h3><div class="chart-container"><canvas id="chart-hum"></canvas></div></div>
+<div class="card"><h3>Πoρεία Πίεσης</h3><div class="chart-container"><canvas id="chart-press"></canvas></div></div>
+<div class="card"><h3>Πορεία Βροχόπτωσης</h3><div class="chart-container"><canvas id="chart-rain"></canvas></div></div>
 </div>
 
 <div class="bottom-dashboard">
@@ -364,113 +258,43 @@ max-width: 1200px; font-size: 0.9rem; border: 1px solid rgba(255, 255, 255, 0.2)
 </div>
 
 <script>
-// Λειτουργία για Νύχτα και Αστέρια
-function applyNightEffects() {
-const hour = new Date().getHours();
-const isNight = (hour >= 20 || hour < 6);
-const body = document.body;
+/* --- ΣΥΝΑΡΤΗΣΗ ΓΙΑ ΤΑ ΑΣΤΕΡΙΑ --- */
+function createStars() {
 const starField = document.getElementById('star-field');
-
-if (isNight) {
-body.classList.add('night-mode');
-if (starField.innerHTML === "") {
-for (let i = 0; i < 20; i++) {
+for (let i = 0; i < 100; i++) {
 let star = document.createElement('div');
 star.className = 'star';
 star.style.left = Math.random() * 100 + 'vw';
+star.style.top = Math.random() * 100 + 'vh';
 star.style.width = star.style.height = (Math.random() * 3 + 1) + 'px';
-star.style.animationDuration = (Math.random() * 3 + 2) + 's';
+star.style.animationDuration = (Math.random() * 5 + 3) + 's';
 star.style.animationDelay = (Math.random() * 10) + 's';
 starField.appendChild(star);
 }
 }
-} else {
-body.classList.remove('night-mode');
-starField.innerHTML = "";
-}
-}
+createStars();
 
+/* --- Ο ΔΙΚΟΣ ΣΟΥ ΚΩΔΙΚΑΣ JS ΑΠΕΙΡΑΧΤΟΣ --- */
 let currentSlide = 0;
 const slides = document.querySelectorAll('#ad-slider img');
-function nextSlide() {
-if (slides.length === 0) return;
-slides[currentSlide].classList.remove('active');
-currentSlide = (currentSlide + 1) % slides.length;
-slides[currentSlide].classList.add('active');
-}
+function nextSlide() { if (slides.length === 0) return; slides[currentSlide].classList.remove('active'); currentSlide = (currentSlide + 1) % slides.length; slides[currentSlide].classList.add('active'); }
 setInterval(nextSlide, 4000);
 
-var gTemp = new RadialGauge({
-renderTo: 'gauge-temp', width: 240, height: 240, units: "°C", minValue: -10, maxValue: 60,
-majorTicks: ["-10","0","10","20","30","40","50","60"], minorTicks: 2, strokeTicks: true,
-highlights: [
-{ "from": -10, "to": 0, "color": "rgba(0,255,255,.5)" },
-{ "from": 0, "to": 10, "color": "rgba(0,128,255,.5)" },
-{ "from": 10, "to": 20, "color": "rgba(154,205,50,.5)" },
-{ "from": 20, "to": 30, "color": "rgba(255,215,0,.5)" },
-{ "from": 30, "to": 40, "color": "rgba(255,165,0,.5)" },
-{ "from": 40, "to": 60, "color": "rgba(255,0,0,.5)" }
-],
-colorPlate: "#fff", borderShadowWidth: 0, borders: true, needleType: "arrow", needleWidth: 4,
-needleCircleSize: 7, needleCircleOuter: true, needleCircleInner: false, animationDuration: 1500, animationRule: "linear"
-}).draw();
+var gTemp = new RadialGauge({ renderTo: 'gauge-temp', width: 240, height: 240, units: "°C", minValue: -10, maxValue: 60, majorTicks: ["-10","0","10","20","30","40","50","60"], minorTicks: 2, strokeTicks: true, highlights: [ { "from": -10, "to": 0, "color": "rgba(0,255,255,.5)" }, { "from": 0, "to": 10, "color": "rgba(0,128,255,.5)" }, { "from": 10, "to": 20, "color": "rgba(154,205,50,.5)" }, { "from": 20, "to": 30, "color": "rgba(255,215,0,.5)" }, { "from": 30, "to": 40, "color": "rgba(255,165,0,.5)" }, { "from": 40, "to": 60, "color": "rgba(255,0,0,.5)" } ], colorPlate: "#fff", borderShadowWidth: 0, borders: true, needleType: "arrow", needleWidth: 4, needleCircleSize: 7, needleCircleOuter: true, needleCircleInner: false, animationDuration: 1500, animationRule: "linear" }).draw();
+var gHum = new RadialGauge({ renderTo: 'gauge-hum', width: 240, height: 240, units: "%", minValue: 0, maxValue: 100, majorTicks: ["0","10","20","30","40","50","60","70","80","90","100"], minorTicks: 2, strokeTicks: true, highlights: [ { "from": 0, "to": 20, "color": "rgba(255,140,0,.5)" }, { "from": 20, "to": 40, "color": "rgba(255,165,0,.5)" }, { "from": 40, "to": 60, "color": "rgba(50,205,50,.5)" }, { "from": 60, "to": 80, "color": "rgba(0,191,255,.5)" }, { "from": 80, "to": 100, "color": "rgba(0,0,255,.5)" } ], colorPlate: "#fff", borders: true, needleType: "arrow", needleWidth: 4, animationDuration: 1500 }).draw();
+var gPress = new RadialGauge({ renderTo: 'gauge-press', width: 240, height: 240, units: "hPa", minValue: 950, maxValue: 1050, majorTicks: ["950","960","970","980","990","1000","1010","1020","1030","1040","1050"], minorTicks: 2, strokeTicks: true, highlights: [ { "from": 950, "to": 1000, "color": "rgba(255,0,0,.5)" }, { "from": 1000, "to": 1020, "color": "rgba(0,255,0,.5)" }, { "from": 1020, "to": 1050, "color": "rgba(0,0,255,.5)" } ], colorPlate: "#fff", borders: true, needleType: "arrow", needleWidth: 4, animationDuration: 1500 }).draw();
 
-var gHum = new RadialGauge({
-renderTo: 'gauge-hum', width: 240, height: 240, units: "%", minValue: 0, maxValue: 100,
-majorTicks: ["0","10","20","30","40","50","60","70","80","90","100"], minorTicks: 2, strokeTicks: true,
-highlights: [
-{ "from": 0, "to": 20, "color": "rgba(255,140,0,.5)" },
-{ "from": 20, "to": 40, "color": "rgba(255,165,0,.5)" },
-{ "from": 40, "to": 60, "color": "rgba(50,205,50,.5)" },
-{ "from": 60, "to": 80, "color": "rgba(0,191,255,.5)" },
-{ "from": 80, "to": 100, "color": "rgba(0,0,255,.5)" }
-],
-colorPlate: "#fff", borders: true, needleType: "arrow", needleWidth: 4, animationDuration: 1500
-}).draw();
-
-var gPress = new RadialGauge({
-renderTo: 'gauge-press', width: 240, height: 240, units: "hPa", minValue: 950, maxValue: 1050,
-majorTicks: ["950","960","970","980","990","1000","1010","1020","1030","1040","1050"],
-minorTicks: 2, strokeTicks: true,
-highlights: [
-{ "from": 950, "to": 1000, "color": "rgba(255,0,0,.5)" },
-{ "from": 1000, "to": 1020, "color": "rgba(0,255,0,.5)" },
-{ "from": 1020, "to": 1050, "color": "rgba(0,0,255,.5)" }
-],
-colorPlate: "#fff", borders: true, needleType: "arrow", needleWidth: 4, animationDuration: 1500
-}).draw();
-
-function createChart(canvasId, label, color, minVal = null, maxVal = null) {
-return new Chart(document.getElementById(canvasId), {
-type: 'line',
-data: { labels: [], datasets: [{ label: label, data: [], borderColor: color, backgroundColor: color + '22', borderWidth: 3, tension: 0.3, fill: true }] },
-options: {
-responsive: true,
-maintainAspectRatio: false,
-scales: {
-x: { grid: { display: false }, ticks: { color: '#ffffff' } },
-y: { min: minVal, max: maxVal, grid: { color: 'rgba(255,255,255,0.1)' }, ticks: { color: '#ffffff' } }
-},
-plugins: { legend: { labels: { color: '#fff' } } }
-}
-});
-}
-
+function createChart(canvasId, label, color, minVal = null, maxVal = null) { return new Chart(document.getElementById(canvasId), { type: 'line', data: { labels: [], datasets: [{ label: label, data: [], borderColor: color, backgroundColor: color + '22', borderWidth: 3, tension: 0.3, fill: true }] }, options: { responsive: true, maintainAspectRatio: false, scales: { x: { grid: { display: false }, ticks: { color: '#ffffff' } }, y: { min: minVal, max: maxVal, grid: { color: 'rgba(255,255,255,0.1)' }, ticks: { color: '#ffffff' } } }, plugins: { legend: { labels: { color: '#fff' } } } } }); }
 var cTemp = createChart('chart-temp', 'Θερμοκρασία (°C)', '#d53a35');
 var cHum = createChart('chart-hum', 'Υγρασία (%)', '#2f89fc');
 var cPress = createChart('chart-press', 'Πίεση (hPa)', '#ff9f43');
 var cRain = createChart('chart-rain', 'Βροχόπτωση (mm)', '#28a745', 0, 50);
 
 function update() {
-applyNightEffects();
 const d = new Date();
 const curHour = d.getHours();
 const curMin = d.getMinutes();
-
-if (curHour === 0 && curMin === 0) {
-localStorage.setItem('rain_reset_value', document.getElementById('r-val').innerText);
-}
-
+if (curHour === 0 && curMin === 0) { localStorage.setItem('rain_reset_value', document.getElementById('r-val').innerText); }
 document.getElementById('clock').innerText = d.toLocaleTimeString('el-GR');
 document.getElementById('date').innerText = d.toLocaleDateString('el-GR', {weekday:'long', day:'numeric', month:'long'});
 
@@ -498,17 +322,13 @@ const lastSeen = new Date(last.created_at);
 const now = new Date();
 const diffMinutes = (now - lastSeen) / 1000 / 60;
 const statusBadge = document.getElementById('status-badge');
-if (diffMinutes < 20) { statusBadge.innerText = "ONLINE"; statusBadge.style.backgroundColor = "#00ff00"; }
-else { statusBadge.innerText = "OFFLINE"; statusBadge.style.backgroundColor = "#ff0000"; }
-
+if (diffMinutes < 20) { statusBadge.innerText = "ONLINE"; statusBadge.style.backgroundColor = "#00ff00"; } else { statusBadge.innerText = "OFFLINE"; statusBadge.style.backgroundColor = "#ff0000"; }
 if(last.field1) gTemp.value = last.field1;
 if(last.field2) gHum.value = last.field2;
 if(last.field3) gPress.value = last.field3;
 
 const alertBox = document.getElementById('alert-box');
-if (temp <= 2) { alertBox.innerText = "⚠️ ΠΡΟΣΟΧΗ: Κίνδυνος Παγετού!"; alertBox.className = "alert-danger"; }
-else if (hum > 85) { alertBox.innerText = "💧 Υψηλή Υγρασία: Κίνδυνος για Μύκητες."; alertBox.className = "alert-warning"; }
-else { alertBox.innerText = "✅ Ομαλές Συνθήκες."; alertBox.className = "alert-normal"; }
+if (temp <= 2) { alertBox.innerText = "⚠️ ΠΡΟΣΟΧΗ: Κίνδυνος Παγετού!"; alertBox.className = "alert-danger"; } else if (hum > 85) { alertBox.innerText = "💧 Υψηλή Υγρασία: Κίνδυνος για Μύκητες."; alertBox.className = "alert-warning"; } else { alertBox.innerText = "✅ Ομαλές Συνθήκες."; alertBox.className = "alert-normal"; }
 
 let currentRainValue = 0;
 if(last.field4) {
@@ -563,10 +383,7 @@ document.getElementById('p-min').innerText = pMin.v.toFixed(1);
 document.getElementById('p-min-t').innerText = "(" + new Date(pMin.t).toLocaleTimeString('el-GR', {hour:'2-digit', minute:'2-digit'}) + ")";
 }
 })
-.catch(err => {
-document.getElementById('status-badge').innerText = "OFFLINE";
-document.getElementById('status-badge').style.backgroundColor = "#ff0000";
-});
+.catch(err => { document.getElementById('status-badge').innerText = "OFFLINE"; document.getElementById('status-badge').style.backgroundColor = "#ff0000"; });
 }
 update();
 setInterval(update, 20000);
