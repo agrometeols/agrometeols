@@ -14,21 +14,22 @@ top: 0;
 left: 0;
 width: 100%;
 height: 100%;
-z-index: -1; /* Πίσω από το overlay, πάνω από το background image */
+z-index: 0; /* Πάνω από το background του body */
 pointer-events: none;
 overflow: hidden;
 }
 
 #sun-element {
 position: absolute;
-bottom: -120px; /* Ξεκινάει κάτω */
-left: 70%;
-width: 100px;
-height: 100px;
-background: radial-gradient(circle, #fff700 0%, #ff8c00 100%);
+bottom: -150px;
+left: 75%;
+width: 120px;
+height: 120px;
+background: radial-gradient(circle, #fff700 20%, #ff8c00 100%);
 border-radius: 50%;
-box-shadow: 0 0 60px rgba(255, 165, 0, 0.8);
-transition: transform 10s ease-in-out; /* Αργή κίνηση */
+box-shadow: 0 0 80px rgba(255, 165, 0, 0.9);
+transition: transform 10s ease-in-out;
+filter: blur(1px);
 }
 
 .shooting-star {
@@ -51,7 +52,16 @@ animation: shoot 4s linear infinite;
 /* --- ΤΕΛΟΣ ΠΡΟΣΘΗΚΗΣ CSS --- */
 
 body { margin: 0; padding: 0; background: #2d5a27 url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1920&q=80') no-repeat center center fixed; background-size: cover; font-family: sans-serif; }
-.overlay { min-height: 100vh; background: rgba(0,0,0,0.4); padding: 20px; box-sizing: border-box; }
+
+/* Διόρθωση στο overlay για να είναι πάνω από τα εφέ */
+.overlay {
+position: relative;
+z-index: 10;
+min-height: 100vh;
+background: rgba(0,0,0,0.4);
+padding: 20px;
+box-sizing: border-box;
+}
 
 /* --- PREMIUM LOGO SECTION --- */
 header { text-align: center; color: white; margin-bottom: 30px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
@@ -214,7 +224,6 @@ max-width: 1200px; font-size: 0.9rem; border: 1px solid rgba(255, 255, 255, 0.2)
 <div id="sun-element"></div>
 <div id="stars-overlay"></div>
 </div>
-<!-- ΤΕΛΟΣ ΠΡΟΣΘΗΚΗΣ HTML -->
 
 <div class="overlay">
 <header>
@@ -253,8 +262,6 @@ max-width: 1200px; font-size: 0.9rem; border: 1px solid rgba(255, 255, 255, 0.2)
 <p>Υψηλότερη Θερμοκρασία: <span id="t-max">--</span>°C <span id="t-max-t"></span> | Χαμηλότερη: <span id="t-min">--</span>°C <span id="t-min-t"></span></p>
 <p>Υψηλότερη Υγρασία: <span id="h-max">--</span>% <span id="h-max-t"></span> | Χαμηλότερη: <span id="h-min">--</span>% <span id="h-min-t"></span></p>
 <p>Υψηλότερη Πίεση: <span id="p-max">--</span> <span id="p-max-t"></span> | Χαμηλότερη: <span id="p-min">--</span> <span id="p-min-t"></span></p>
-
-<!-- ΕΔΩ ΑΦΑΙΡΕΘΗΚΕ Η ΓΡΑΜΜΗ ΜΕ ΤΟ ΜΠΛΕ ΠΛΑΙΣΙΟ ΠΟΥ ΣΗΜΑΔΕΨΕΣ -->
 
 <div class="rain-gauges-container">
 <!-- DAY RAIN -->
@@ -417,17 +424,14 @@ const hour = new Date().getHours();
 const sun = document.getElementById('sun-element');
 const stars = document.getElementById('stars-overlay');
 
-// Μέρα: 07:00 έως 19:59 (Προσαρμόζεις τις ώρες αν θες)
+// Μέρα: 07:00 έως 19:59
 const isDay = hour >= 7 && hour < 20;
 
 if (isDay) {
-// Ανέβασμα Ήλιου
-sun.style.transform = "translateY(-500px)";
-stars.innerHTML = ""; // Καθαρισμός αστεριών
+sun.style.transform = "translateY(-550px)";
+stars.innerHTML = "";
 } else {
-// Κατέβασμα Ήλιου
 sun.style.transform = "translateY(0px)";
-// Δημιουργία πεφταστεριού αν είναι νύχτα και δεν υπάρχει ήδη
 if (stars.children.length === 0) {
 startShootingStars();
 }
@@ -446,12 +450,10 @@ star.style.top = Math.random() * 40 + "%";
 starsContainer.appendChild(star);
 setTimeout(() => star.remove(), 4000);
 }
-}, 6000); // Πέφτει ένα αστέρι κάθε 6 δευτερόλεπτα τη νύχτα
+}, 8000);
 }
-// Εκτέλεση ελέγχου αμέσως
 updateSkyGraphics();
-// Έλεγχος κάθε 5 λεπτά για αλλαγή φάσης
-setInterval(updateSkyGraphics, 300000);
+setInterval(updateSkyGraphics, 60000);
 /* --- ΤΕΛΟΣ ΠΡΟΣΘΗΚΗΣ JS --- */
 
 let currentSlide = 0;
