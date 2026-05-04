@@ -17,7 +17,6 @@ header { text-align: center; color: white; margin-bottom: 30px; display: flex; f
 .logo-text-wrapper { text-align: left; line-height: 1; }
 .logo-text-wrapper h1 { margin: 0; font-size: 2.2rem; letter-spacing: 1px; text-transform: uppercase; font-weight: 800; }
 .logo-text-wrapper span { color: #00ff00; font-size: 1.1rem; font-weight: bold; letter-spacing: 6px; text-transform: uppercase; }
-/* ---------------------------- */
 
 .top-dashboard { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px; max-width: 1200px; margin: 0 auto 20px auto; }
 .dashboard { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 15px; max-width: 1200px; margin: 0 auto 20px auto; }
@@ -52,7 +51,6 @@ box-shadow: 0 15px 40px rgba(0,0,0,0.5);
 
 #clock, #date, #r-val, #b-val, #reset-msg { color: white !important; }
 
-/* --- ΕΝΗΜΕΡΩΜΕΝΟ ΣΤΥΛ ΓΙΑ ΤΟΥΣ ΜΕΤΡΗΤΕΣ ΜΕ ΚΛΙΜΑΚΕΣ --- */
 .rain-gauges-container {
 display: flex;
 flex-wrap: wrap;
@@ -137,7 +135,6 @@ padding: 3px 0;
 .chart-container { position: relative; height: 240px; width: 100%; margin-top: 10px; }
 canvas { max-width: 100%; height: auto; }
 
-/* --- ΤΟ ΚΟΥΤΑΚΙ STATUS --- */
 #status-badge {
 font-weight: bold;
 padding: 5px 15px;
@@ -154,7 +151,6 @@ margin-left: 5px;
 .alert-normal { background: rgba(0, 128, 0, 0.4); border-color: rgba(255,255,255,0.2) !important; }
 .alert-danger { background: rgba(255, 0, 0, 0.5); border-color: rgba(255,255,255,0.2) !important; animation: blink 2s infinite; }
 .alert-warning { background: rgba(255, 165, 0, 0.5); border-color: rgba(255,255,255,0.2) !important; }
-@keyframes blink { 0% {opacity: 1;} 50% {opacity: 0.7;} 100% {opacity: 1;} }
 
 footer {
 text-align: center; color: #ffffff; margin: 30px auto 10px auto; padding: 12px 25px;
@@ -206,12 +202,8 @@ max-width: 1200px; font-size: 0.9rem; border: 1px solid rgba(255, 255, 255, 0.2)
 <p>Υψηλότερη Θερμοκρασία: <span id="t-max">--</span>°C <span id="t-max-t"></span> | Χαμηλότερη: <span id="t-min">--</span>°C <span id="t-min-t"></span></p>
 <p>Υψηλότερη Υγρασία: <span id="h-max">--</span>% <span id="h-max-t"></span> | Χαμηλότερη: <span id="h-min">--</span>% <span id="h-min-t"></span></p>
 <p>Υψηλότερη Πίεση: <span id="p-max">--</span> <span id="p-max-t"></span> | Χαμηλότερη: <span id="p-min">--</span> <span id="p-min-t"></span></p>
-<p style="border-top: 1px solid rgba(255,255,255,0.3); padding-top: 5px; margin-top: 5px; margin-bottom:0;">
-<strong>Βροχόπτωση:</strong><br>
-Τελευταίο 24ωρο: <span id="r-total-day" style="font-weight:bold">--</span> mm |
-Μήνας: <span id="r-total-month" style="font-weight:bold">--</span> mm |
-Έτος: <span id="r-total-year" style="font-weight:bold">--</span> mm
-</p>
+
+<!-- ΕΔΩ ΑΦΑΙΡΕΘΗΚΕ Η ΓΡΑΜΜΗ ΜΕ ΤΟ ΜΠΛΕ ΠΛΑΙΣΙΟ ΠΟΥ ΣΗΜΑΔΕΨΕΣ -->
 
 <div class="rain-gauges-container">
 <!-- DAY RAIN -->
@@ -456,7 +448,6 @@ localStorage.setItem('rain_reset_value', document.getElementById('r-val').innerT
 document.getElementById('clock').innerText = d.toLocaleTimeString('el-GR');
 document.getElementById('date').innerText = d.toLocaleDateString('el-GR', {weekday:'long', day:'numeric', month:'long'});
 
-// ΠΡΟΣΟΧΗ: Προστέθηκε το &metadata=true στο τέλος του URL για να έρθουν τα δεδομένα!
 fetch("https://api.thingspeak.com/channels/3365350/feeds.json?results=80&metadata=true")
 .then(res => res.json())
 .then(data => {
@@ -465,15 +456,12 @@ const last = feeds[feeds.length - 1];
 const temp = parseFloat(last.field1);
 const hum = parseFloat(last.field2);
 
-// --- ΔΙΑΒΑΣΜΑ METADATA ΓΙΑ ΜΗΝΑ ΚΑΙ ΕΤΟΣ ---
 if(data.channel && data.channel.metadata) {
 try {
 let meta = JSON.parse(data.channel.metadata);
 let mVal = parseFloat(meta.month) || 0;
 let yVal = parseFloat(meta.year) || 0;
 
-document.getElementById('r-total-month').innerText = mVal.toFixed(1);
-document.getElementById('r-total-year').innerText = yVal.toFixed(1);
 document.getElementById('val-month').innerText = mVal.toFixed(1);
 document.getElementById('val-year').innerText = yVal.toFixed(1);
 document.getElementById('bar-month').style.height = Math.min((mVal / 150) * 100, 100) + "%";
@@ -541,14 +529,6 @@ cPress.update();
 cRain.data.labels = labels;
 cRain.data.datasets[0].data = feeds.map(f => f.field4);
 cRain.update();
-
-let rArr = feeds.filter(f => f.field4 != null).map(f => parseFloat(f.field4));
-if(rArr.length > 0) {
-let rMax = Math.max(...rArr);
-let rMin = Math.min(...rArr);
-let rTotalDay = rMax - rMin;
-document.getElementById('r-total-day').innerText = (rTotalDay > 0 ? rTotalDay : 0).toFixed(2);
-}
 
 let tArr = feeds.filter(f => f.field1 != null).map(f => ({v: parseFloat(f.field1), t: f.created_at}));
 let hArr = feeds.filter(f => f.field2 != null).map(f => ({v: parseFloat(f.field2), t: f.created_at}));
