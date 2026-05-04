@@ -7,29 +7,34 @@
 <script src="https://cdn.rawgit.com/Mikhus/canvas-gauges/gh-pages/download/2.1.7/all/gauge.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
-/* --- ΠΡΟΣΘΗΚΗ ΜΟΝΟ ΓΙΑ ΗΛΙΟ & ΑΣΤΕΡΙΑ --- */
+/* --- ΠΡΟΣΘΗΚΗ ΜΟΝΟ ΓΙΑ ΗΛΙΟ, ΦΕΓΓΑΡΙ & ΑΣΤΕΡΙΑ --- */
 #sky-elements-container {
 position: fixed;
 top: 0; left: 0; width: 100%; height: 100%;
-z-index: 0;
+z-index: 1;
 pointer-events: none;
 overflow: hidden;
 }
-#sun-element {
+.celestial-body {
 position: absolute;
-bottom: -150px;
 left: 75%;
-width: 140px;
-height: 140px;
-background: radial-gradient(circle, #fff700 20%, #ff8c00 100%);
+width: 130px;
+height: 130px;
 border-radius: 50%;
+transition: transform 10s ease-in-out, opacity 2s;
+z-index: 2;
+}
+.sun-effect {
+background: radial-gradient(circle, #fff700 20%, #ff8c00 100%);
 box-shadow: 0 0 80px rgba(255, 165, 0, 0.9);
-transition: transform 15s ease-in-out;
+}
+.moon-effect {
+background: radial-gradient(circle, #f0f0f0 20%, #999 100%);
+box-shadow: 0 0 40px rgba(255, 255, 255, 0.5);
 }
 .shooting-star {
 position: absolute;
-width: 3px;
-height: 3px;
+width: 3px; height: 3px;
 background: white;
 box-shadow: 0 0 10px white;
 border-radius: 50%;
@@ -44,7 +49,7 @@ animation: shoot 4s linear infinite;
 }
 /* --- ΤΕΛΟΣ ΠΡΟΣΘΗΚΗΣ ΕΦΕ --- */
 
-body { margin: 0; padding: 0; background: #2d5a27 url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1920&q=80') no-repeat center center fixed; background-size: cover; font-family: sans-serif; }
+body { margin: 0; padding: 0; background: #2d5a27 url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1920&q=80') no-repeat center center fixed; background-size: cover; font-family: sans-serif; transition: background 2s ease; }
 .overlay { position: relative; z-index: 10; min-height: 100vh; background: rgba(0,0,0,0.4); padding: 20px; box-sizing: border-box; }
 
 /* --- PREMIUM LOGO SECTION --- */
@@ -205,7 +210,7 @@ max-width: 1200px; font-size: 0.9rem; border: 1px solid rgba(255, 255, 255, 0.2)
 
 <!-- ΤΑ LAYERS ΤΟΥ ΟΥΡΑΝΟΥ -->
 <div id="sky-elements-container">
-<div id="sun-element"></div>
+<div id="celestial-obj" class="celestial-body"></div>
 <div id="stars-overlay"></div>
 </div>
 
@@ -402,17 +407,28 @@ max-width: 1200px; font-size: 0.9rem; border: 1px solid rgba(255, 255, 255, 0.2)
 </div>
 
 <script>
-/* --- JS ΓΙΑ ΗΛΙΟ & ΑΣΤΕΡΙΑ --- */
-function updateSkyGraphics() {
+/* --- JS ΓΙΑ ΔΥΝΑΜΙΚΟ ΟΥΡΑΝΟ --- */
+function updateSky() {
 const hour = new Date().getHours();
-const sun = document.getElementById('sun-element');
+const celestial = document.getElementById('celestial-obj');
 const stars = document.getElementById('stars-overlay');
 
-if (hour >= 7 && hour < 20) { // ΜΕΡΑ
-sun.style.transform = "translateY(-600px)";
-stars.innerHTML = "";
-} else { // ΝΥΧΤΑ
-sun.style.transform = "translateY(0px)";
+// Έλεγχος Μέρας / Νύχτας
+if (hour >= 7 && hour < 20) {
+// ΜΕΡΑ: Ήλιος
+celestial.className = "celestial-body sun-effect";
+celestial.style.transform = "translateY(-600px)"; // Ανεβαίνει
+celestial.style.opacity = "1";
+stars.innerHTML = ""; // Σβήνουν τα αστέρια
+document.body.style.backgroundImage = "url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1920&q=80')";
+} else {
+// ΝΥΧΤΑ: Φεγγάρι & Αστέρια
+celestial.className = "celestial-body moon-effect";
+celestial.style.transform = "translateY(-500px)"; // Ανεβαίνει το φεγγάρι
+celestial.style.opacity = "1";
+document.body.style.backgroundImage = "url('https://images.unsplash.com/photo-1504608524841-42fe6f032b4b?auto=format&fit=crop&w=1920&q=80')";
+
+// Δημιουργία πεφταστεριών αν είναι βράδυ
 if (stars.children.length === 0) {
 setInterval(() => {
 const s = document.createElement('div');
@@ -421,14 +437,14 @@ s.style.left = Math.random() * 100 + "%";
 s.style.top = Math.random() * 30 + "%";
 stars.appendChild(s);
 setTimeout(() => s.remove(), 4000);
-}, 6000);
+}, 7000);
 }
 }
 }
-updateSkyGraphics();
-setInterval(updateSkyGraphics, 60000);
+updateSky();
+setInterval(updateSky, 60000);
 
-/* ΟΛΟΣ Ο ΔΙΚΟΣ ΣΟΥ ΚΩΔΙΚΑΣ JS ΣΥΝΕΧΙΖΕΙ ΑΠΟ ΚΑΤΩ ΑΠΕΙΡΑΧΤΟΣ */
+/* --- ΟΛΟΣ Ο ΔΙΚΟΣ ΣΟΥ ΚΩΔΙΚΑΣ JS --- */
 let currentSlide = 0;
 const slides = document.querySelectorAll('#ad-slider img');
 function nextSlide() {
