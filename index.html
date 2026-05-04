@@ -7,18 +7,18 @@
 <script src="https://cdn.rawgit.com/Mikhus/canvas-gauges/gh-pages/download/2.1.7/all/gauge.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
-/* --- NIGHT MODE & STARS EFFECTS --- */
+/* --- DYNAMIC DAY/NIGHT SYSTEM --- */
 body {
 margin: 0;
 padding: 0;
-background: #000; /* Μαύρο φόντο βάσης */
+background: #000;
 font-family: sans-serif;
 overflow-x: hidden;
+transition: background 2s ease;
 }
 
-/* Το layer της εικόνας με πολύ χαμηλή φωτεινότητα */
-body::before {
-content: "";
+/* Το φόντο με τον αγρό */
+#bg-layer {
 position: fixed;
 top: 0;
 left: 0;
@@ -26,20 +26,29 @@ width: 100%;
 height: 100%;
 background: url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1920&q=80') no-repeat center center fixed;
 background-size: cover;
-filter: brightness(0.1) contrast(1.2); /* Πολύ σκοτεινό για να φαίνονται τα αστέρια */
 z-index: -2;
+transition: filter 3s ease; /* Ομαλή μετάβαση φωτισμού */
 }
 
-/* Στυλ για τα αστέρια */
-.star {
+/* Containers για τα αστέρια */
+#star-field {
 position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+z-index: -1;
+pointer-events: none;
+transition: opacity 3s ease;
+}
+
+.star {
+position: absolute;
 background: white;
 border-radius: 50%;
 opacity: 0.8;
-box-shadow: 0 0 4px 1px rgba(255, 255, 255, 0.8); /* Λάμψη στα αστέρια */
+box-shadow: 0 0 5px 2px rgba(255, 255, 255, 0.4);
 animation: fall linear infinite;
-pointer-events: none;
-z-index: -1;
 }
 
 @keyframes fall {
@@ -47,8 +56,15 @@ from { transform: translateY(-10vh) translateX(0); opacity: 1; }
 to { transform: translateY(110vh) translateX(100px); opacity: 0; }
 }
 
-/* --- Ο ΔΙΚΟΣ ΣΟΥ ΚΩΔΙΚΑΣ CSS ΑΠΕΙΡΑΧΤΟΣ --- */
-.overlay { min-height: 100vh; background: rgba(0,0,0,0.4); padding: 20px; box-sizing: border-box; }
+/* Κλάσεις για την εναλλαγή */
+.is-day #bg-layer { filter: brightness(1.0) contrast(1.0); }
+.is-day #star-field { opacity: 0; }
+
+.is-night #bg-layer { filter: brightness(0.3) contrast(1.1); }
+.is-night #star-field { opacity: 1; }
+
+/* --- REST OF YOUR CSS UNTOUCHED --- */
+.overlay { min-height: 100vh; background: rgba(0,0,0,0.2); padding: 20px; box-sizing: border-box; }
 header { text-align: center; color: white; margin-bottom: 30px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
 .logo-container { display: flex; align-items: center; gap: 15px; background: rgba(255,255,255,0.1); padding: 15px 30px; border-radius: 50px; backdrop-filter: blur(5px); border: 1px solid rgba(255,255,255,0.2); box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
 .logo-svg { filter: drop-shadow(0 0 5px rgba(0,255,0,0.5)); }
@@ -94,8 +110,8 @@ footer { text-align: center; color: #ffffff; margin: 30px auto 10px auto; paddin
 .radar-frame { width: 100%; height: 380px; border: none; border-radius: 12px; }
 </style>
 </head>
-<body>
-<!-- Layer για τα αστέρια -->
+<body class="is-day">
+<div id="bg-layer"></div>
 <div id="star-field"></div>
 
 <div class="overlay">
@@ -137,61 +153,11 @@ footer { text-align: center; color: #ffffff; margin: 30px auto 10px auto; paddin
 <p>Υψηλότερη Πίεση: <span id="p-max">--</span> <span id="p-max-t"></span> | Χαμηλότερη: <span id="p-min">--</span> <span id="p-min-t"></span></p>
 
 <div class="rain-gauges-container">
-<div class="rain-box">
-<div class="rain-box-title">Σημερινός Υετός</div>
-<div class="rain-visual">
-<div class="rain-num-scale"><span>50</span><span>25</span><span>0</span></div>
-<div class="rain-ticks"><span></span><span></span><span></span><span></span><span></span></div>
-<div class="rain-bar-container"><div id="bar-day" class="rain-bar-fill"></div></div>
-<div class="rain-ticks"><span></span><span></span><span></span><span></span><span></span></div>
-<div class="rain-num-scale"><span>50</span><span>25</span><span>0</span></div>
-</div>
-<div class="rain-box-footer"><span id="val-day">0.0</span> mm</div>
-</div>
-<div class="rain-box">
-<div class="rain-box-title">Τρέ/Kακοκαιρία</div>
-<div class="rain-visual">
-<div class="rain-num-scale"><span>50</span><span>25</span><span>0</span></div>
-<div class="rain-ticks"><span></span><span></span><span></span><span></span><span></span></div>
-<div class="rain-bar-container"><div id="bar-storm" class="rain-bar-fill"></div></div>
-<div class="rain-ticks"><span></span><span></span><span></span><span></span><span></span></div>
-<div class="rain-num-scale"><span>50</span><span>25</span><span>0</span></div>
-</div>
-<div class="rain-box-footer"><span id="val-storm">0.0</span> mm</div>
-</div>
-<div class="rain-box">
-<div class="rain-box-title">Ραγδαιότητα</div>
-<div class="rain-visual">
-<div class="rain-num-scale"><span>50</span><span>25</span><span>0</span></div>
-<div class="rain-ticks"><span></span><span></span><span></span><span></span><span></span></div>
-<div class="rain-bar-container"><div id="bar-rate" class="rain-bar-fill"></div></div>
-<div class="rain-ticks"><span></span><span></span><span></span><span></span><span></span></div>
-<div class="rain-num-scale"><span>50</span><span>25</span><span>0</span></div>
-</div>
-<div class="rain-box-footer"><span id="val-rate">0.0</span> mm/h</div>
-</div>
-<div class="rain-box">
-<div class="rain-box-title">Μηνιαίος Υετός</div>
-<div class="rain-visual">
-<div class="rain-num-scale"><span>150</span><span>75</span><span>0</span></div>
-<div class="rain-ticks"><span></span><span></span><span></span><span></span><span></span></div>
-<div class="rain-bar-container"><div id="bar-month" class="rain-bar-fill"></div></div>
-<div class="rain-ticks"><span></span><span></span><span></span><span></span><span></span></div>
-<div class="rain-num-scale"><span>150</span><span>75</span><span>0</span></div>
-</div>
-<div class="rain-box-footer"><span id="val-month">0.0</span> mm</div>
-</div>
-<div class="rain-box">
-<div class="rain-box-title">Ετήσιος Yετός</div>
-<div class="rain-visual">
-<div class="rain-num-scale"><span>600</span><span>300</span><span>0</span></div>
-<div class="rain-ticks"><span></span><span></span><span></span><span></span><span></span></div>
-<div class="rain-bar-container"><div id="bar-year" class="rain-bar-fill"></div></div>
-<div class="rain-ticks"><span></span><span></span><span></span><span></span><span></span></div>
-<div class="rain-num-scale"><span>600</span><span>300</span><span>0</span></div>
-</div>
-<div class="rain-box-footer"><span id="val-year">0.0</span> mm</div>
-</div>
+<div class="rain-box"><div class="rain-box-title">Σημερινός Υετός</div><div class="rain-visual"><div class="rain-num-scale"><span>50</span><span>25</span><span>0</span></div><div class="rain-ticks"><span></span><span></span><span></span><span></span><span></span></div><div class="rain-bar-container"><div id="bar-day" class="rain-bar-fill"></div></div><div class="rain-ticks"><span></span><span></span><span></span><span></span><span></span></div><div class="rain-num-scale"><span>50</span><span>25</span><span>0</span></div></div><div class="rain-box-footer"><span id="val-day">0.0</span> mm</div></div>
+<div class="rain-box"><div class="rain-box-title">Τρέ/Kακοκαιρία</div><div class="rain-visual"><div class="rain-num-scale"><span>50</span><span>25</span><span>0</span></div><div class="rain-ticks"><span></span><span></span><span></span><span></span><span></span></div><div class="rain-bar-container"><div id="bar-storm" class="rain-bar-fill"></div></div><div class="rain-ticks"><span></span><span></span><span></span><span></span><span></span></div><div class="rain-num-scale"><span>50</span><span>25</span><span>0</span></div></div><div class="rain-box-footer"><span id="val-storm">0.0</span> mm</div></div>
+<div class="rain-box"><div class="rain-box-title">Ραγδαιότητα</div><div class="rain-visual"><div class="rain-num-scale"><span>50</span><span>25</span><span>0</span></div><div class="rain-ticks"><span></span><span></span><span></span><span></span><span></span></div><div class="rain-bar-container"><div id="bar-rate" class="rain-bar-fill"></div></div><div class="rain-ticks"><span></span><span></span><span></span><span></span><span></span></div><div class="rain-num-scale"><span>50</span><span>25</span><span>0</span></div></div><div class="rain-box-footer"><span id="val-rate">0.0</span> mm/h</div></div>
+<div class="rain-box"><div class="rain-box-title">Μηνιαίος Υετός</div><div class="rain-visual"><div class="rain-num-scale"><span>150</span><span>75</span><span>0</span></div><div class="rain-ticks"><span></span><span></span><span></span><span></span><span></span></div><div class="rain-bar-container"><div id="bar-month" class="rain-bar-fill"></div></div><div class="rain-ticks"><span></span><span></span><span></span><span></span><span></span></div><div class="rain-num-scale"><span>150</span><span>75</span><span>0</span></div></div><div class="rain-box-footer"><span id="val-month">0.0</span> mm</div></div>
+<div class="rain-box"><div class="rain-box-title">Ετήσιος Yετός</div><div class="rain-visual"><div class="rain-num-scale"><span>600</span><span>300</span><span>0</span></div><div class="rain-ticks"><span></span><span></span><span></span><span></span><span></span></div><div class="rain-bar-container"><div id="bar-year" class="rain-bar-fill"></div></div><div class="rain-ticks"><span></span><span></span><span></span><span></span><span></span></div><div class="rain-num-scale"><span>600</span><span>300</span><span>0</span></div></div><div class="rain-box-footer"><span id="val-year">0.0</span> mm</div></div>
 </div>
 </div>
 </div>
@@ -258,9 +224,25 @@ footer { text-align: center; color: #ffffff; margin: 30px auto 10px auto; paddin
 </div>
 
 <script>
-/* --- ΣΥΝΑΡΤΗΣΗ ΓΙΑ ΤΑ ΑΣΤΕΡΙΑ --- */
+/* --- DAY/NIGHT LOGIC --- */
+function checkTime() {
+const hour = new Date().getHours();
+const body = document.body;
+const starField = document.getElementById('star-field');
+
+// Ημέρα: 06:00 - 20:00
+if (hour >= 6 && hour < 20) {
+body.className = "is-day";
+starField.innerHTML = ""; // Καθαρίζει τα αστέρια την ημέρα
+} else {
+body.className = "is-night";
+if (starField.innerHTML === "") createStars(); // Δημιουργεί αστέρια μόνο τη νύχτα
+}
+}
+
 function createStars() {
 const starField = document.getElementById('star-field');
+starField.innerHTML = "";
 for (let i = 0; i < 100; i++) {
 let star = document.createElement('div');
 star.className = 'star';
@@ -272,9 +254,12 @@ star.style.animationDelay = (Math.random() * 10) + 's';
 starField.appendChild(star);
 }
 }
-createStars();
 
-/* --- Ο ΔΙΚΟΣ ΣΟΥ ΚΩΔΙΚΑΣ JS ΑΠΕΙΡΑΧΤΟΣ --- */
+// Έλεγχος κάθε 1 λεπτό για αλλαγή κατάστασης
+setInterval(checkTime, 60000);
+checkTime();
+
+/* --- YOUR ORIGINAL JS UNTOUCHED --- */
 let currentSlide = 0;
 const slides = document.querySelectorAll('#ad-slider img');
 function nextSlide() { if (slides.length === 0) return; slides[currentSlide].classList.remove('active'); currentSlide = (currentSlide + 1) % slides.length; slides[currentSlide].classList.add('active'); }
