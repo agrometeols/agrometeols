@@ -144,6 +144,7 @@ footer { text-align: center; color: #ffffff; margin: 30px auto 10px auto; paddin
 <p><strong>Λειτουργία:</strong> 24 ώρες το 24ωρο</p>
 <div id="clock" style="font-size:1.8rem; font-weight:bold">--:--:--</div>
 <div id="date">------</div>
+<p><strong>Ώρες Ψύχους (<7°C):</strong> <span id="chill-hours" style="font-weight:bold; color:#00ccff">0</span></p>
 </div>
 
 <div class="card info-card">
@@ -271,6 +272,8 @@ var cHum = createChart('chart-hum', 'Υγρασία (%)', '#2f89fc');
 var cPress = createChart('chart-press', 'Πίεση (hPa)', '#ff9f43');
 var cRain = createChart('chart-rain', 'Βροχόπτωση (mm)', '#00ccff', 0, 50, 'bar');
 
+let prevPress = 0;
+
 function update() {
 const d = new Date();
 const todayStr = d.toLocaleDateString('el-GR');
@@ -284,6 +287,7 @@ const feeds = data.feeds;
 const last = feeds[feeds.length - 1];
 const temp = parseFloat(last.field1);
 const hum = parseFloat(last.field2);
+const press = parseFloat(last.field3);
 
 let firstFeedToday = feeds.find(f => new Date(f.created_at).toLocaleDateString('el-GR') === todayStr);
 let resetVal = firstFeedToday ? parseFloat(firstFeedToday.field4) : (parseFloat(last.field4) || 0);
@@ -309,18 +313,23 @@ if(last.field1) gTemp.value = last.field1;
 if(last.field2) gHum.value = last.field2;
 if(last.field3) gPress.value = last.field3;
 
-// --- ΑΝΑΒΑΘΜΙΣΜΕΝΕΣ ΓΕΩΡΓΙΚΕΣ ΠΡΟΕΙΔΟΠΟΙΗΣΕΙΣ (ΑΝΑΡΣΙΑ, ΚΛΕΩΝΟΣ ΚΛΠ) ---
+// --- ΑΝΑΒΑΘΜΙΣΜΕΝΕΣ ΓΕΩΡΓΙΚΕΣ ΠΡΟΕΙΔΟΠΟΙΗΣΕΙΣ ---
 const alertBox = document.getElementById('alert-box');
-const month = d.getMonth() + 1; // 1 = Ιανουάριος
+const month = d.getMonth() + 1;
 
 if (temp <= 2) {
 alertBox.innerText = "⚠️ ΠΡΟΣΟΧΗ: Κίνδυνος Παγετού!";
+alertBox.className = "alert-danger";
+} else if (temp > 36 && hum < 30) {
+alertBox.innerText = "☀️ Κίνδυνος Ηλιοκαύματος Καρπών! Συστήνεται δροσισμός.";
+alertBox.className = "alert-warning";
+} else if (prevPress > 0 && (prevPress - press) > 1.5) {
+alertBox.innerText = "⛈️ Απότομη πτώση πίεσης! Πιθανό μπουρίνι / καταιγίδα.";
 alertBox.className = "alert-danger";
 } else if (temp > 35) {
 alertBox.innerText = "🔥 Θερμικό Στρες: Αυξημένες ανάγκες άρδευσης!";
 alertBox.className = "alert-danger";
 } else if (month >= 3 && month <= 5 && temp > 12) {
-// Παράδειγμα για Κλεωνό ή Ανάρσια την άνοιξη
 alertBox.innerText = "🐛 Έναρξη δραστηριότητας εχθρών (Κλεωνός/Ανάρσια). Ελέγξτε τις παγίδες!";
 alertBox.className = "alert-warning";
 } else if (temp >= 18 && temp <= 26 && hum > 85) {
@@ -336,6 +345,7 @@ alertBox.className = "alert-normal";
 alertBox.innerText = "✅ Ομαλές Συνθήκες.";
 alertBox.className = "alert-normal";
 }
+prevPress = press;
 
 let currentRainValue = 0;
 if(last.field4) {
@@ -377,6 +387,9 @@ document.getElementById('t-max').innerText = tMax.v.toFixed(1);
 document.getElementById('t-max-t').innerText = "(" + new Date(tMax.t).toLocaleTimeString('el-GR', {hour:'2-digit', minute:'2-digit'}) + ")";
 document.getElementById('t-min').innerText = tMin.v.toFixed(1);
 document.getElementById('t-min-t').innerText = "(" + new Date(tMin.t).toLocaleTimeString('el-GR', {hour:'2-digit', minute:'2-digit'}) + ")";
+// Υπολογισμός ωρών ψύχους (με βάση τα 80 αποτελέσματα)
+let cHrs = tArr.filter(f => f.v < 7).length * (20/60);
+document.getElementById('chill-hours').innerText = cHrs.toFixed(1);
 }
 if(hArr.length > 0) {
 let hMax = hArr.reduce((p, c) => (p.v > c.v) ? p : c);
@@ -402,3 +415,4 @@ setInterval(update, 20000);
 </script>
 </body>
 </html>
+
