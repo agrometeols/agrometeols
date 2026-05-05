@@ -17,6 +17,7 @@ overflow-x: hidden;
 transition: background 2s ease;
 }
 
+/* Το φόντο με τον αγρό */
 #bg-layer {
 position: fixed;
 top: 0;
@@ -26,9 +27,10 @@ height: 100%;
 background: url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1920&q=80') no-repeat center center fixed;
 background-size: cover;
 z-index: -2;
-transition: filter 3s ease;
+transition: filter 3s ease; /* Ομαλή μετάβαση φωτισμού */
 }
 
+/* Containers για τα αστέρια */
 #star-field {
 position: fixed;
 top: 0;
@@ -54,12 +56,14 @@ from { transform: translateY(-10vh) translateX(0); opacity: 1; }
 to { transform: translateY(110vh) translateX(100px); opacity: 0; }
 }
 
+/* Κλάσεις για την εναλλαγή */
 .is-day #bg-layer { filter: brightness(1.0) contrast(1.0); }
 .is-day #star-field { opacity: 0; }
 
 .is-night #bg-layer { filter: brightness(0.3) contrast(1.1); }
 .is-night #star-field { opacity: 1; }
 
+/* --- REST OF YOUR CSS UNTOUCHED --- */
 .overlay { min-height: 100vh; background: rgba(0,0,0,0.2); padding: 20px; box-sizing: border-box; }
 header { text-align: center; color: white; margin-bottom: 30px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
 .logo-container { display: flex; align-items: center; gap: 15px; background: rgba(255,255,255,0.1); padding: 15px 30px; border-radius: 50px; backdrop-filter: blur(5px); border: 1px solid rgba(255,255,255,0.2); box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
@@ -273,8 +277,8 @@ const todayDateStr = d.toLocaleDateString('el-GR');
 document.getElementById('clock').innerText = d.toLocaleTimeString('el-GR');
 document.getElementById('date').innerText = d.toLocaleDateString('el-GR', {weekday:'long', day:'numeric', month:'long'});
 
-// Φέρνουμε αρκετά αποτελέσματα για να βρούμε την αρχή της ημέρας
-fetch("https://api.thingspeak.com/channels/3365350/feeds.json?results=100&metadata=true")
+// Φέρνουμε 120 αποτελέσματα για να είμαστε σίγουροι ότι πιάνουμε το 24ωρο
+fetch("https://api.thingspeak.com/channels/3365350/feeds.json?results=120&metadata=true")
 .then(res => res.json())
 .then(data => {
 const feeds = data.feeds;
@@ -284,15 +288,22 @@ const last = feeds[feeds.length - 1];
 const temp = parseFloat(last.field1);
 const hum = parseFloat(last.field2);
 
-// --- ΔΙΟΡΘΩΣΗ LIVE ΒΡΟΧΗΣ: Βρίσκουμε την πρώτη μέτρηση της σημερινής ημέρας ---
-let rainResetValue = 0;
-const firstTodayFeed = feeds.find(f => new Date(f.created_at).toLocaleDateString('el-GR') === todayDateStr);
-if (firstTodayFeed && firstTodayFeed.field4) {
-rainResetValue = parseFloat(firstTodayFeed.field4);
-} else {
-// Αν δεν έχει καταγραφεί ακόμα τίποτα σήμερα, η βροχή είναι 0
-rainResetValue = parseFloat(last.field4) || 0;
-}
+// --- ΔΙΟΡΘΩΣΗ LIVE ΒΡΟΧΗΣ ---
+// Βρίσκουμε την πρώτη εγγραφή της σημερινής ημέρας (μετά τα μεσάνυχτα)
+let firstTodayEntry = feeds.find(f => {
+let fDate = new Date(f.created_at).toLocaleDateString('el-GR');
+return fDate === todayDateStr;
+});
+
+let rainBaseValue = firstTodayEntry ? parseFloat(firstTodayEntry.field4) : parseFloat(last.field4);
+let liveRainTotal = parseFloat(last.field4) || 0;
+let currentRainValue = liveRainTotal - rainBaseValue;
+if (currentRainValue < 0) currentRainValue = 0;
+
+document.getElementById('r-val').innerText = currentRainValue.toFixed(2);
+document.getElementById('val-day').innerText = currentRainValue.toFixed(1);
+document.getElementById('bar-day').style.height = Math.min((currentRainValue / 50) * 100, 100) + "%";
+// ----------------------------
 
 if(data.channel && data.channel.metadata) {
 try {
@@ -319,15 +330,6 @@ if(last.field3) gPress.value = last.field3;
 const alertBox = document.getElementById('alert-box');
 if (temp <= 2) { alertBox.innerText = "⚠️ ΠΡΟΣΟΧΗ: Κίνδυνος Παγετού!"; alertBox.className = "alert-danger"; } else if (hum > 85) { alertBox.innerText = "💧 Υψηλή Υγρασία: Κίνδυνος για Μύκητες."; alertBox.className = "alert-warning"; } else { alertBox.innerText = "✅ Ομαλές Συνθήκες."; alertBox.className = "alert-normal"; }
 
-// Εμφάνιση βροχής (Live αφαίρεση)
-let liveRainTotal = parseFloat(last.field4) || 0;
-let currentRainValue = liveRainTotal - rainResetValue;
-if (currentRainValue < 0) currentRainValue = 0;
-
-document.getElementById('r-val').innerText = currentRainValue.toFixed(2);
-document.getElementById('val-day').innerText = currentRainValue.toFixed(1);
-document.getElementById('bar-day').style.height = Math.min((currentRainValue / 50) * 100, 100) + "%";
-
 let b = parseFloat(last.field5);
 document.getElementById('b-val').innerText = b.toFixed(0);
 let lbl = document.getElementById('b-label');
@@ -340,11 +342,11 @@ cTemp.data.labels = labels; cTemp.data.datasets[0].data = feeds.map(f => f.field
 cHum.data.labels = labels; cHum.data.datasets[0].data = feeds.map(f => f.field2); cHum.update();
 cPress.data.labels = labels; cPress.data.datasets[0].data = feeds.map(f => f.field3); cPress.update();
 
-// Ενημέρωση Γραφήματος Βροχής
+// Γράφημα βροχής (επίσης συγχρονισμένο)
 cRain.data.labels = labels;
 cRain.data.datasets[0].data = feeds.map(f => {
-let v = (parseFloat(f.field4) || 0) - rainResetValue;
-return v < 0 ? 0 : v;
+let val = (parseFloat(f.field4) || 0) - rainBaseValue;
+return val < 0 ? 0 : val;
 });
 cRain.update();
 
