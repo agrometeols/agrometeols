@@ -285,7 +285,6 @@ const last = feeds[feeds.length - 1];
 const temp = parseFloat(last.field1);
 const hum = parseFloat(last.field2);
 
-// ΔΥΝΑΜΙΚΟΣ ΜΗΔΕΝΙΣΜΟΣ ΒΡΟΧΗΣ ΓΙΑ ΣΥΓΧΡΟΝΙΣΜΟ ΟΛΩΝ ΤΩΝ ΣΥΣΚΕΥΩΝ
 let firstFeedToday = feeds.find(f => new Date(f.created_at).toLocaleDateString('el-GR') === todayStr);
 let resetVal = firstFeedToday ? parseFloat(firstFeedToday.field4) : (parseFloat(last.field4) || 0);
 
@@ -310,14 +309,20 @@ if(last.field1) gTemp.value = last.field1;
 if(last.field2) gHum.value = last.field2;
 if(last.field3) gPress.value = last.field3;
 
-// --- ΑΝΑΒΑΘΜΙΣΜΕΝΕΣ ΓΕΩΡΓΙΚΕΣ ΠΡΟΕΙΔΟΠΟΙΗΣΕΙΣ ---
+// --- ΑΝΑΒΑΘΜΙΣΜΕΝΕΣ ΓΕΩΡΓΙΚΕΣ ΠΡΟΕΙΔΟΠΟΙΗΣΕΙΣ (ΑΝΑΡΣΙΑ, ΚΛΕΩΝΟΣ ΚΛΠ) ---
 const alertBox = document.getElementById('alert-box');
+const month = d.getMonth() + 1; // 1 = Ιανουάριος
+
 if (temp <= 2) {
 alertBox.innerText = "⚠️ ΠΡΟΣΟΧΗ: Κίνδυνος Παγετού!";
 alertBox.className = "alert-danger";
 } else if (temp > 35) {
 alertBox.innerText = "🔥 Θερμικό Στρες: Αυξημένες ανάγκες άρδευσης!";
 alertBox.className = "alert-danger";
+} else if (month >= 3 && month <= 5 && temp > 12) {
+// Παράδειγμα για Κλεωνό ή Ανάρσια την άνοιξη
+alertBox.innerText = "🐛 Έναρξη δραστηριότητας εχθρών (Κλεωνός/Ανάρσια). Ελέγξτε τις παγίδες!";
+alertBox.className = "alert-warning";
 } else if (temp >= 18 && temp <= 26 && hum > 85) {
 alertBox.innerText = "🍄 Υψηλός Κίνδυνος Μυκήτων (Περονόσπορος).";
 alertBox.className = "alert-warning";
