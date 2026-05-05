@@ -273,11 +273,11 @@ var cRain = createChart('chart-rain', 'Βροχόπτωση (mm)', '#00ccff', 0,
 
 function update() {
 const d = new Date();
-const todayDateStr = d.toLocaleDateString('el-GR');
+const todayDateStr = d.toLocaleDateString('en-CA'); // Μορφή YYYY-MM-DD
 document.getElementById('clock').innerText = d.toLocaleTimeString('el-GR');
 document.getElementById('date').innerText = d.toLocaleDateString('el-GR', {weekday:'long', day:'numeric', month:'long'});
 
-// Φέρνουμε 120 αποτελέσματα για να είμαστε σίγουροι ότι πιάνουμε το 24ωρο
+// Ζητάμε 120 αποτελέσματα για να έχουμε σίγουρα όλο το 24ωρο
 fetch("https://api.thingspeak.com/channels/3365350/feeds.json?results=120&metadata=true")
 .then(res => res.json())
 .then(data => {
@@ -288,13 +288,10 @@ const last = feeds[feeds.length - 1];
 const temp = parseFloat(last.field1);
 const hum = parseFloat(last.field2);
 
-// --- ΔΙΟΡΘΩΣΗ LIVE ΒΡΟΧΗΣ ---
-// Βρίσκουμε την πρώτη εγγραφή της σημερινής ημέρας (μετά τα μεσάνυχτα)
-let firstTodayEntry = feeds.find(f => {
-let fDate = new Date(f.created_at).toLocaleDateString('el-GR');
-return fDate === todayDateStr;
-});
-
+// --- ΔΙΟΡΘΩΣΗ: ΣΥΓΧΡΟΝΙΣΜΟΣ ΒΡΟΧΗΣ ΣΕ ΟΛΕΣ ΤΙΣ ΣΥΣΚΕΥΕΣ ---
+// Βρίσκουμε την πρώτη εγγραφή που έγινε ΣΗΜΕΡΑ (με βάση την ημερομηνία του σταθμού)
+let firstTodayEntry = feeds.find(f => f.created_at.startsWith(todayDateStr));
+// Αν δεν βρούμε (π.χ. μόλις άλλαξε η μέρα), παίρνουμε την τελευταία τιμή ως βάση
 let rainBaseValue = firstTodayEntry ? parseFloat(firstTodayEntry.field4) : parseFloat(last.field4);
 let liveRainTotal = parseFloat(last.field4) || 0;
 let currentRainValue = liveRainTotal - rainBaseValue;
@@ -303,7 +300,7 @@ if (currentRainValue < 0) currentRainValue = 0;
 document.getElementById('r-val').innerText = currentRainValue.toFixed(2);
 document.getElementById('val-day').innerText = currentRainValue.toFixed(1);
 document.getElementById('bar-day').style.height = Math.min((currentRainValue / 50) * 100, 100) + "%";
-// ----------------------------
+// ---------------------------------------------------------
 
 if(data.channel && data.channel.metadata) {
 try {
@@ -322,7 +319,6 @@ const now = new Date();
 const diffMinutes = (now - lastSeen) / 1000 / 60;
 const statusBadge = document.getElementById('status-badge');
 if (diffMinutes < 20) { statusBadge.innerText = "ONLINE"; statusBadge.style.backgroundColor = "#00ff00"; } else { statusBadge.innerText = "OFFLINE"; statusBadge.style.backgroundColor = "#ff0000"; }
-
 if(last.field1) gTemp.value = last.field1;
 if(last.field2) gHum.value = last.field2;
 if(last.field3) gPress.value = last.field3;
@@ -342,7 +338,7 @@ cTemp.data.labels = labels; cTemp.data.datasets[0].data = feeds.map(f => f.field
 cHum.data.labels = labels; cHum.data.datasets[0].data = feeds.map(f => f.field2); cHum.update();
 cPress.data.labels = labels; cPress.data.datasets[0].data = feeds.map(f => f.field3); cPress.update();
 
-// Γράφημα βροχής (επίσης συγχρονισμένο)
+// ΕΝΗΜΕΡΩΣΗ ΓΡΑΦΗΜΑΤΟΣ ΒΡΟΧΗΣ ΜΕ ΤΗ ΝΕΑ ΛΟΓΙΚΗ
 cRain.data.labels = labels;
 cRain.data.datasets[0].data = feeds.map(f => {
 let val = (parseFloat(f.field4) || 0) - rainBaseValue;
