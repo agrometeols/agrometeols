@@ -277,9 +277,9 @@ var cRain = createChart('chart-rain', 'Βροχόπτωση (mm)', '#28a745', 0,
 
 function update() {
 const d = new Date();
-const curHour = d.getHours();
-const curMin = d.getMinutes();
-if (curHour === 0 && curMin === 0) { localStorage.setItem('rain_reset_value', document.getElementById('r-val').innerText); }
+const todayStr = d.toLocaleDateString('el-GR');
+const lastResetDate = localStorage.getItem('last_reset_date');
+
 document.getElementById('clock').innerText = d.toLocaleTimeString('el-GR');
 document.getElementById('date').innerText = d.toLocaleDateString('el-GR', {weekday:'long', day:'numeric', month:'long'});
 
@@ -290,6 +290,12 @@ const feeds = data.feeds;
 const last = feeds[feeds.length - 1];
 const temp = parseFloat(last.field1);
 const hum = parseFloat(last.field2);
+
+// --- ΕΛΕΓΧΟΣ ΜΗΔΕΝΙΣΜΟΥ ΗΜΕΡΑΣ ---
+if (lastResetDate !== todayStr && last.field4) {
+localStorage.setItem('rain_reset_value', last.field4);
+localStorage.setItem('last_reset_date', todayStr);
+}
 
 if(data.channel && data.channel.metadata) {
 try {
