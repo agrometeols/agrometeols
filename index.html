@@ -1,3 +1,15 @@
+Καμία επιλογή 
+
+Μετάβαση απευθείας στο περιεχόμενο
+Χρήση του Gmail με αναγνώστες οθόνης
+1 από 1.177
+Κομπλέ με γεωργικές ειδοποίησης 
+Εισερχόμενα
+
+Xristos tsavalakoglou <liagasvw@gmail.com>
+10:04 μ.μ. (πριν από 1 λεπτό)
+προς εγώ
+
 <!DOCTYPE html>
 <html lang="el">
 <head>
@@ -269,7 +281,6 @@ options: { responsive: true, maintainAspectRatio: false, scales: { x: { grid: { 
 var cTemp = createChart('chart-temp', 'Θερμοκρασία (°C)', '#d53a35');
 var cHum = createChart('chart-hum', 'Υγρασία (%)', '#2f89fc');
 var cPress = createChart('chart-press', 'Πίεση (hPa)', '#ff9f43');
-// ΑΛΛΑΓΗ ΣΕ BAR CHART ΓΙΑ ΤΗ ΒΡΟΧΗ
 var cRain = createChart('chart-rain', 'Βροχόπτωση (mm)', '#00ccff', 0, 50, 'bar');
 
 function update() {
@@ -286,7 +297,7 @@ const last = feeds[feeds.length - 1];
 const temp = parseFloat(last.field1);
 const hum = parseFloat(last.field2);
 
-// Βελτιωμένη λογική μηδενισμού βροχής για συγχρονισμό συσκευών
+// ΔΥΝΑΜΙΚΟΣ ΜΗΔΕΝΙΣΜΟΣ ΒΡΟΧΗΣ ΓΙΑ ΣΥΓΧΡΟΝΙΣΜΟ ΟΛΩΝ ΤΩΝ ΣΥΣΚΕΥΩΝ
 let firstFeedToday = feeds.find(f => new Date(f.created_at).toLocaleDateString('el-GR') === todayStr);
 let resetVal = firstFeedToday ? parseFloat(firstFeedToday.field4) : (parseFloat(last.field4) || 0);
 
@@ -311,8 +322,27 @@ if(last.field1) gTemp.value = last.field1;
 if(last.field2) gHum.value = last.field2;
 if(last.field3) gPress.value = last.field3;
 
+// --- ΑΝΑΒΑΘΜΙΣΜΕΝΕΣ ΓΕΩΡΓΙΚΕΣ ΠΡΟΕΙΔΟΠΟΙΗΣΕΙΣ ---
 const alertBox = document.getElementById('alert-box');
-if (temp <= 2) { alertBox.innerText = "⚠️ ΠΡΟΣΟΧΗ: Κίνδυνος Παγετού!"; alertBox.className = "alert-danger"; } else if (hum > 85) { alertBox.innerText = "💧 Υψηλή Υγρασία: Κίνδυνος για Μύκητες."; alertBox.className = "alert-warning"; } else { alertBox.innerText = "✅ Ομαλές Συνθήκες."; alertBox.className = "alert-normal"; }
+if (temp <= 2) {
+alertBox.innerText = "⚠️ ΠΡΟΣΟΧΗ: Κίνδυνος Παγετού!";
+alertBox.className = "alert-danger";
+} else if (temp > 35) {
+alertBox.innerText = "🔥 Θερμικό Στρες: Αυξημένες ανάγκες άρδευσης!";
+alertBox.className = "alert-danger";
+} else if (temp >= 18 && temp <= 26 && hum > 85) {
+alertBox.innerText = "🍄 Υψηλός Κίνδυνος Μυκήτων (Περονόσπορος).";
+alertBox.className = "alert-warning";
+} else if (temp > 28 && hum < 40) {
+alertBox.innerText = "🕷️ Κίνδυνος Τετράνυχου (Ξηροθερμικές συνθήκες).";
+alertBox.className = "alert-warning";
+} else if (temp >= 15 && temp <= 25 && hum >= 50 && hum <= 75) {
+alertBox.innerText = "🚜 Ιδανικές συνθήκες για ψεκασμό.";
+alertBox.className = "alert-normal";
+} else {
+alertBox.innerText = "✅ Ομαλές Συνθήκες.";
+alertBox.className = "alert-normal";
+}
 
 let currentRainValue = 0;
 if(last.field4) {
@@ -336,7 +366,6 @@ cTemp.data.labels = labels; cTemp.data.datasets[0].data = feeds.map(f => f.field
 cHum.data.labels = labels; cHum.data.datasets[0].data = feeds.map(f => f.field2); cHum.update();
 cPress.data.labels = labels; cPress.data.datasets[0].data = feeds.map(f => f.field3); cPress.update();
 
-// ΥΠΟΛΟΓΙΣΜΟΣ ΚΑΙ ΕΝΗΜΕΡΩΣΗ BAR CHART ΒΡΟΧΗΣ
 cRain.data.labels = labels;
 cRain.data.datasets[0].data = feeds.map(f => {
 let val = parseFloat(f.field4) - resetVal;
@@ -380,3 +409,4 @@ setInterval(update, 20000);
 </script>
 </body>
 </html>
+
