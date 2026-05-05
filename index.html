@@ -99,7 +99,7 @@ header { text-align: center; color: white; margin-bottom: 30px; display: flex; f
 canvas { max-width: 100%; height: auto; }
 #status-badge { font-weight: bold; padding: 5px 15px; border-radius: 4px; color: white !important; text-transform: uppercase; display: inline-block; margin-left: 5px; }
 .section-title { width: 100%; max-width: 1200px; margin: 20px auto 10px auto; color: white; border-left: 5px solid #fff; padding-left: 10px; }
-#alert-box { font-weight: bold; padding: 15px; border-radius: 8px; margin-top: 10px; border: 2px solid transparent; color: white !important; }
+#alert-box, #chill-box { font-weight: bold; padding: 15px; border-radius: 8px; margin-top: 10px; border: 2px solid transparent; color: white !important; }
 .alert-normal { background: rgba(0, 128, 0, 0.4); border-color: rgba(255,255,255,0.2) !important; }
 .alert-danger { background: rgba(255, 0, 0, 0.5); border-color: rgba(255,255,255,0.2) !important; animation: blink 2s infinite; }
 .alert-warning { background: rgba(255, 165, 0, 0.5); border-color: rgba(255,255,255,0.2) !important; }
@@ -144,7 +144,6 @@ footer { text-align: center; color: #ffffff; margin: 30px auto 10px auto; paddin
 <p><strong>Λειτουργία:</strong> 24 ώρες το 24ωρο</p>
 <div id="clock" style="font-size:1.8rem; font-weight:bold">--:--:--</div>
 <div id="date">------</div>
-<p><strong>Ώρες Ψύχους (<7°C):</strong> <span id="chill-hours" style="font-weight:bold; color:#00ccff">0</span></p>
 </div>
 
 <div class="card info-card">
@@ -165,8 +164,12 @@ footer { text-align: center; color: #ffffff; margin: 30px auto 10px auto; paddin
 
 <div class="dashboard">
 <div class="card">
-<h3>(Live) Γεωργικές Προειδοποιήσεις</h3>
+<h3>Γεωργικές Προειδοποιήσεις</h3>
 <div id="alert-box" class="alert-normal">Φόρτωση δεδομένων...</div>
+</div>
+<div class="card">
+<h3>Στατιστικά Καλλιέργειας</h3>
+<div id="chill-box" class="alert-normal">Ώρες Ψύχους (<7°C): <span id="chill-hours">0</span></div>
 </div>
 </div>
 
@@ -387,7 +390,7 @@ document.getElementById('t-max').innerText = tMax.v.toFixed(1);
 document.getElementById('t-max-t').innerText = "(" + new Date(tMax.t).toLocaleTimeString('el-GR', {hour:'2-digit', minute:'2-digit'}) + ")";
 document.getElementById('t-min').innerText = tMin.v.toFixed(1);
 document.getElementById('t-min-t').innerText = "(" + new Date(tMin.t).toLocaleTimeString('el-GR', {hour:'2-digit', minute:'2-digit'}) + ")";
-// Υπολογισμός ωρών ψύχους (με βάση τα 80 αποτελέσματα)
+// Υπολογισμός ωρών ψύχους
 let cHrs = tArr.filter(f => f.v < 7).length * (20/60);
 document.getElementById('chill-hours').innerText = cHrs.toFixed(1);
 }
@@ -415,4 +418,3 @@ setInterval(update, 20000);
 </script>
 </body>
 </html>
-
