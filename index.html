@@ -269,29 +269,29 @@ options: { responsive: true, maintainAspectRatio: false, scales: { x: { grid: { 
 var cTemp = createChart('chart-temp', 'Θερμοκρασία (°C)', '#d53a35');
 var cHum = createChart('chart-hum', 'Υγρασία (%)', '#2f89fc');
 var cPress = createChart('chart-press', 'Πίεση (hPa)', '#ff9f43');
-// ΑΛΛΑΓΗ ΣΕ BAR CHART ΓΙΑ ΤΗ ΒΡΟΧΗ
 var cRain = createChart('chart-rain', 'Βροχόπτωση (mm)', '#00ccff', 0, 50, 'bar');
 
 function update() {
 const d = new Date();
-const todayStr = d.toLocaleDateString('el-GR');
-const lastResetDate = localStorage.getItem('last_reset_date');
+const todayStr = d.toISOString().split('T')[0]; // Format YYYY-MM-DD για το API
 document.getElementById('clock').innerText = d.toLocaleTimeString('el-GR');
 document.getElementById('date').innerText = d.toLocaleDateString('el-GR', {weekday:'long', day:'numeric', month:'long'});
 
-fetch("https://api.thingspeak.com/channels/3365350/feeds.json?results=80&metadata=true")
+// Φέρνουμε τα σημερινά δεδομένα από την αρχή της ημέρας (start) για να βρούμε την πρώτη τιμή βροχής
+fetch(`https://api.thingspeak.com/channels/3365350/feeds.json?start=${todayStr}%2000:00:00`)
 .then(res => res.json())
 .then(data => {
 const feeds = data.feeds;
+if (feeds.length === 0) return;
+
 const last = feeds[feeds.length - 1];
+const firstValidRain = feeds.find(f => f.field4 !== null);
+const rainResetValue = firstValidRain ? parseFloat(firstValidRain.field4) : 0;
+
 const temp = parseFloat(last.field1);
 const hum = parseFloat(last.field2);
 
-if (lastResetDate !== todayStr && last.field4) {
-localStorage.setItem('rain_reset_value', last.field4);
-localStorage.setItem('last_reset_date', todayStr);
-}
-
+// Metadata
 if(data.channel && data.channel.metadata) {
 try {
 let meta = JSON.parse(data.channel.metadata);
@@ -316,11 +316,11 @@ if(last.field3) gPress.value = last.field3;
 const alertBox = document.getElementById('alert-box');
 if (temp <= 2) { alertBox.innerText = "⚠️ ΠΡΟΣΟΧΗ: Κίνδυνος Παγετού!"; alertBox.className = "alert-danger"; } else if (hum > 85) { alertBox.innerText = "💧 Υψηλή Υγρασία: Κίνδυνος για Μύκητες."; alertBox.className = "alert-warning"; } else { alertBox.innerText = "✅ Ομαλές Συνθήκες."; alertBox.className = "alert-normal"; }
 
+// LIVE RAIN CALCULATION (Same for all devices)
 let currentRainValue = 0;
 if(last.field4) {
 let liveRain = parseFloat(last.field4);
-let resetVal = parseFloat(localStorage.getItem('rain_reset_value')) || 0;
-currentRainValue = liveRain - resetVal;
+currentRainValue = liveRain - rainResetValue;
 if (currentRainValue < 0) currentRainValue = 0;
 document.getElementById('r-val').innerText = currentRainValue.toFixed(2);
 document.getElementById('bar-day').style.height = Math.min((currentRainValue / 50) * 100, 100) + "%";
@@ -334,23 +334,23 @@ if(b > 75) { lbl.innerText="ΚΑΛΗ"; lbl.style.color="green"; }
 else if(b > 30) { lbl.innerText="ΜΕΤΡΙΑ"; lbl.style.color="orange"; }
 else { lbl.innerText="ΧΑΜΗΛΗ"; lbl.style.color="red"; }
 
-let labels = feeds.map(f => new Date(f.created_at).toLocaleTimeString('el-GR', {hour: '2-digit', minute:'2-digit'}));
-cTemp.data.labels = labels; cTemp.data.datasets[0].data = feeds.map(f => f.field1); cTemp.update();
-cHum.data.labels = labels; cHum.data.datasets[0].data = feeds.map(f => f.field2); cHum.update();
-cPress.data.labels = labels; cPress.data.datasets[0].data = feeds.map(f => f.field3); cPress.update();
+// Περιορίζουμε τα feeds για τα γραφήματα στα τελευταία 80 για να μην "βαραίνει" η σελίδα
+const graphFeeds = feeds.slice(-80);
+let labels = graphFeeds.map(f => new Date(f.created_at).toLocaleTimeString('el-GR', {hour: '2-digit', minute:'2-digit'}));
+cTemp.data.labels = labels; cTemp.data.datasets[0].data = graphFeeds.map(f => f.field1); cTemp.update();
+cHum.data.labels = labels; cHum.data.datasets[0].data = graphFeeds.map(f => f.field2); cHum.update();
+cPress.data.labels = labels; cPress.data.datasets[0].data = graphFeeds.map(f => f.field3); cPress.update();
 
-// ΥΠΟΛΟΓΙΣΜΟΣ ΚΑΙ ΕΝΗΜΕΡΩΣΗ BAR CHART ΒΡΟΧΗΣ
-let resetVal = parseFloat(localStorage.getItem('rain_reset_value')) || 0;
 cRain.data.labels = labels;
-cRain.data.datasets[0].data = feeds.map(f => {
-let val = parseFloat(f.field4) - resetVal;
+cRain.data.datasets[0].data = graphFeeds.map(f => {
+let val = parseFloat(f.field4) - rainResetValue;
 return val < 0 ? 0 : val;
 });
 cRain.update();
 
-let tArr = feeds.filter(f => f.field1 != null).map(f => ({v: parseFloat(f.field1), t: f.created_at}));
-let hArr = feeds.filter(f => f.field2 != null).map(f => ({v: parseFloat(f.field2), t: f.created_at}));
-let pArr = feeds.filter(f => f.field3 != null).map(f => ({v: parseFloat(f.field3), t: f.created_at}));
+let tArr = graphFeeds.filter(f => f.field1 != null).map(f => ({v: parseFloat(f.field1), t: f.created_at}));
+let hArr = graphFeeds.filter(f => f.field2 != null).map(f => ({v: parseFloat(f.field2), t: f.created_at}));
+let pArr = graphFeeds.filter(f => f.field3 != null).map(f => ({v: parseFloat(f.field3), t: f.created_at}));
 
 if(tArr.length > 0) {
 let tMax = tArr.reduce((p, c) => (p.v > c.v) ? p : c);
