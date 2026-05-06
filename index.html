@@ -5,8 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Agro Meteo Ls</title>
 
+<!-- FAVICON (Το εικονίδιο στην καρτέλα του browser) -->
 <link rel="icon" type="image/png" href="https://i.imgur.com/xnwDN1W.png">
 
+<!-- SOCIAL MEDIA SETTINGS (Για να φαίνεται σωστά στο Viber/Messenger) -->
 <meta property="og:title" content="Agro Meteo Ls">
 <meta property="og:description" content="Αγρο-Μετεωρολογικός Σταθμός Νέος Μυλότοπος - IoT System">
 <meta property="og:image" content="https://i.imgur.com/xnwDN1W.png">
@@ -294,6 +296,7 @@ footer { text-align: center; color: #ffffff; margin: 30px auto 10px auto; paddin
 
 <div class="overlay">
 <header>
+<!-- Language Switcher -->
 <div class="lang-switcher">
 <button class="lang-btn" onclick="changeLang('el')">
 <img src="https://flagcdn.com/w40/gr.png" class="flag-icon" alt="Ελληνικά"> Ελληνικά
@@ -303,6 +306,7 @@ footer { text-align: center; color: #ffffff; margin: 30px auto 10px auto; paddin
 </button>
 </div>
 
+<!-- Logo -->
 <div class="logo-container">
 <div class="logo-svg">
 <svg width="60" height="60" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -319,6 +323,7 @@ footer { text-align: center; color: #ffffff; margin: 30px auto 10px auto; paddin
 </div>
 </div>
 
+<!-- Navigation -->
 <div class="nav-menu">
 <button class="nav-btn active" id="btn-home" onclick="showSection('home')">Αρχική</button>
 <button class="nav-btn" id="btn-cams" onclick="showSection('cams')">Live Κάμερες</button>
@@ -326,6 +331,7 @@ footer { text-align: center; color: #ffffff; margin: 30px auto 10px auto; paddin
 </div>
 </header>
 
+<!-- SECTION: HOME -->
 <div id="section-home" class="page-section active">
 <div class="top-dashboard">
 <div class="card info-card">
@@ -339,6 +345,7 @@ footer { text-align: center; color: #ffffff; margin: 30px auto 10px auto; paddin
 
 <div class="time-widget-row">
 <div id="clock" style="font-size:1.8rem; font-weight:bold">--:--:--</div>
+<!-- SOCIAL WIDGET (ΜΕΣΑ ΣΤΟ ΚΟΥΤΙ ΤΕΡΜΑ ΔΕΞΙΑ) -->
 <div class="social-widget">
 <div><span class="live-dot"></span><span id="txt-live">Live:</span> <strong id="val-live">--</strong></div>
 <div><span id="txt-monthly">Επισκέψεις:</span> <strong id="val-monthly">--</strong></div>
@@ -446,10 +453,6 @@ footer { text-align: center; color: #ffffff; margin: 30px auto 10px auto; paddin
 <h3 class="widget-title" id="txt-radar-title">Ζωντανό Ραντάρ Βροχής</h3>
 <iframe class="radar-frame" src="https://www.rainviewer.com/map.html?loc=40.7922,22.39,11&oFa=0&oC=1&oU=0&oF=0&oSt=1&oT=1&oB=1&oP=1&oR=1&oS=0&oW=0&mT=3&ls=1&lm=1&th=1&oN=1" allowfullscreen></iframe>
 </div>
-<div class="card widget-card" style="grid-column: 1 / -1; max-width: 1200px; width: 100%; margin: 0 auto;">
-<h3 class="widget-title" id="txt-ndvi-title">Δορυφορικός Έλεγχος Βλάστησης (NDVI)</h3>
-<iframe class="radar-frame" style="height: 500px;" src="https://apps.sentinel-hub.com/sentinel-playground/?source=S2L2A&lat=40.7963&lng=22.3895&zoom=14&preset=NDVI&layers=B04,B08,B11&maxcc=20&gain=1.0&gamma=1.0&time=2024-01-01%7C2026-05-06&atmFilter=&showLabels=true" allowfullscreen></iframe>
-</div>
 </div>
 
 <h2 class="section-title" id="txt-ads-title">Συνεργαζόμενοι Γεωπόνοι & Διαφημίσεις</h2>
@@ -480,6 +483,7 @@ footer { text-align: center; color: #ffffff; margin: 30px auto 10px auto; paddin
 </div>
 </div>
 
+<!-- SECTION: CAMS -->
 <div id="section-cams" class="page-section">
 <h2 class="section-title">Ζωντανή Μετάδοση</h2>
 <div class="dashboard">
@@ -498,6 +502,7 @@ footer { text-align: center; color: #ffffff; margin: 30px auto 10px auto; paddin
 </div>
 </div>
 
+<!-- SECTION: CONTACT -->
 <div id="section-contact" class="page-section">
 <h2 class="section-title">Επικοινωνία</h2>
 <div class="dashboard">
@@ -555,7 +560,6 @@ rDay: "Σημερινός Υετός", rStorm: "Τρέ/Kακοκαιρία", rRa
 alertsTitle: "Γεωργικές Προειδοποιήσεις", cropStats: "Στατιστικά Καλλιέργειας", chillLbl: "Ώρες Ψύχους Κάτω Από",
 curTitle: "Τρέχουσες Ενδείξεις", gTemp: "Θερμοκρασία", gHum: "Υγρασία", gPress: "Βαρομετρική πίεση", gRain: "Βροχόπτωση (Live)",
 foreTitle: "Πρόγνωση & Ραντάρ", foreSub: "Πρόγνωση: Νέος Μυλότοπος", radarTitle: "Ζωντανό Ραντάρ Βροχής",
-ndviTitle: "Δορυφορικός Έλεγχος Βλάστησης (NDVI)",
 adsTitle: "Συνεργαζόμενοι Γεωπόνοι & Διαφημίσεις", histTitle: "Ιστορικά Γραφήματα",
 cTemp: "Πορεία Θερμοκρασία", cHum: "Πορεία Υγρασία", cPress: "Πορεία Πίεσης", cRain: "Πορεία Βροχόπτωσης",
 battTitle: "Μπαταρία Σταθμού", footer: "© 2026 Agro Meteo Ls | Προγραμματισμός Χρήστος Τσαβαλάκογλου Iot System",
@@ -571,7 +575,6 @@ rDay: "Daily Rain", rStorm: "Storm Rain", rRate: "Rain Rate", rMonth: "Monthly R
 alertsTitle: "Agricultural Alerts", cropStats: "Crop Statistics", chillLbl: "Chill Hours Below",
 curTitle: "Current Readings", gTemp: "Temperature", gHum: "Humidity", gPress: "Barometric Pressure", gRain: "Rainfall (Live)",
 foreTitle: "Forecast & Radar", foreSub: "Forecast: Neos Mylotopos", radarTitle: "Live Rain Radar",
-ndviTitle: "Satellite Crop Monitoring (NDVI)",
 adsTitle: "Collaborating Agronomists & Ads", histTitle: "Historical Charts",
 cTemp: "Temperature Trend", cHum: "Humidity Trend", cPress: "Pressure Trend", cRain: "Rainfall Trend",
 battTitle: "Station Battery", footer: "© 2026 Agro Meteo Ls | Programming by Christos Tsavalakoglou Iot System",
@@ -609,7 +612,6 @@ document.getElementById('txt-g-rain').innerText = t.gRain;
 document.getElementById('txt-fore-title').innerText = t.foreTitle;
 document.getElementById('txt-fore-sub').innerText = t.foreSub;
 document.getElementById('txt-radar-title').innerText = t.radarTitle;
-document.getElementById('txt-ndvi-title').innerText = t.ndviTitle;
 document.getElementById('txt-ads-title').innerText = t.adsTitle;
 document.getElementById('txt-hist-title').innerText = t.histTitle;
 document.getElementById('txt-c-temp').innerText = t.cTemp;
