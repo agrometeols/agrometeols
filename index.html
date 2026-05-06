@@ -71,7 +71,6 @@ gap: 10px;
 padding: 15px 0;
 z-index: 1000;
 position: relative;
-/* Διασφαλίζουμε ότι στην κάθετη διάταξη του header μπαίνει πρώτο */
 order: -1;
 }
 
@@ -112,9 +111,48 @@ border-radius: 2px;
 box-shadow: 0 0 5px rgba(0,0,0,0.3);
 }
 
+/* --- NAVIGATION MENU --- */
+.nav-menu {
+display: flex;
+justify-content: center;
+gap: 10px;
+margin-top: 15px;
+width: 100%;
+z-index: 100;
+}
+
+.nav-btn {
+background: rgba(255, 255, 255, 0.15);
+backdrop-filter: blur(10px);
+border: 1px solid rgba(255, 255, 255, 0.2);
+padding: 10px 20px;
+border-radius: 30px;
+color: white;
+font-weight: bold;
+text-transform: uppercase;
+cursor: pointer;
+transition: all 0.3s;
+font-size: 0.85rem;
+}
+
+.nav-btn:hover {
+background: rgba(0, 255, 0, 0.3);
+border-color: #00ff00;
+}
+
+.nav-btn.active {
+background: rgba(0, 255, 0, 0.5);
+border-color: #00ff00;
+box-shadow: 0 0 15px rgba(0, 255, 0, 0.4);
+}
+
+/* --- SECTIONS VISIBILITY --- */
+.page-section { display: none; }
+.page-section.active { display: block; }
+
 /* --- IMPROVED WAVING FLAG --- */
 .waving-flag {
-width: 32px; /* Ένα κλικ πιο μεγάλη */
+width: 32px;
 vertical-align: middle;
 margin-left: 10px;
 display: inline-block;
@@ -130,7 +168,7 @@ animation: wave-motion 2.5s infinite ease-in-out;
 100% { transform: translateZ(0) rotate(0deg); }
 }
 
-/* --- REST OF YOUR CSS UNTOUCHED --- */
+/* --- REST OF CSS --- */
 .overlay { min-height: 100vh; background: rgba(0,0,0,0.2); padding: 20px; box-sizing: border-box; }
 header { text-align: center; color: white; margin-bottom: 30px; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; }
 .logo-container { display: flex; align-items: center; gap: 15px; background: rgba(255,255,255,0.1); padding: 15px 30px; border-radius: 50px; backdrop-filter: blur(5px); border: 1px solid rgba(255,255,255,0.2); box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
@@ -207,8 +245,17 @@ footer { text-align: center; color: #ffffff; margin: 30px auto 10px auto; paddin
 <span id="txt-logo-sub">Ls System</span>
 </div>
 </div>
+
+<!-- LINE BELOW LOGO WITH BUTTONS -->
+<div class="nav-menu">
+<button class="nav-btn active" id="btn-home" onclick="showSection('home')">Αρχική</button>
+<button class="nav-btn" id="btn-cams" onclick="showSection('cams')">Live Κάμερες</button>
+<button class="nav-btn" id="btn-contact" onclick="showSection('contact')">Επικοινωνία</button>
+</div>
 </header>
 
+<!-- SECTION: HOME (MAIN DASHBOARD) -->
+<div id="section-home" class="page-section active">
 <div class="top-dashboard">
 <div class="card info-card">
 <h3 id="txt-station-title" style="border-bottom:1px solid white">Αγρο-Μετεωρολογικός σταθμός Νεος Μυλότοπος Πέλλας</h3>
@@ -299,11 +346,66 @@ footer { text-align: center; color: #ffffff; margin: 30px auto 10px auto; paddin
 <div id="b-label" style="font-weight:bold">--</div>
 </div>
 </div>
+</div>
+
+<!-- SECTION: CAMS -->
+<div id="section-cams" class="page-section">
+<h2 class="section-title">Live Κάμερες</h2>
+<div class="dashboard">
+<div class="card" style="min-height: 400px;">
+<h3>Κάμερα 1 - Περιοχή Σταθμού</h3>
+<div style="background: #000; height: 300px; display: flex; align-items: center; justify-content: center; border-radius: 8px; border: 1px solid #333;">
+<p style="color: #555;">Η ζωντανή ροή θα είναι σύντομα διαθέσιμη...</p>
+</div>
+</div>
+<div class="card" style="min-height: 400px;">
+<h3>Κάμερα 2 - Αγρός</h3>
+<div style="background: #000; height: 300px; display: flex; align-items: center; justify-content: center; border-radius: 8px; border: 1px solid #333;">
+<p style="color: #555;">Η ζωντανή ροή θα είναι σύντομα διαθέσιμη...</p>
+</div>
+</div>
+</div>
+</div>
+
+<!-- SECTION: CONTACT -->
+<div id="section-contact" class="page-section">
+<h2 class="section-title">Επικοινωνία</h2>
+<div class="dashboard" style="justify-content: center;">
+<div class="card info-card" style="max-width: 600px; margin: 0 auto; text-align: center !important;">
+<h3 style="border-bottom: 1px solid white; padding-bottom: 10px;">Στοιχεία Σταθμού</h3>
+<p><strong>Ιδιοκτήτης:</strong> Χρήστος Τσαβαλακόγλου</p>
+<p><strong>Τοποθεσία:</strong> Νέος Μυλότοπος, Πέλλα, Ελλάδα</p>
+<p><strong>Σύστημα:</strong> Agro Meteo Ls Iot System</p>
+<hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.2); margin: 20px 0;">
+<p>Για ερωτήσεις σχετικά με τα γεωργικά δεδομένα ή τεχνική υποστήριξη:</p>
+<div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 10px; margin-top: 15px;">
+<p>📧 Email: <strong>info@agrometeols.gr</strong></p>
+<p>📞 Τηλ: <strong>+30 23820 XXXXX</strong></p>
+</div>
+</div>
+</div>
+</div>
 
 <footer id="txt-footer">&copy; 2026 Agro Meteo Ls | Προγραμματισμός Χρήστος Τσαβαλακόγλου Iot System</footer>
 </div>
 
 <script>
+/* --- NAVIGATION LOGIC --- */
+function showSection(sectionId) {
+// Hide all sections
+document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
+// Deactivate all buttons
+document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+// Show target section
+document.getElementById('section-' + sectionId).classList.add('active');
+// Activate target button
+if(sectionId === 'home') document.getElementById('btn-home').classList.add('active');
+if(sectionId === 'cams') document.getElementById('btn-cams').classList.add('active');
+if(sectionId === 'contact') document.getElementById('btn-contact').classList.add('active');
+// Scroll to top
+window.scrollTo(0,0);
+}
+
 /* --- MULTI-LANGUAGE LOGIC --- */
 const translations = {
 el: {
@@ -377,13 +479,13 @@ document.getElementById('txt-batt-title').innerText = t.battTitle;
 document.getElementById('txt-footer').innerText = t.footer;
 document.getElementById('reset-msg').innerText = t.resetMsg;
 
-// Update Forecast Widget language
+// Buttons Translation
+document.getElementById('btn-home').innerText = (lang === 'el') ? "Αρχική" : "Home";
+document.getElementById('btn-cams').innerText = (lang === 'el') ? "Live Κάμερες" : "Live Cameras";
+document.getElementById('btn-contact').innerText = (lang === 'el') ? "Επικοινωνία" : "Contact";
+
 const foreFrame = document.getElementById('frame-fore');
-if(lang === 'en') {
-foreFrame.src = foreFrame.src.replace('/el/', '/en/');
-} else {
-foreFrame.src = foreFrame.src.replace('/en/', '/el/');
-}
+if(lang === 'en') { foreFrame.src = foreFrame.src.replace('/el/', '/en/'); } else { foreFrame.src = foreFrame.src.replace('/en/', '/el/'); }
 }
 
 /* --- DAY/NIGHT LOGIC --- */
@@ -416,7 +518,7 @@ const slides = document.querySelectorAll('#ad-slider img');
 function nextSlide() { if (slides.length === 0) return; slides[currentSlide].classList.remove('active'); currentSlide = (currentSlide + 1) % slides.length; slides[currentSlide].classList.add('active'); }
 setInterval(nextSlide, 4000);
 
-var gTemp = new RadialGauge({ renderTo: 'gauge-temp', width: 240, height: 240, units: "°C", minValue: -10, maxValue: 60, majorTicks: ["-10","0","10","20","30","40","50","60"], minorTicks: 2, strokeTicks: true, highlights: [ { "from": -10, "to": 0, "color": "rgba(0,255,255,.5)" }, { "from": 0, "to": 10, "color": "rgba(0,128,255,.5)" }, { "from": 10, "to": 20, "color": "rgba(154,205,50,.5)" }, { "from": 20, "to": 30, "color": "rgba(255,215,0,.5)" }, { "from": 20, "to": 30, "color": "rgba(255,215,0,.5)" }, { "from": 30, "to": 40, "color": "rgba(255,165,0,.5)" }, { "from": 40, "to": 60, "color": "rgba(255,0,0,.5)" } ], colorPlate: "#fff", borderShadowWidth: 0, borders: true, needleType: "arrow", needleWidth: 4, needleCircleSize: 7, needleCircleOuter: true, needleCircleInner: false, animationDuration: 1500, animationRule: "linear" }).draw();
+var gTemp = new RadialGauge({ renderTo: 'gauge-temp', width: 240, height: 240, units: "°C", minValue: -10, maxValue: 60, majorTicks: ["-10","0","10","20","30","40","50","60"], minorTicks: 2, strokeTicks: true, highlights: [ { "from": -10, "to": 0, "color": "rgba(0,255,255,.5)" }, { "from": 0, "to": 10, "color": "rgba(0,128,255,.5)" }, { "from": 10, "to": 20, "color": "rgba(154,205,50,.5)" }, { "from": 20, "to": 30, "color": "rgba(255,215,0,.5)" }, { "from": 30, "to": 40, "color": "rgba(255,165,0,.5)" }, { "from": 40, "to": 60, "color": "rgba(255,0,0,.5)" } ], colorPlate: "#fff", borderShadowWidth: 0, borders: true, needleType: "arrow", needleWidth: 4, needleCircleSize: 7, needleCircleOuter: true, needleCircleInner: false, animationDuration: 1500, animationRule: "linear" }).draw();
 var gHum = new RadialGauge({ renderTo: 'gauge-hum', width: 240, height: 240, units: "%", minValue: 0, maxValue: 100, majorTicks: ["0","10","20","30","40","50","60","70","80","90","100"], minorTicks: 2, strokeTicks: true, highlights: [ { "from": 0, "to": 20, "color": "rgba(255,140,0,.5)" }, { "from": 20, "to": 40, "color": "rgba(255,165,0,.5)" }, { "from": 40, "to": 60, "color": "rgba(50,205,50,.5)" }, { "from": 60, "to": 80, "color": "rgba(0,191,255,.5)" }, { "from": 80, "to": 100, "color": "rgba(0,0,255,.5)" } ], colorPlate: "#fff", borders: true, needleType: "arrow", needleWidth: 4, animationDuration: 1500 }).draw();
 var gPress = new RadialGauge({ renderTo: 'gauge-press', width: 240, height: 240, units: "hPa", minValue: 950, maxValue: 1050, majorTicks: ["950","960","970","980","990","1000","1010","1020","1030","1040","1050"], minorTicks: 2, strokeTicks: true, highlights: [ { "from": 950, "to": 1000, "color": "rgba(255,0,0,.5)" }, { "from": 1000, "to": 1020, "color": "rgba(0,255,0,.5)" }, { "from": 1020, "to": 1050, "color": "rgba(0,0,255,.5)" } ], colorPlate: "#fff", borders: true, needleType: "arrow", needleWidth: 4, animationDuration: 1500 }).draw();
 
@@ -474,44 +576,22 @@ if(last.field1) gTemp.value = last.field1;
 if(last.field2) gHum.value = last.field2;
 if(last.field3) gPress.value = last.field3;
 
-// --- ΑΝΑΒΑΘΜΙΣΜΕΝΕΣ ΓΕΩΡΓΙΚΕΣ ΠΡΟΕΙΔΟΠΟΙΗΣΕΙΣ ---
+// ALERT LOGIC
 const alertBox = document.getElementById('alert-box');
 const month = d.getMonth() + 1;
-
-if (temp <= 2) {
-alertBox.innerText = "⚠️ ΠΡΟΣΟΧΗ: Κίνδυνος Παγετού!";
-alertBox.className = "alert-danger";
-} else if (temp > 36 && hum < 30) {
-alertBox.innerText = "☀️ Κίνδυνος Ηλιοκαύματος Καρπών! Συστήνεται δροσισμός.";
-alertBox.className = "alert-warning";
-} else if (prevPress > 0 && (prevPress - press) > 1.5) {
-alertBox.innerText = "⛈️ Απότομη πτώση πίεσης! Πιθανό μπουρίνι / καταιγίδα.";
-alertBox.className = "alert-danger";
-} else if (temp > 35) {
-alertBox.innerText = "🔥 Θερμικό Στρες: Αυξημένες ανάγκες άρδευσης!";
-alertBox.className = "alert-danger";
-} else if (month >= 3 && month <= 5 && temp > 12) {
-alertBox.innerText = "🐛 Έναρξη δραστηριότητας εχθρών (Κλεωνός/Ανάρσια). Ελέγξτε τις παγίδες!";
-alertBox.className = "alert-warning";
-} else if (temp >= 18 && temp <= 26 && hum > 85) {
-alertBox.innerText = "🍄 Υψηλός Κίνδυνος Μυκήτων (Περονόσπορος).";
-alertBox.className = "alert-warning";
-} else if (temp > 28 && hum < 40) {
-alertBox.innerText = "🕷️ Κίνδυνος Τετράνυχου (Ξηροθερμικές συνθήκες).";
-alertBox.className = "alert-warning";
-} else if (temp >= 15 && temp <= 25 && hum >= 50 && hum <= 75) {
-alertBox.innerText = "🚜 Ιδανικές συνθήκες για ψεκασμό.";
-alertBox.className = "alert-normal";
-} else {
-alertBox.innerText = "✅ Ομαλές Συνθήκες.";
-alertBox.className = "alert-normal";
-}
+if (temp <= 2) { alertBox.innerText = "⚠️ ΠΡΟΣΟΧΗ: Κίνδυνος Παγετού!"; alertBox.className = "alert-danger"; }
+else if (temp > 36 && hum < 30) { alertBox.innerText = "☀️ Κίνδυνος Ηλιοκαύματος Καρπών! Συστήνεται δροσισμός."; alertBox.className = "alert-warning"; }
+else if (prevPress > 0 && (prevPress - press) > 1.5) { alertBox.innerText = "⛈️ Απότομη πτώση πίεσης! Πιθανό μπουρίνι / καταιγίδα."; alertBox.className = "alert-danger"; }
+else if (temp > 35) { alertBox.innerText = "🔥 Θερμικό Στρες: Αυξημένες ανάγκες άρδευσης!"; alertBox.className = "alert-danger"; }
+else if (month >= 3 && month <= 5 && temp > 12) { alertBox.innerText = "🐛 Έναρξη δραστηριότητας εχθρών (Κλεωνός/Ανάρσια). Ελέγξτε τις παγίδες!"; alertBox.className = "alert-warning"; }
+else if (temp >= 18 && temp <= 26 && hum > 85) { alertBox.innerText = "🍄 Υψηλός Κίνδυνος Μυκήτων (Περονόσπορος)."; alertBox.className = "alert-warning"; }
+else if (temp > 28 && hum < 40) { alertBox.innerText = "🕷️ Κίνδυνος Τετράνυχου (Ξηροθερμικές συνθήκες)."; alertBox.className = "alert-warning"; }
+else if (temp >= 15 && temp <= 25 && hum >= 50 && hum <= 75) { alertBox.innerText = "🚜 Ιδανικές συνθήκες για ψεκασμό."; alertBox.className = "alert-normal"; }
+else { alertBox.innerText = "✅ Ομαλές Συνθήκες."; alertBox.className = "alert-normal"; }
 prevPress = press;
 
-let currentRainValue = 0;
 if(last.field4) {
-let liveRain = parseFloat(last.field4);
-currentRainValue = liveRain - resetVal;
+let currentRainValue = parseFloat(last.field4) - resetVal;
 if (currentRainValue < 0) currentRainValue = 0;
 document.getElementById('r-val').innerText = currentRainValue.toFixed(2);
 document.getElementById('bar-day').style.height = Math.min((currentRainValue / 50) * 100, 100) + "%";
@@ -530,18 +610,9 @@ let labels = feeds.map(f => new Date(f.created_at).toLocaleTimeString('el-GR', {
 cTemp.data.labels = labels; cTemp.data.datasets[0].data = feeds.map(f => f.field1); cTemp.update();
 cHum.data.labels = labels; cHum.data.datasets[0].data = feeds.map(f => f.field2); cHum.update();
 cPress.data.labels = labels; cPress.data.datasets[0].data = feeds.map(f => f.field3); cPress.update();
-
-cRain.data.labels = labels;
-cRain.data.datasets[0].data = feeds.map(f => {
-let val = parseFloat(f.field4) - resetVal;
-return val < 0 ? 0 : val;
-});
-cRain.update();
+cRain.data.labels = labels; cRain.data.datasets[0].data = feeds.map(f => { let val = parseFloat(f.field4) - resetVal; return val < 0 ? 0 : val; }); cRain.update();
 
 let tArr = feeds.filter(f => f.field1 != null).map(f => ({v: parseFloat(f.field1), t: f.created_at}));
-let hArr = feeds.filter(f => f.field2 != null).map(f => ({v: parseFloat(f.field2), t: f.created_at}));
-let pArr = feeds.filter(f => f.field3 != null).map(f => ({v: parseFloat(f.field3), t: f.created_at}));
-
 if(tArr.length > 0) {
 let tMax = tArr.reduce((p, c) => (p.v > c.v) ? p : c);
 let tMin = tArr.reduce((p, c) => (p.v < c.v) ? p : c);
@@ -549,31 +620,13 @@ document.getElementById('t-max').innerText = tMax.v.toFixed(1);
 document.getElementById('t-max-t').innerText = "(" + new Date(tMax.t).toLocaleTimeString('el-GR', {hour:'2-digit', minute:'2-digit'}) + ")";
 document.getElementById('t-min').innerText = tMin.v.toFixed(1);
 document.getElementById('t-min-t').innerText = "(" + new Date(tMin.t).toLocaleTimeString('el-GR', {hour:'2-digit', minute:'2-digit'}) + ")";
-// Υπολογισμός ωρών ψύχους
 let cHrs = tArr.filter(f => f.v < 7).length * (20/60);
 document.getElementById('chill-hours').innerText = cHrs.toFixed(1);
 }
-if(hArr.length > 0) {
-let hMax = hArr.reduce((p, c) => (p.v > c.v) ? p : c);
-let hMin = hArr.reduce((p, c) => (p.v < c.v) ? p : c);
-document.getElementById('h-max').innerText = hMax.v.toFixed(0);
-document.getElementById('h-max-t').innerText = "(" + new Date(hMax.t).toLocaleTimeString('el-GR', {hour:'2-digit', minute:'2-digit'}) + ")";
-document.getElementById('h-min').innerText = hMin.v.toFixed(0);
-document.getElementById('h-min-t').innerText = "(" + new Date(hMin.t).toLocaleTimeString('el-GR', {hour:'2-digit', minute:'2-digit'}) + ")";
-}
-if(pArr.length > 0) {
-let pMax = pArr.reduce((p, c) => (p.v > c.v) ? p : c);
-let pMin = pArr.reduce((p, c) => (p.v < c.v) ? p : c);
-document.getElementById('p-max').innerText = pMax.v.toFixed(1);
-document.getElementById('p-max-t').innerText = "(" + new Date(pMax.t).toLocaleTimeString('el-GR', {hour:'2-digit', minute:'2-digit'}) + ")";
-document.getElementById('p-min').innerText = pMin.v.toFixed(1);
-document.getElementById('p-min-t').innerText = "(" + new Date(pMin.t).toLocaleTimeString('el-GR', {hour:'2-digit', minute:'2-digit'}) + ")";
-}
 })
-.catch(err => { document.getElementById('status-badge').innerText = "OFFLINE"; document.getElementById('status-badge').style.backgroundColor = "#ff0000"; });
+.catch(err => { document.getElementById('status-badge').innerText = "OFFLINE"; });
 }
 
-// Αρχικοποίηση - Πάντα Ελληνικά στην αρχή
 window.onload = () => {
 checkTime();
 changeLang('el');
