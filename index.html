@@ -63,6 +63,57 @@ to { transform: translateY(110vh) translateX(100px); opacity: 0; }
 .is-night #bg-layer { filter: brightness(0.3) contrast(1.1); }
 .is-night #star-field { opacity: 1; }
 
+/* --- LANGUAGE SWITCHER STYLE --- */
+.lang-switcher {
+position: absolute;
+top: 20px;
+right: 20px;
+display: flex;
+gap: 10px;
+z-index: 1000;
+}
+.lang-btn {
+background: rgba(255, 255, 255, 0.2);
+backdrop-filter: blur(8px);
+border: 1px solid rgba(255, 255, 255, 0.3);
+padding: 8px 15px;
+border-radius: 25px;
+color: white;
+font-size: 0.85rem;
+cursor: pointer;
+display: flex;
+align-items: center;
+gap: 8px;
+transition: background 0.3s;
+text-decoration: none;
+}
+.lang-btn:hover {
+background: rgba(255, 255, 255, 0.4);
+}
+.flag-icon {
+width: 20px;
+height: 14px;
+object-fit: cover;
+border-radius: 2px;
+}
+
+/* --- WAVING FLAG ANIMATION --- */
+.waving-flag {
+width: 22px;
+vertical-align: middle;
+margin-left: 8px;
+display: inline-block;
+animation: wave 2s infinite ease-in-out;
+transform-origin: left center;
+}
+@keyframes wave {
+0% { transform: rotate(0deg) skewY(0deg); }
+25% { transform: rotate(5deg) skewY(5deg); }
+50% { transform: rotate(0deg) skewY(0deg); }
+75% { transform: rotate(-5deg) skewY(-5deg); }
+100% { transform: rotate(0deg) skewY(0deg); }
+}
+
 /* --- REST OF YOUR CSS UNTOUCHED --- */
 .overlay { min-height: 100vh; background: rgba(0,0,0,0.2); padding: 20px; box-sizing: border-box; }
 header { text-align: center; color: white; margin-bottom: 30px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
@@ -114,6 +165,15 @@ footer { text-align: center; color: #ffffff; margin: 30px auto 10px auto; paddin
 <div id="bg-layer"></div>
 <div id="star-field"></div>
 
+<div class="lang-switcher">
+<div class="lang-btn">
+<img src="https://upload.wikimedia.org/wikipedia/commons/5/5c/Flag_of_Greece.svg" class="flag-icon" alt="Ελληνικά"> Ελληνικά
+</div>
+<div class="lang-btn">
+<img src="https://upload.wikimedia.org/wikipedia/commons/a/a4/Flag_of_the_United_Kingdom.svg" class="flag-icon" alt="English"> English
+</div>
+</div>
+
 <div class="overlay">
 <header>
 <div class="logo-container">
@@ -139,7 +199,7 @@ footer { text-align: center; color: #ffffff; margin: 30px auto 10px auto; paddin
 <p><strong>Σταθμός:</strong> Agro Meteo Ls</p>
 <p><strong>Ιδιοκτησία:</strong> Χρήστος Τσαβαλακόγλου</p>
 <p><strong>Υψόμετρο:</strong> 40m</p>
-<p><strong>Επίβλεψη:</strong> Χρήστος Τσαβαλακόγλου</p>
+<p><strong>Επίβλεψη:</strong> Χρήστος Τσαβαλακόγλου <img src="https://upload.wikimedia.org/wikipedia/commons/5/5c/Flag_of_Greece.svg" class="waving-flag" alt="Greece"></p>
 <p><strong>Κατάσταση:</strong> <span id="status-badge">ΕΛΕΓΧΟΣ...</span></p>
 <p><strong>Λειτουργία:</strong> 24 ώρες το 24ωρο</p>
 <div id="clock" style="font-size:1.8rem; font-weight:bold">--:--:--</div>
