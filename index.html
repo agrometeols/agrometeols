@@ -84,34 +84,36 @@ cursor: pointer;
 display: flex;
 align-items: center;
 gap: 8px;
-transition: background 0.3s;
-text-decoration: none;
+transition: all 0.3s;
 }
 .lang-btn:hover {
 background: rgba(255, 255, 255, 0.4);
+transform: scale(1.05);
 }
 .flag-icon {
-width: 20px;
-height: 14px;
+width: 22px;
+height: 15px;
 object-fit: cover;
 border-radius: 2px;
+box-shadow: 0 0 5px rgba(0,0,0,0.3);
 }
 
-/* --- WAVING FLAG ANIMATION --- */
+/* --- IMPROVED WAVING FLAG --- */
 .waving-flag {
-width: 22px;
+width: 32px; /* Ένα κλικ πιο μεγάλη */
 vertical-align: middle;
-margin-left: 8px;
+margin-left: 10px;
 display: inline-block;
-animation: wave 2s infinite ease-in-out;
-transform-origin: left center;
+filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+animation: wave-motion 2.5s infinite ease-in-out;
 }
-@keyframes wave {
-0% { transform: rotate(0deg) skewY(0deg); }
-25% { transform: rotate(5deg) skewY(5deg); }
-50% { transform: rotate(0deg) skewY(0deg); }
-75% { transform: rotate(-5deg) skewY(-5deg); }
-100% { transform: rotate(0deg) skewY(0deg); }
+
+@keyframes wave-motion {
+0% { transform: translateZ(0) rotate(0deg); clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%); }
+25% { transform: translateZ(0) rotate(2deg) skewY(2deg); }
+50% { transform: translateZ(0) rotate(0deg) skewY(0deg); }
+75% { transform: translateZ(0) rotate(-2deg) skewY(-2deg); }
+100% { transform: translateZ(0) rotate(0deg); }
 }
 
 /* --- REST OF YOUR CSS UNTOUCHED --- */
@@ -166,12 +168,12 @@ footer { text-align: center; color: #ffffff; margin: 30px auto 10px auto; paddin
 <div id="star-field"></div>
 
 <div class="lang-switcher">
-<div class="lang-btn">
-<img src="https://upload.wikimedia.org/wikipedia/commons/5/5c/Flag_of_Greece.svg" class="flag-icon" alt="Ελληνικά"> Ελληνικά
-</div>
-<div class="lang-btn">
-<img src="https://upload.wikimedia.org/wikipedia/commons/a/a4/Flag_of_the_United_Kingdom.svg" class="flag-icon" alt="English"> English
-</div>
+<button class="lang-btn" onclick="changeLang('el')">
+<img src="https://flagcdn.com/w40/gr.png" class="flag-icon" alt="Ελληνικά"> Ελληνικά
+</button>
+<button class="lang-btn" onclick="changeLang('en')">
+<img src="https://flagcdn.com/w40/gb.png" class="flag-icon" alt="English"> English
+</button>
 </div>
 
 <div class="overlay">
@@ -187,77 +189,77 @@ footer { text-align: center; color: #ffffff; margin: 30px auto 10px auto; paddin
 </svg>
 </div>
 <div class="logo-text-wrapper">
-<h1>Agro Meteo</h1>
-<span>Ls System</span>
+<h1 id="txt-logo-main">Agro Meteo</h1>
+<span id="txt-logo-sub">Ls System</span>
 </div>
 </div>
 </header>
 
 <div class="top-dashboard">
 <div class="card info-card">
-<h3 style="border-bottom:1px solid white">Αγρο-Μετεωρολογικός σταθμός Νεος Μυλότοπος Πέλλας</h3>
-<p><strong>Σταθμός:</strong> Agro Meteo Ls</p>
-<p><strong>Ιδιοκτησία:</strong> Χρήστος Τσαβαλακόγλου</p>
-<p><strong>Υψόμετρο:</strong> 40m</p>
-<p><strong>Επίβλεψη:</strong> Χρήστος Τσαβαλακόγλου <img src="https://upload.wikimedia.org/wikipedia/commons/5/5c/Flag_of_Greece.svg" class="waving-flag" alt="Greece"></p>
-<p><strong>Κατάσταση:</strong> <span id="status-badge">ΕΛΕΓΧΟΣ...</span></p>
-<p><strong>Λειτουργία:</strong> 24 ώρες το 24ωρο</p>
+<h3 id="txt-station-title" style="border-bottom:1px solid white">Αγρο-Μετεωρολογικός σταθμός Νεος Μυλότοπος Πέλλας</h3>
+<p><strong id="txt-lbl-station">Σταθμός:</strong> Agro Meteo Ls</p>
+<p><strong id="txt-lbl-owner">Ιδιοκτησία:</strong> Χρήστος Τσαβαλακόγλου</p>
+<p><strong id="txt-lbl-alt">Υψόμετρο:</strong> 40m</p>
+<p><strong id="txt-lbl-super">Επίβλεψη:</strong> Χρήστος Τσαβαλακόγλου <img src="https://flagcdn.com/w80/gr.png" class="waving-flag" alt="Greece"></p>
+<p><strong id="txt-lbl-status">Κατάσταση:</strong> <span id="status-badge">ΕΛΕΓΧΟΣ...</span></p>
+<p><strong id="txt-lbl-op">Λειτουργία:</strong> 24 ώρες το 24ωρο</p>
 <div id="clock" style="font-size:1.8rem; font-weight:bold">--:--:--</div>
 <div id="date">------</div>
 </div>
 
 <div class="card info-card">
-<h3 style="border-bottom:1px solid white">Μέγιστες/Ελάχιστες & Βροχόπτωση</h3>
-<p>Υψηλότερη Θερμοκρασία: <span id="t-max">--</span>°C <span id="t-max-t"></span> | Χαμηλότερη: <span id="t-min">--</span>°C <span id="t-min-t"></span></p>
-<p>Υψηλότερη Υγρασία: <span id="h-max">--</span>% <span id="h-max-t"></span> | Χαμηλότερη: <span id="h-min">--</span>% <span id="h-min-t"></span></p>
-<p>Υψηλότερη Πίεση: <span id="p-max">--</span> <span id="p-max-t"></span> | Χαμηλότερη: <span id="p-min">--</span> <span id="p-min-t"></span></p>
+<h3 id="txt-stats-title" style="border-bottom:1px solid white">Μέγιστες/Ελάχιστες & Βροχόπτωση</h3>
+<p id="txt-temp-ext">Υψηλότερη Θερμοκρασία: <span id="t-max">--</span>°C <span id="t-max-t"></span> | Χαμηλότερη: <span id="t-min">--</span>°C <span id="t-min-t"></span></p>
+<p id="txt-hum-ext">Υψηλότερη Υγρασία: <span id="h-max">--</span>% <span id="h-max-t"></span> | Χαμηλότερη: <span id="h-min">--</span>% <span id="h-min-t"></span></p>
+<p id="txt-pres-ext">Υψηλότερη Πίεση: <span id="p-max">--</span> <span id="p-max-t"></span> | Χαμηλότερη: <span id="p-min">--</span> <span id="p-min-t"></span></p>
 
 <div class="rain-gauges-container">
-<div class="rain-box"><div class="rain-box-title">Σημερινός Υετός</div><div class="rain-visual"><div class="rain-num-scale"><span>50</span><span>25</span><span>0</span></div><div class="rain-ticks"><span></span><span></span><span></span><span></span><span></span></div><div class="rain-bar-container"><div id="bar-day" class="rain-bar-fill"></div></div><div class="rain-ticks"><span></span><span></span><span></span><span></span><span></span></div><div class="rain-num-scale"><span>50</span><span>25</span><span>0</span></div></div><div class="rain-box-footer"><span id="val-day">0.0</span> mm</div></div>
-<div class="rain-box"><div class="rain-box-title">Τρέ/Kακοκαιρία</div><div class="rain-visual"><div class="rain-num-scale"><span>50</span><span>25</span><span>0</span></div><div class="rain-ticks"><span></span><span></span><span></span><span></span><span></span></div><div class="rain-bar-container"><div id="bar-storm" class="rain-bar-fill"></div></div><div class="rain-ticks"><span></span><span></span><span></span><span></span><span></span></div><div class="rain-num-scale"><span>50</span><span>25</span><span>0</span></div></div><div class="rain-box-footer"><span id="val-storm">0.0</span> mm</div></div>
-<div class="rain-box"><div class="rain-box-title">Ραγδαιότητα</div><div class="rain-visual"><div class="rain-num-scale"><span>50</span><span>25</span><span>0</span></div><div class="rain-ticks"><span></span><span></span><span></span><span></span><span></span></div><div class="rain-bar-container"><div id="bar-rate" class="rain-bar-fill"></div></div><div class="rain-ticks"><span></span><span></span><span></span><span></span><span></span></div><div class="rain-num-scale"><span>50</span><span>25</span><span>0</span></div></div><div class="rain-box-footer"><span id="val-rate">0.0</span> mm/h</div></div>
-<div class="rain-box"><div class="rain-box-title">Μηνιαίος Υετός</div><div class="rain-visual"><div class="rain-num-scale"><span>150</span><span>75</span><span>0</span></div><div class="rain-ticks"><span></span><span></span><span></span><span></span><span></span></div><div class="rain-bar-container"><div id="bar-month" class="rain-bar-fill"></div></div><div class="rain-ticks"><span></span><span></span><span></span><span></span><span></span></div><div class="rain-num-scale"><span>150</span><span>75</span><span>0</span></div></div><div class="rain-box-footer"><span id="val-month">0.0</span> mm</div></div>
-<div class="rain-box"><div class="rain-box-title">Ετήσιος Yετός</div><div class="rain-visual"><div class="rain-num-scale"><span>600</span><span>300</span><span>0</span></div><div class="rain-ticks"><span></span><span></span><span></span><span></span><span></span></div><div class="rain-bar-container"><div id="bar-year" class="rain-bar-fill"></div></div><div class="rain-ticks"><span></span><span></span><span></span><span></span><span></span></div><div class="rain-num-scale"><span>600</span><span>300</span><span>0</span></div></div><div class="rain-box-footer"><span id="val-year">0.0</span> mm</div></div>
+<div class="rain-box"><div class="rain-box-title" id="txt-r-day">Σημερινός Υετός</div><div class="rain-visual"><div class="rain-num-scale"><span>50</span><span>25</span><span>0</span></div><div class="rain-ticks"><span></span><span></span><span></span><span></span><span></span></div><div class="rain-bar-container"><div id="bar-day" class="rain-bar-fill"></div></div><div class="rain-ticks"><span></span><span></span><span></span><span></span><span></span></div><div class="rain-num-scale"><span>50</span><span>25</span><span>0</span></div></div><div class="rain-box-footer"><span id="val-day">0.0</span> mm</div></div>
+<div class="rain-box"><div class="rain-box-title" id="txt-r-storm">Τρέ/Kακοκαιρία</div><div class="rain-visual"><div class="rain-num-scale"><span>50</span><span>25</span><span>0</span></div><div class="rain-ticks"><span></span><span></span><span></span><span></span><span></span></div><div class="rain-bar-container"><div id="bar-storm" class="rain-bar-fill"></div></div><div class="rain-ticks"><span></span><span></span><span></span><span></span><span></span></div><div class="rain-num-scale"><span>50</span><span>25</span><span>0</span></div></div><div class="rain-box-footer"><span id="val-storm">0.0</span> mm</div></div>
+<div class="rain-box"><div class="rain-box-title" id="txt-r-rate">Ραγδαιότητα</div><div class="rain-visual"><div class="rain-num-scale"><span>50</span><span>25</span><span>0</span></div><div class="rain-ticks"><span></span><span></span><span></span><span></span><span></span></div><div class="rain-bar-container"><div id="bar-rate" class="rain-bar-fill"></div></div><div class="rain-ticks"><span></span><span></span><span></span><span></span><span></span></div><div class="rain-num-scale"><span>50</span><span>25</span><span>0</span></div></div><div class="rain-box-footer"><span id="val-rate">0.0</span> mm/h</div></div>
+<div class="rain-box"><div class="rain-box-title" id="txt-r-month">Μηνιαίος Υετός</div><div class="rain-visual"><div class="rain-num-scale"><span>150</span><span>75</span><span>0</span></div><div class="rain-ticks"><span></span><span></span><span></span><span></span><span></span></div><div class="rain-bar-container"><div id="bar-month" class="rain-bar-fill"></div></div><div class="rain-ticks"><span></span><span></span><span></span><span></span><span></span></div><div class="rain-num-scale"><span>150</span><span>75</span><span>0</span></div></div><div class="rain-box-footer"><span id="val-month">0.0</span> mm</div></div>
+<div class="rain-box"><div class="rain-box-title" id="txt-r-year">Ετήσιος Yετός</div><div class="rain-visual"><div class="rain-num-scale"><span>600</span><span>300</span><span>0</span></div><div class="rain-ticks"><span></span><span></span><span></span><span></span><span></span></div><div class="rain-bar-container"><div id="bar-year" class="rain-bar-fill"></div></div><div class="rain-ticks"><span></span><span></span><span></span><span></span><span></span></div><div class="rain-num-scale"><span>600</span><span>300</span><span>0</span></div></div><div class="rain-box-footer"><span id="val-year">0.0</span> mm</div></div>
 </div>
 </div>
 </div>
 
 <div class="dashboard">
 <div class="card">
-<h3>Γεωργικές Προειδοποιήσεις</h3>
+<h3 id="txt-alerts-title">Γεωργικές Προειδοποιήσεις</h3>
 <div id="alert-box" class="alert-normal">Φόρτωση δεδομένων...</div>
 </div>
 <div class="card">
-<h3>Στατιστικά Καλλιέργειας</h3>
-<div id="chill-box" class="alert-normal">Ώρες Ψύχους Κάτω Από (<7°C): <span id="chill-hours">0</span></div>
+<h3 id="txt-crop-stats">Στατιστικά Καλλιέργειας</h3>
+<div id="chill-box" class="alert-normal"><span id="txt-chill-lbl">Ώρες Ψύχους Κάτω Από</span> (<7°C): <span id="chill-hours">0</span></div>
 </div>
 </div>
 
-<h2 class="section-title">Τρέχουσες Ενδείξεις</h2>
+<h2 class="section-title" id="txt-cur-title">Τρέχουσες Ενδείξεις</h2>
 <div class="dashboard">
-<div class="card"><h3>Θερμοκρασία</h3><canvas id="gauge-temp" style="max-width: 240px; width: 100%; height: auto;"></canvas></div>
-<div class="card"><h3>Υγρασία</h3><canvas id="gauge-hum" style="max-width: 240px; width: 100%; height: auto;"></canvas></div>
-<div class="card"><h3>Βαρομετρική πίεση</h3><canvas id="gauge-press" style="max-width: 240px; width: 100%; height: auto;"></canvas></div>
+<div class="card"><h3 id="txt-g-temp">Θερμοκρασία</h3><canvas id="gauge-temp" style="max-width: 240px; width: 100%; height: auto;"></canvas></div>
+<div class="card"><h3 id="txt-g-hum">Υγρασία</h3><canvas id="gauge-hum" style="max-width: 240px; width: 100%; height: auto;"></canvas></div>
+<div class="card"><h3 id="txt-g-press">Βαρομετρική πίεση</h3><canvas id="gauge-press" style="max-width: 240px; width: 100%; height: auto;"></canvas></div>
 <div class="card" style="display: flex; flex-direction: column; justify-content: center; min-height: 270px;">
-<h3>Βροχόπτωση (Live)</h3>
+<h3 id="txt-g-rain">Βροχόπτωση (Live)</h3>
 <div style="font-size: 4rem; font-weight: bold; margin: 20px 0;"><span id="r-val">--</span><span style="font-size: 1.5rem;">mm</span></div>
 <small id="reset-msg">Μηδενίζει αυτόματα στις 00:00</small>
 </div>
 </div>
 
-<h2 class="section-title">Πρόγνωση & Ραντάρ</h2>
+<h2 class="section-title" id="txt-fore-title">Πρόγνωση & Ραντάρ</h2>
 <div class="dashboard">
 <div class="card widget-card">
-<h3 class="widget-title">Πρόγνωση: Νέος Μυλότοπος</h3>
-<iframe class="forecast-frame" src="https://www.meteoblue.com/el/weather/widget/three/neos-mylon-topos_%ce%95%ce%bb%ce%bb%ce%ac%ce%b4%ce%b1_844962?geoloc=fixed&nocurrent=0&noforecast=0&days=4&tempunit=CELSIUS&windunit=KILOMETER_PER_HOUR&layout=light" frameborder="0" scrolling="NO" allowtransparency="true" sandbox="allow-same-origin allow-scripts allow-popups allow-popups-to-escape-sandbox"></iframe>
+<h3 class="widget-title" id="txt-fore-sub">Πρόγνωση: Νέος Μυλότοπος</h3>
+<iframe id="frame-fore" class="forecast-frame" src="https://www.meteoblue.com/el/weather/widget/three/neos-mylon-topos_%ce%95%ce%bb%ce%bb%ce%ac%ce%b4%ce%b1_844962?geoloc=fixed&nocurrent=0&noforecast=0&days=4&tempunit=CELSIUS&windunit=KILOMETER_PER_HOUR&layout=light" frameborder="0" scrolling="NO" allowtransparency="true" sandbox="allow-same-origin allow-scripts allow-popups allow-popups-to-escape-sandbox"></iframe>
 </div>
 <div class="card widget-card">
-<h3 class="widget-title">Ζωντανό Ραντάρ Βροχής</h3>
+<h3 class="widget-title" id="txt-radar-title">Ζωντανό Ραντάρ Βροχής</h3>
 <iframe class="radar-frame" src="https://www.rainviewer.com/map.html?loc=40.7922,22.39,11&oFa=0&oC=1&oU=0&oF=0&oSt=1&oT=1&oB=1&oP=1&oR=1&oS=0&oW=0&mT=3&ls=1&lm=1&th=1&oN=1" allowfullscreen></iframe>
 </div>
 </div>
 
-<h2 class="section-title">Συνεργαζόμενοι Γεωπόνοι & Διαφημίσεις</h2>
+<h2 class="section-title" id="txt-ads-title">Συνεργαζόμενοι Γεωπόνοι & Διαφημίσεις</h2>
 <div class="ads-dashboard">
 <div class="card" style="padding: 10px;">
 <div class="slideshow-container" id="ad-slider">
@@ -268,26 +270,105 @@ footer { text-align: center; color: #ffffff; margin: 30px auto 10px auto; paddin
 </div>
 </div>
 
-<h2 class="section-title">Ιστορικά Γραφήματα</h2>
+<h2 class="section-title" id="txt-hist-title">Ιστορικά Γραφήματα</h2>
 <div class="charts-dashboard">
-<div class="card"><h3>Πορεία Θερμοκρασία</h3><div class="chart-container"><canvas id="chart-temp"></canvas></div></div>
-<div class="card"><h3>Πορεία Υγρασία</h3><div class="chart-container"><canvas id="chart-hum"></canvas></div></div>
-<div class="card"><h3>Πoρεία Πίεσης</h3><div class="chart-container"><canvas id="chart-press"></canvas></div></div>
-<div class="card"><h3>Πορεία Βροχόπτωσης</h3><div class="chart-container"><canvas id="chart-rain"></canvas></div></div>
+<div class="card"><h3 id="txt-c-temp">Πορεία Θερμοκρασία</h3><div class="chart-container"><canvas id="chart-temp"></canvas></div></div>
+<div class="card"><h3 id="txt-c-hum">Πορεία Υγρασία</h3><div class="chart-container"><canvas id="chart-hum"></canvas></div></div>
+<div class="card"><h3 id="txt-c-press">Πoρεία Πίεσης</h3><div class="chart-container"><canvas id="chart-press"></canvas></div></div>
+<div class="card"><h3 id="txt-c-rain">Πορεία Βροχόπτωσης</h3><div class="chart-container"><canvas id="chart-rain"></canvas></div></div>
 </div>
 
 <div class="bottom-dashboard">
 <div class="card">
-<h3>Μπαταρία Σταθμού</h3>
+<h3 id="txt-batt-title">Μπαταρία Σταθμού</h3>
 <div style="font-size: 3rem; font-weight: bold;"><span id="b-val">--</span><span style="font-size: 1.2rem;">%</span></div>
 <div id="b-label" style="font-weight:bold">--</div>
 </div>
 </div>
 
-<footer>&copy; 2026 Agro Meteo Ls | Προγραμματισμός Χρήστος Τσαβαλακόγλου Iot System</footer>
+<footer id="txt-footer">&copy; 2026 Agro Meteo Ls | Προγραμματισμός Χρήστος Τσαβαλακόγλου Iot System</footer>
 </div>
 
 <script>
+/* --- MULTI-LANGUAGE LOGIC --- */
+const translations = {
+el: {
+logoSub: "Ls System", stationTitle: "Αγρο-Μετεωρολογικός σταθμός Νεος Μυλότοπος Πέλλας",
+lblStation: "Σταθμός:", lblOwner: "Ιδιοκτησία:", lblAlt: "Υψόμετρο:", lblSuper: "Επίβλεψη:",
+lblStatus: "Κατάσταση:", lblOp: "Λειτουργία:", statsTitle: "Μέγιστες/Ελάχιστες & Βροχόπτωση",
+tempExt: "Υψηλότερη Θερμοκρασία: ", humExt: "Υψηλότερη Υγρασία: ", presExt: "Υψηλότερη Πίεση: ",
+rDay: "Σημερινός Υετός", rStorm: "Τρέ/Kακοκαιρία", rRate: "Ραγδαιότητα", rMonth: "Μηνιαίος Υετός", rYear: "Ετήσιος Yετός",
+alertsTitle: "Γεωργικές Προειδοποιήσεις", cropStats: "Στατιστικά Καλλιέργειας", chillLbl: "Ώρες Ψύχους Κάτω Από",
+curTitle: "Τρέχουσες Ενδείξεις", gTemp: "Θερμοκρασία", gHum: "Υγρασία", gPress: "Βαρομετρική πίεση", gRain: "Βροχόπτωση (Live)",
+foreTitle: "Πρόγνωση & Ραντάρ", foreSub: "Πρόγνωση: Νέος Μυλότοπος", radarTitle: "Ζωντανό Ραντάρ Βροχής",
+adsTitle: "Συνεργαζόμενοι Γεωπόνοι & Διαφημίσεις", histTitle: "Ιστορικά Γραφήματα",
+cTemp: "Πορεία Θερμοκρασία", cHum: "Πορεία Υγρασία", cPress: "Πορεία Πίεσης", cRain: "Πορεία Βροχόπτωσης",
+battTitle: "Μπαταρία Σταθμού", footer: "© 2026 Agro Meteo Ls | Προγραμματισμός Χρήστος Τσαβαλακόγλου Iot System",
+resetMsg: "Μηδενίζει αυτόματα στις 00:00", low: "ΧΑΜΗΛΗ", med: "ΜΕΤΡΙΑ", high: "ΚΑΛΗ", checking: "ΕΛΕΓΧΟΣ..."
+},
+en: {
+logoSub: "Ls System", stationTitle: "Agro-Meteorological Station Neos Mylotopos Pella",
+lblStation: "Station:", lblOwner: "Ownership:", lblAlt: "Altitude:", lblSuper: "Supervision:",
+lblStatus: "Status:", lblOp: "Operation:", statsTitle: "Max/Min & Rainfall",
+tempExt: "Highest Temperature: ", humExt: "Highest Humidity: ", presExt: "Highest Pressure: ",
+rDay: "Daily Rain", rStorm: "Storm Rain", rRate: "Rain Rate", rMonth: "Monthly Rain", rYear: "Yearly Rain",
+alertsTitle: "Agricultural Alerts", cropStats: "Crop Statistics", chillLbl: "Chill Hours Below",
+curTitle: "Current Readings", gTemp: "Temperature", gHum: "Humidity", gPress: "Barometric Pressure", gRain: "Rainfall (Live)",
+foreTitle: "Forecast & Radar", foreSub: "Forecast: Neos Mylotopos", radarTitle: "Live Rain Radar",
+adsTitle: "Collaborating Agronomists & Ads", histTitle: "Historical Charts",
+cTemp: "Temperature Trend", cHum: "Humidity Trend", cPress: "Pressure Trend", cRain: "Rainfall Trend",
+battTitle: "Station Battery", footer: "© 2026 Agro Meteo Ls | Programming by Christos Tsavalakoglou Iot System",
+resetMsg: "Resets automatically at 00:00", low: "LOW", med: "MEDIUM", high: "GOOD", checking: "CHECKING..."
+}
+};
+
+function changeLang(lang) {
+document.documentElement.lang = lang;
+const t = translations[lang];
+document.getElementById('txt-logo-sub').innerText = t.logoSub;
+document.getElementById('txt-station-title').innerText = t.stationTitle;
+document.getElementById('txt-lbl-station').innerText = t.lblStation;
+document.getElementById('txt-lbl-owner').innerText = t.lblOwner;
+document.getElementById('txt-lbl-alt').innerText = t.lblAlt;
+document.getElementById('txt-lbl-super').innerHTML = t.lblSuper + ' Χρήστος Τσαβαλακόγλου <img src="https://flagcdn.com/w80/gr.png" class="waving-flag" alt="Greece">';
+document.getElementById('txt-lbl-status').innerText = t.lblStatus;
+document.getElementById('txt-lbl-op').innerText = t.lblOp;
+document.getElementById('txt-stats-title').innerText = t.statsTitle;
+document.getElementById('txt-r-day').innerText = t.rDay;
+document.getElementById('txt-r-storm').innerText = t.rStorm;
+document.getElementById('txt-r-rate').innerText = t.rRate;
+document.getElementById('txt-r-month').innerText = t.rMonth;
+document.getElementById('txt-r-year').innerText = t.rYear;
+document.getElementById('txt-alerts-title').innerText = t.alertsTitle;
+document.getElementById('txt-crop-stats').innerText = t.cropStats;
+document.getElementById('txt-chill-lbl').innerText = t.chillLbl;
+document.getElementById('txt-cur-title').innerText = t.curTitle;
+document.getElementById('txt-g-temp').innerText = t.gTemp;
+document.getElementById('txt-g-hum').innerText = t.gHum;
+document.getElementById('txt-g-press').innerText = t.gPress;
+document.getElementById('txt-g-rain').innerText = t.gRain;
+document.getElementById('txt-fore-title').innerText = t.foreTitle;
+document.getElementById('txt-fore-sub').innerText = t.foreSub;
+document.getElementById('txt-radar-title').innerText = t.radarTitle;
+document.getElementById('txt-ads-title').innerText = t.adsTitle;
+document.getElementById('txt-hist-title').innerText = t.histTitle;
+document.getElementById('txt-c-temp').innerText = t.cTemp;
+document.getElementById('txt-c-hum').innerText = t.cHum;
+document.getElementById('txt-c-press').innerText = t.cPress;
+document.getElementById('txt-c-rain').innerText = t.cRain;
+document.getElementById('txt-batt-title').innerText = t.battTitle;
+document.getElementById('txt-footer').innerText = t.footer;
+document.getElementById('reset-msg').innerText = t.resetMsg;
+
+// Update Forecast Widget language
+const foreFrame = document.getElementById('frame-fore');
+if(lang === 'en') {
+foreFrame.src = foreFrame.src.replace('/el/', '/en/');
+} else {
+foreFrame.src = foreFrame.src.replace('/en/', '/el/');
+}
+}
+
 /* --- DAY/NIGHT LOGIC --- */
 function checkTime() {
 const hour = new Date().getHours();
@@ -423,9 +504,10 @@ document.getElementById('val-day').innerText = currentRainValue.toFixed(1);
 let b = parseFloat(last.field5);
 document.getElementById('b-val').innerText = b.toFixed(0);
 let lbl = document.getElementById('b-label');
-if(b > 75) { lbl.innerText="ΚΑΛΗ"; lbl.style.color="green"; }
-else if(b > 30) { lbl.innerText="ΜΕΤΡΙΑ"; lbl.style.color="orange"; }
-else { lbl.innerText="ΧΑΜΗΛΗ"; lbl.style.color="red"; }
+const t = translations[document.documentElement.lang || 'el'];
+if(b > 75) { lbl.innerText=t.high; lbl.style.color="green"; }
+else if(b > 30) { lbl.innerText=t.med; lbl.style.color="orange"; }
+else { lbl.innerText=t.low; lbl.style.color="red"; }
 
 let labels = feeds.map(f => new Date(f.created_at).toLocaleTimeString('el-GR', {hour: '2-digit', minute:'2-digit'}));
 cTemp.data.labels = labels; cTemp.data.datasets[0].data = feeds.map(f => f.field1); cTemp.update();
