@@ -71,7 +71,21 @@ gap: 10px;
 padding: 15px 0;
 z-index: 1000;
 position: relative;
+/* Διασφαλίζουμε ότι στην κάθετη διάταξη του header μπαίνει πρώτο */
+order: -1;
 }
+
+/* Desktop: Πάνω δεξιά */
+@media (min-width: 769px) {
+.lang-switcher {
+position: absolute;
+top: 20px;
+right: 20px;
+padding: 0;
+order: unset;
+}
+}
+
 .lang-btn {
 background: rgba(255, 255, 255, 0.2);
 backdrop-filter: blur(8px);
@@ -118,7 +132,7 @@ animation: wave-motion 2.5s infinite ease-in-out;
 
 /* --- REST OF YOUR CSS UNTOUCHED --- */
 .overlay { min-height: 100vh; background: rgba(0,0,0,0.2); padding: 20px; box-sizing: border-box; }
-header { text-align: center; color: white; margin-bottom: 30px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+header { text-align: center; color: white; margin-bottom: 30px; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; }
 .logo-container { display: flex; align-items: center; gap: 15px; background: rgba(255,255,255,0.1); padding: 15px 30px; border-radius: 50px; backdrop-filter: blur(5px); border: 1px solid rgba(255,255,255,0.2); box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
 .logo-svg { filter: drop-shadow(0 0 5px rgba(0,255,0,0.5)); }
 .logo-text-wrapper { text-align: left; line-height: 1; }
@@ -167,6 +181,8 @@ footer { text-align: center; color: #ffffff; margin: 30px auto 10px auto; paddin
 <div id="bg-layer"></div>
 <div id="star-field"></div>
 
+<div class="overlay">
+<header>
 <div class="lang-switcher">
 <button class="lang-btn" onclick="changeLang('el')">
 <img src="https://flagcdn.com/w40/gr.png" class="flag-icon" alt="Ελληνικά"> Ελληνικά
@@ -176,8 +192,6 @@ footer { text-align: center; color: #ffffff; margin: 30px auto 10px auto; paddin
 </button>
 </div>
 
-<div class="overlay">
-<header>
 <div class="logo-container">
 <div class="logo-svg">
 <svg width="60" height="60" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -275,7 +289,7 @@ footer { text-align: center; color: #ffffff; margin: 30px auto 10px auto; paddin
 <div class="card"><h3 id="txt-c-temp">Πορεία Θερμοκρασία</h3><div class="chart-container"><canvas id="chart-temp"></canvas></div></div>
 <div class="card"><h3 id="txt-c-hum">Πορεία Υγρασία</h3><div class="chart-container"><canvas id="chart-hum"></canvas></div></div>
 <div class="card"><h3 id="txt-c-press">Πoρεία Πίεσης</h3><div class="chart-container"><canvas id="chart-press"></canvas></div></div>
-<div class="card"><h3 id="txt-c-rain">Πορεία Βροχόπτωσης</h3><div class="chart-container"><canvas id="chart-rain"></canvas></div></div>
+<div class="card"><h3 id="txt-c-rain">Πορεία Βροχόpτωσης</h3><div class="chart-container"><canvas id="chart-rain"></canvas></div></div>
 </div>
 
 <div class="bottom-dashboard">
