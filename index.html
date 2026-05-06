@@ -4,6 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Agro Meteo Ls</title>
+
+<!-- ΑΥΤΗ ΕΙΝΑΙ Η ΓΡΑΜΜΗ ΓΙΑ ΤΟ ΕΙΚΟΝΙΔΙΟ (FAVICON) -->
+<link rel="icon" type="image/png" href="https://i.imgur.com/oAWf4Ai.png">
+
 <script src="https://cdn.rawgit.com/Mikhus/canvas-gauges/gh-pages/download/2.1.7/all/gauge.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
@@ -27,7 +31,7 @@ height: 100%;
 background: url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1920&q=80') no-repeat center center fixed;
 background-size: cover;
 z-index: -2;
-transition: filter 3s ease; /* Ομαλή μετάβαση φωτισμού */
+transition: filter 3s ease;
 }
 
 /* Containers για τα αστέρια */
@@ -110,7 +114,7 @@ border-radius: 2px;
 box-shadow: 0 0 5px rgba(0,0,0,0.3);
 }
 
-/* --- IMPROVED WAVING FLAG --- */
+/* --- WAVING FLAG --- */
 .waving-flag {
 width: 32px;
 vertical-align: middle;
@@ -239,7 +243,6 @@ footer { text-align: center; color: #ffffff; margin: 30px auto 10px auto; paddin
 </div>
 </header>
 
-<!-- SECTION ΑΡΧΙΚΗ -->
 <div id="section-home" class="page-section active">
 <div class="top-dashboard">
 <div class="card info-card">
@@ -333,7 +336,6 @@ footer { text-align: center; color: #ffffff; margin: 30px auto 10px auto; paddin
 </div>
 </div>
 
-<!-- SECTION LIVE CAMS -->
 <div id="section-cams" class="page-section">
 <h2 class="section-title">Ζωντανή Μετάδοση</h2>
 <div class="dashboard">
@@ -352,14 +354,13 @@ footer { text-align: center; color: #ffffff; margin: 30px auto 10px auto; paddin
 </div>
 </div>
 
-<!-- SECTION CONTACT (ΔΙΟΡΘΩΜΕΝΗ ΜΕΓΑΛΗ ΚΑΡΤΑ) -->
 <div id="section-contact" class="page-section">
 <h2 class="section-title">Επικοινωνία</h2>
 <div class="dashboard">
 <div class="card info-card" style="grid-column: 1 / -1; max-width: 1200px; width: 100%; margin: 0 auto;">
 <h3 style="border-bottom: 1px solid white; padding-bottom: 10px;">Στοιχεία Agro Meteo Ls</h3>
 <p><strong style="font-size: 1.2rem;">Υπεύθυνος Συστήματος:</strong> <span style="font-size: 1.2rem;">Χρήστος Τσαβαλακόγλου</span></p>
-<p><strong>Email Επικοινωνίας:</strong> liagasvw@gmail.com</p>
+<p><strong>Email Επικοινωνίας:</strong> info@agrometeols.gr</p>
 <p><strong>Τοποθεσία Σταθμού:</strong> Νέος Μυλότοπος, Πέλλα, Ελλάδα</p>
 <p><strong>Τεχνική Υποστήριξη:</strong> Διαθέσιμη 24/7 για την παρακολούθηση των δεδομένων.</p>
 <div style="margin-top: 20px; font-style: italic; opacity: 0.8;">
@@ -373,7 +374,6 @@ footer { text-align: center; color: #ffffff; margin: 30px auto 10px auto; paddin
 </div>
 
 <script>
-/* --- NAVIGATION SYSTEM --- */
 function showSection(sectionId) {
 document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
 document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
@@ -382,7 +382,6 @@ document.getElementById('btn-' + (sectionId === 'home' ? 'home' : sectionId === 
 window.scrollTo(0,0);
 }
 
-/* --- MULTI-LANGUAGE LOGIC --- */
 const translations = {
 el: {
 logoSub: "Ls System", stationTitle: "Αγρο-Μετεωρολογικός σταθμός Νεος Μυλότοπος Πέλλας",
@@ -463,7 +462,6 @@ foreFrame.src = foreFrame.src.replace('/en/', '/el/');
 }
 }
 
-/* --- DAY/NIGHT LOGIC --- */
 function checkTime() {
 const hour = new Date().getHours();
 const body = document.body;
@@ -487,7 +485,6 @@ starField.appendChild(star);
 setInterval(checkTime, 60000);
 checkTime();
 
-/* --- GRAPHS & LOGIC --- */
 let currentSlide = 0;
 const slides = document.querySelectorAll('#ad-slider img');
 function nextSlide() { if (slides.length === 0) return; slides[currentSlide].classList.remove('active'); currentSlide = (currentSlide + 1) % slides.length; slides[currentSlide].classList.add('active'); }
