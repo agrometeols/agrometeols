@@ -65,12 +65,12 @@ to { transform: translateY(110vh) translateX(100px); opacity: 0; }
 
 /* --- LANGUAGE SWITCHER STYLE --- */
 .lang-switcher {
-position: absolute;
-top: 20px;
-right: 20px;
 display: flex;
+justify-content: center;
 gap: 10px;
+padding: 15px 0;
 z-index: 1000;
+position: relative;
 }
 .lang-btn {
 background: rgba(255, 255, 255, 0.2);
@@ -402,7 +402,7 @@ const slides = document.querySelectorAll('#ad-slider img');
 function nextSlide() { if (slides.length === 0) return; slides[currentSlide].classList.remove('active'); currentSlide = (currentSlide + 1) % slides.length; slides[currentSlide].classList.add('active'); }
 setInterval(nextSlide, 4000);
 
-var gTemp = new RadialGauge({ renderTo: 'gauge-temp', width: 240, height: 240, units: "°C", minValue: -10, maxValue: 60, majorTicks: ["-10","0","10","20","30","40","50","60"], minorTicks: 2, strokeTicks: true, highlights: [ { "from": -10, "to": 0, "color": "rgba(0,255,255,.5)" }, { "from": 0, "to": 10, "color": "rgba(0,128,255,.5)" }, { "from": 10, "to": 20, "color": "rgba(154,205,50,.5)" }, { "from": 20, "to": 30, "color": "rgba(255,215,0,.5)" }, { "from": 30, "to": 40, "color": "rgba(255,165,0,.5)" }, { "from": 40, "to": 60, "color": "rgba(255,0,0,.5)" } ], colorPlate: "#fff", borderShadowWidth: 0, borders: true, needleType: "arrow", needleWidth: 4, needleCircleSize: 7, needleCircleOuter: true, needleCircleInner: false, animationDuration: 1500, animationRule: "linear" }).draw();
+var gTemp = new RadialGauge({ renderTo: 'gauge-temp', width: 240, height: 240, units: "°C", minValue: -10, maxValue: 60, majorTicks: ["-10","0","10","20","30","40","50","60"], minorTicks: 2, strokeTicks: true, highlights: [ { "from": -10, "to": 0, "color": "rgba(0,255,255,.5)" }, { "from": 0, "to": 10, "color": "rgba(0,128,255,.5)" }, { "from": 10, "to": 20, "color": "rgba(154,205,50,.5)" }, { "from": 20, "to": 30, "color": "rgba(255,215,0,.5)" }, { "from": 20, "to": 30, "color": "rgba(255,215,0,.5)" }, { "from": 30, "to": 40, "color": "rgba(255,165,0,.5)" }, { "from": 40, "to": 60, "color": "rgba(255,0,0,.5)" } ], colorPlate: "#fff", borderShadowWidth: 0, borders: true, needleType: "arrow", needleWidth: 4, needleCircleSize: 7, needleCircleOuter: true, needleCircleInner: false, animationDuration: 1500, animationRule: "linear" }).draw();
 var gHum = new RadialGauge({ renderTo: 'gauge-hum', width: 240, height: 240, units: "%", minValue: 0, maxValue: 100, majorTicks: ["0","10","20","30","40","50","60","70","80","90","100"], minorTicks: 2, strokeTicks: true, highlights: [ { "from": 0, "to": 20, "color": "rgba(255,140,0,.5)" }, { "from": 20, "to": 40, "color": "rgba(255,165,0,.5)" }, { "from": 40, "to": 60, "color": "rgba(50,205,50,.5)" }, { "from": 60, "to": 80, "color": "rgba(0,191,255,.5)" }, { "from": 80, "to": 100, "color": "rgba(0,0,255,.5)" } ], colorPlate: "#fff", borders: true, needleType: "arrow", needleWidth: 4, animationDuration: 1500 }).draw();
 var gPress = new RadialGauge({ renderTo: 'gauge-press', width: 240, height: 240, units: "hPa", minValue: 950, maxValue: 1050, majorTicks: ["950","960","970","980","990","1000","1010","1020","1030","1040","1050"], minorTicks: 2, strokeTicks: true, highlights: [ { "from": 950, "to": 1000, "color": "rgba(255,0,0,.5)" }, { "from": 1000, "to": 1020, "color": "rgba(0,255,0,.5)" }, { "from": 1020, "to": 1050, "color": "rgba(0,0,255,.5)" } ], colorPlate: "#fff", borders: true, needleType: "arrow", needleWidth: 4, animationDuration: 1500 }).draw();
 
