@@ -201,7 +201,7 @@ footer { text-align: center; color: #ffffff; margin: 30px auto 10px auto; paddin
 <p><strong id="txt-lbl-station">Σταθμός:</strong> Agro Meteo Ls</p>
 <p><strong id="txt-lbl-owner">Ιδιοκτησία:</strong> Χρήστος Τσαβαλακόγλου</p>
 <p><strong id="txt-lbl-alt">Υψόμετρο:</strong> 40m</p>
-<p><strong id="txt-lbl-super">Επίβλεψη:</strong> Χρήστος Τσαβαλακόγλου <img src="https://flagcdn.com/w80/gr.png" class="waving-flag" alt="Greece"></p>
+<p><strong id="txt-lbl-super">Επίβλεψη:</strong> <span id="val-super-name">Χρήστος Τσαβαλακόγλου</span> <img src="https://flagcdn.com/w80/gr.png" class="waving-flag" alt="Greece"></p>
 <p><strong id="txt-lbl-status">Κατάσταση:</strong> <span id="status-badge">ΕΛΕΓΧΟΣ...</span></p>
 <p><strong id="txt-lbl-op">Λειτουργία:</strong> 24 ώρες το 24ωρο</p>
 <div id="clock" style="font-size:1.8rem; font-weight:bold">--:--:--</div>
@@ -304,7 +304,8 @@ foreTitle: "Πρόγνωση & Ραντάρ", foreSub: "Πρόγνωση: Νέο
 adsTitle: "Συνεργαζόμενοι Γεωπόνοι & Διαφημίσεις", histTitle: "Ιστορικά Γραφήματα",
 cTemp: "Πορεία Θερμοκρασία", cHum: "Πορεία Υγρασία", cPress: "Πορεία Πίεσης", cRain: "Πορεία Βροχόπτωσης",
 battTitle: "Μπαταρία Σταθμού", footer: "© 2026 Agro Meteo Ls | Προγραμματισμός Χρήστος Τσαβαλακόγλου Iot System",
-resetMsg: "Μηδενίζει αυτόματα στις 00:00", low: "ΧΑΜΗΛΗ", med: "ΜΕΤΡΙΑ", high: "ΚΑΛΗ", checking: "ΕΛΕΓΧΟΣ..."
+resetMsg: "Μηδενίζει αυτόματα στις 00:00", low: "ΧΑΜΗΛΗ", med: "ΜΕΤΡΙΑ", high: "ΚΑΛΗ", checking: "ΕΛΕΓΧΟΣ...",
+name: "Χρήστος Τσαβαλακόγλου"
 },
 en: {
 logoSub: "Ls System", stationTitle: "Agro-Meteorological Station Neos Mylotopos Pella",
@@ -318,7 +319,8 @@ foreTitle: "Forecast & Radar", foreSub: "Forecast: Neos Mylotopos", radarTitle: 
 adsTitle: "Collaborating Agronomists & Ads", histTitle: "Historical Charts",
 cTemp: "Temperature Trend", cHum: "Humidity Trend", cPress: "Pressure Trend", cRain: "Rainfall Trend",
 battTitle: "Station Battery", footer: "© 2026 Agro Meteo Ls | Programming by Christos Tsavalakoglou Iot System",
-resetMsg: "Resets automatically at 00:00", low: "LOW", med: "MEDIUM", high: "GOOD", checking: "CHECKING..."
+resetMsg: "Resets automatically at 00:00", low: "LOW", med: "MEDIUM", high: "GOOD", checking: "CHECKING...",
+name: "Christos Tsavalakoglou"
 }
 };
 
@@ -330,7 +332,8 @@ document.getElementById('txt-station-title').innerText = t.stationTitle;
 document.getElementById('txt-lbl-station').innerText = t.lblStation;
 document.getElementById('txt-lbl-owner').innerText = t.lblOwner;
 document.getElementById('txt-lbl-alt').innerText = t.lblAlt;
-document.getElementById('txt-lbl-super').innerHTML = t.lblSuper + ' Χρήστος Τσαβαλακόγλου <img src="https://flagcdn.com/w80/gr.png" class="waving-flag" alt="Greece">';
+document.getElementById('txt-lbl-super').innerText = t.lblSuper;
+document.getElementById('val-super-name').innerText = t.name;
 document.getElementById('txt-lbl-status').innerText = t.lblStatus;
 document.getElementById('txt-lbl-op').innerText = t.lblOp;
 document.getElementById('txt-stats-title').innerText = t.statsTitle;
@@ -555,8 +558,14 @@ document.getElementById('p-min-t').innerText = "(" + new Date(pMin.t).toLocaleTi
 })
 .catch(err => { document.getElementById('status-badge').innerText = "OFFLINE"; document.getElementById('status-badge').style.backgroundColor = "#ff0000"; });
 }
+
+// Αρχικοποίηση - Πάντα Ελληνικά στην αρχή
+window.onload = () => {
+checkTime();
+changeLang('el');
 update();
 setInterval(update, 20000);
+}
 </script>
 </body>
 </html>
