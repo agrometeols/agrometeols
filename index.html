@@ -135,19 +135,14 @@ gap: 2px;
 min-width: 120px;
 text-align: left;
 }
-.live-dot {
-height: 7px;
-width: 7px;
-background-color: #00ff00;
-border-radius: 50%;
-display: inline-block;
-margin-right: 5px;
-animation: pulse-dot 1.5s infinite;
+.live-blink {
+color: #00ff00;
+animation: pulse-live 1.5s infinite;
 }
-@keyframes pulse-dot {
-0% { opacity: 1; transform: scale(1); }
-50% { opacity: 0.4; transform: scale(1.2); }
-100% { opacity: 1; transform: scale(1); }
+@keyframes pulse-live {
+0% { opacity: 1; }
+50% { opacity: 0.4; }
+100% { opacity: 1; }
 }
 
 /* --- WAVING FLAG --- */
@@ -347,7 +342,7 @@ footer { text-align: center; color: #ffffff; margin: 30px auto 10px auto; paddin
 <div id="clock" style="font-size:1.8rem; font-weight:bold">--:--:--</div>
 <!-- SOCIAL WIDGET (ΜΕΣΑ ΣΤΟ ΚΟΥΤΙ ΤΕΡΜΑ ΔΕΞΙΑ) -->
 <div class="social-widget">
-<div style="font-size: 1.1rem; padding: 5px;"><span class="live-dot"></span><span id="txt-live">Live Επισκέπτες:</span> <strong id="val-live">1</strong></div>
+<div style="font-size: 1.1rem; padding: 5px;"><span id="txt-live" class="live-blink">Live Επισκέπτες:</span> <strong id="val-live">1</strong></div>
 </div>
 </div>
 <div id="date">------</div>
