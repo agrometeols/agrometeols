@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html lang="el">
 <head>
@@ -139,13 +141,14 @@ text-align: left;
 /* ΜΟΝΟ Η ΛΕΞΗ LIVE ΑΝΑΒΟΣΒΗΝΕΙ ΠΡΑΣΙΝΗ */
 .live-blink {
 color: #00ff00;
-animation: pulse-live 1.2s infinite ease-in-out;
 font-weight: bold;
+animation: pulse-green 1.5s infinite;
 }
-@keyframes pulse-live {
-0% { opacity: 1; }
-50% { opacity: 0.2; }
-100% { opacity: 1; }
+
+@keyframes pulse-green {
+0% { color: #00ff00; text-shadow: 0 0 5px #00ff00; }
+50% { color: #004400; text-shadow: 0 0 0px #00ff00; }
+100% { color: #00ff00; text-shadow: 0 0 5px #00ff00; }
 }
 
 /* --- WAVING FLAG --- */
