@@ -308,12 +308,28 @@ footer { text-align: center; color: #ffffff; margin: 30px auto 10px auto; paddin
 .const-modal p { font-size: 1.1rem; line-height: 1.6; }
 .const-btn { background: #ffcc00; color: #000; border: none; padding: 12px 40px; border-radius: 30px; font-weight: bold; cursor: pointer; margin-top: 20px; font-size: 1rem; transition: transform 0.2s; }
 .const-btn:hover { transform: scale(1.05); }
+
+/* --- MOBILE CENTERED ADJUSTMENT --- */
+@media only screen and (max-width: 768px) {
+.overlay, header, .logo-container, .logo-text-wrapper, .nav-menu, .card, .info-card, .time-widget-row, .section-title, footer {
+text-align: center !important;
+align-items: center !important;
+justify-content: center !important;
+}
+.logo-text-wrapper, .info-card {
+text-align: center !important;
+}
+.time-widget-row {
+flex-direction: column !important;
+gap: 15px;
+}
+}
 </style>
 </head>
 <body class="is-day">
 <div id="constructionAlert" class="const-overlay">
 <div class="const-modal">
-<h2>⚠️ Προσοχή!</h2>
+<h2>Προσοχή</h2>
 <p>Ο σταθμός και η σελίδα είναι υπό κατασκευή ακόμα. Τα νούμερα και οι ενδείξεις είναι ενδεικτικά και ο σταθμός βρίσκεται σε κλειστό χώρο!</p>
 <button class="const-btn" onclick="closeConstModal()">OK</button>
 </div>
