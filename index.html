@@ -758,35 +758,40 @@ return val < 0 ? 0 : val;
 });
 cRain.update();
 
-let tArr = feeds.filter(f => f.field1 != null).map(f => ({v: parseFloat(f.field1), t: f.created_at}));
-let hArr = feeds.filter(f => f.field2 != null).map(f => ({v: parseFloat(f.field2), t: f.created_at}));
-let pArr = feeds.filter(f => f.field3 != null).map(f => ({v: parseFloat(f.field3), t: f.created_at}));
+// Υπολογισμός Μέγιστων/Ελάχιστων μόνο για την τρέχουσα ημέρα
+let todayFeeds = feeds.filter(f => new Date(f.created_at).toLocaleDateString('el-GR') === todayStr);
 
-if(tArr.length > 0) {
-let tMax = tArr.reduce((p, c) => (p.v > c.v) ? p : c);
-let tMin = tArr.reduce((p, c) => (p.v < c.v) ? p : c);
+if(todayFeeds.length > 0) {
+let tArrToday = todayFeeds.filter(f => f.field1 != null).map(f => ({v: parseFloat(f.field1), t: f.created_at}));
+let hArrToday = todayFeeds.filter(f => f.field2 != null).map(f => ({v: parseFloat(f.field2), t: f.created_at}));
+let pArrToday = todayFeeds.filter(f => f.field3 != null).map(f => ({v: parseFloat(f.field3), t: f.created_at}));
+
+if(tArrToday.length > 0) {
+let tMax = tArrToday.reduce((p, c) => (p.v > c.v) ? p : c);
+let tMin = tArrToday.reduce((p, c) => (p.v < c.v) ? p : c);
 document.getElementById('t-max').innerText = tMax.v.toFixed(1);
 document.getElementById('t-max-t').innerText = "(" + new Date(tMax.t).toLocaleTimeString('el-GR', {hour:'2-digit', minute:'2-digit'}) + ")";
 document.getElementById('t-min').innerText = tMin.v.toFixed(1);
 document.getElementById('t-min-t').innerText = "(" + new Date(tMin.t).toLocaleTimeString('el-GR', {hour:'2-digit', minute:'2-digit'}) + ")";
-let cHrs = tArr.filter(f => f.v < 7).length * (20/60);
+let cHrs = tArrToday.filter(f => f.v < 7).length * (20/60);
 document.getElementById('chill-hours').innerText = cHrs.toFixed(1);
 }
-if(hArr.length > 0) {
-let hMax = hArr.reduce((p, c) => (p.v > c.v) ? p : c);
-let hMin = hArr.reduce((p, c) => (p.v < c.v) ? p : c);
+if(hArrToday.length > 0) {
+let hMax = hArrToday.reduce((p, c) => (p.v > c.v) ? p : c);
+let hMin = hArrToday.reduce((p, c) => (p.v < c.v) ? p : c);
 document.getElementById('h-max').innerText = hMax.v.toFixed(0);
 document.getElementById('h-max-t').innerText = "(" + new Date(hMax.t).toLocaleTimeString('el-GR', {hour:'2-digit', minute:'2-digit'}) + ")";
 document.getElementById('h-min').innerText = hMin.v.toFixed(0);
 document.getElementById('h-min-t').innerText = "(" + new Date(hMin.t).toLocaleTimeString('el-GR', {hour:'2-digit', minute:'2-digit'}) + ")";
 }
-if(pArr.length > 0) {
-let pMax = pArr.reduce((p, c) => (p.v > c.v) ? p : c);
-let pMin = pArr.reduce((p, c) => (p.v < c.v) ? p : c);
+if(pArrToday.length > 0) {
+let pMax = pArrToday.reduce((p, c) => (p.v > c.v) ? p : c);
+let pMin = pArrToday.reduce((p, c) => (p.v < c.v) ? p : c);
 document.getElementById('p-max').innerText = pMax.v.toFixed(1);
 document.getElementById('p-max-t').innerText = "(" + new Date(pMax.t).toLocaleTimeString('el-GR', {hour:'2-digit', minute:'2-digit'}) + ")";
 document.getElementById('p-min').innerText = pMin.v.toFixed(1);
 document.getElementById('p-min-t').innerText = "(" + new Date(pMin.t).toLocaleTimeString('el-GR', {hour:'2-digit', minute:'2-digit'}) + ")";
+}
 }
 })
 .catch(err => { document.getElementById('status-badge').innerText = "OFFLINE"; document.getElementById('status-badge').style.backgroundColor = "#ff0000"; });
