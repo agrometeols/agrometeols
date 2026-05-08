@@ -300,9 +300,24 @@ footer { text-align: center; color: #ffffff; margin: 30px auto 10px auto; paddin
 .radar-frame { width: 100%; height: 550px; border: none; border-radius: 12px; background: #fff; }
 
 @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.6; } 100% { opacity: 1; } }
+
+/* --- CONSTRUCTION MODAL STYLE --- */
+.const-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85); z-index: 9999; justify-content: center; align-items: center; padding: 20px; }
+.const-modal { background: #1a1a1a; border: 2px solid #ffcc00; border-radius: 15px; padding: 30px; text-align: center; max-width: 500px; color: white; box-shadow: 0 0 30px rgba(255, 204, 0, 0.3); }
+.const-modal h2 { color: #ffcc00; margin-top: 0; }
+.const-modal p { font-size: 1.1rem; line-height: 1.6; }
+.const-btn { background: #ffcc00; color: #000; border: none; padding: 12px 40px; border-radius: 30px; font-weight: bold; cursor: pointer; margin-top: 20px; font-size: 1rem; transition: transform 0.2s; }
+.const-btn:hover { transform: scale(1.05); }
 </style>
 </head>
 <body class="is-day">
+<div id="constructionAlert" class="const-overlay">
+<div class="const-modal">
+<h2>Προσοχή</h2>
+<p>Ο σταθμός και η σελίδα είναι υπό κατασκευή ακόμα. Τα νούμερα και οι ενδείξεις είναι ενδεικτικά και ο σταθμός βρίσκεται σε κλειστό χώρο!</p>
+<button class="const-btn" onclick="closeConstModal()">OK</button>
+</div>
+</div>
 <div id="bg-layer"></div>
 <div id="star-field"></div>
 
@@ -812,7 +827,19 @@ checkTime();
 changeLang('el');
 update();
 setInterval(update, 20000);
+
+// ΕΛΕΓΧΟΣ ΓΙΑ ΤΟ MODAL ΚΑΤΑΣΚΕΥΗΣ
+if (showConstructionAlert) {
+document.getElementById('constructionAlert').style.display = 'flex';
 }
+}
+
+function closeConstModal() {
+document.getElementById('constructionAlert').style.display = 'none';
+}
+
+// --- ΔΙΑΚΟΠΤΗΣ ΓΙΑ ΤΟ ΜΗΝΥΜΑ ΚΑΤΑΣΚΕΥΗΣ ---
+const showConstructionAlert = true; // Άλλαξε το σε false για να σταματήσει να φαίνεται
 </script>
 </body>
 </html>
