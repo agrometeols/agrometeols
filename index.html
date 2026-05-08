@@ -259,10 +259,25 @@ margin-top: 10px;
 .rain-ticks span { width: 5px; height: 1px; background: rgba(255,255,255,0.5); }
 .rain-box-footer { font-size: 0.7rem; font-weight: bold; color: white; padding: 3px 0; }
 
-/* Slider */
+/* --- ΕΦΕ ΣΤΙΣ ΔΙΑΦΗΜΙΣΕΙΣ --- */
 .slideshow-container { position: relative; width: 100%; height: 200px; max-height: 250px; overflow: hidden; border-radius: 8px; margin-top: 10px; display: flex; justify-content: center; align-items: center; background: rgba(255,255,255,0.1); }
-.slideshow-container img { max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain; display: none; transition: opacity 0.5s ease-in-out; }
-.slideshow-container img.active { display: block; }
+.slideshow-container img {
+position: absolute;
+max-width: 100%;
+max-height: 100%;
+width: auto;
+height: auto;
+object-fit: contain;
+opacity: 0;
+transform: scale(0.95);
+transition: opacity 1.2s ease-in-out, transform 1.2s ease-in-out;
+z-index: 0;
+}
+.slideshow-container img.active {
+opacity: 1;
+transform: scale(1);
+z-index: 1;
+}
 
 /* Charts */
 .chart-container { position: relative; height: 240px; width: 100%; margin-top: 10px; }
@@ -451,8 +466,8 @@ footer { text-align: center; color: #ffffff; margin: 30px auto 10px auto; paddin
 <div class="card" style="padding: 10px;">
 <div class="slideshow-container" id="ad-slider">
 <img src="https://i.imgur.com/oAWf4Ai.png" class="active" alt="Διαφήμιση 1">
-<img src="https://i.imgur.com/n0QbdQ7.png" class="active" alt="Διαφήμιση 2">
-<img src="https://i.imgur.com/i5431ph.jpeg" class="active" alt="Διαφήμιση 3">
+<img src="https://i.imgur.com/n0QbdQ7.png" alt="Διαφήμιση 2">
+<img src="https://i.imgur.com/i5431ph.jpeg" alt="Διαφήμιση 3">
 </div>
 </div>
 </div>
@@ -640,8 +655,13 @@ checkTime();
 
 let currentSlide = 0;
 const slides = document.querySelectorAll('#ad-slider img');
-function nextSlide() { if (slides.length === 0) return; slides[currentSlide].classList.remove('active'); currentSlide = (currentSlide + 1) % slides.length; slides[currentSlide].classList.add('active'); }
-setInterval(nextSlide, 4000);
+function nextSlide() {
+if (slides.length === 0) return;
+slides[currentSlide].classList.remove('active');
+currentSlide = (currentSlide + 1) % slides.length;
+slides[currentSlide].classList.add('active');
+}
+setInterval(nextSlide, 5000);
 
 var gTemp = new RadialGauge({ renderTo: 'gauge-temp', width: 240, height: 240, units: "°C", minValue: -10, maxValue: 60, majorTicks: ["-10","0","10","20","30","40","50","60"], minorTicks: 2, strokeTicks: true, highlights: [ { "from": -10, "to": 0, "color": "rgba(0,255,255,.5)" }, { "from": 0, "to": 10, "color": "rgba(0,128,255,.5)" }, { "from": 10, "to": 20, "color": "rgba(154,205,50,.5)" }, { "from": 20, "to": 30, "color": "rgba(255,215,0,.5)" }, { "from": 30, "to": 40, "color": "rgba(255,165,0,.5)" }, { "from": 40, "to": 60, "color": "rgba(255,0,0,.5)" } ], colorPlate: "#fff", borderShadowWidth: 0, borders: true, needleType: "arrow", needleWidth: 4, needleCircleSize: 7, needleCircleOuter: true, needleCircleInner: false, animationDuration: 1500, animationRule: "linear" }).draw();
 var gHum = new RadialGauge({ renderTo: 'gauge-hum', width: 240, height: 240, units: "%", minValue: 0, maxValue: 100, majorTicks: ["0","10","20","30","40","50","60","70","80","90","100"], minorTicks: 2, strokeTicks: true, highlights: [ { "from": 0, "to": 20, "color": "rgba(255,140,0,.5)" }, { "from": 20, "to": 40, "color": "rgba(255,165,0,.5)" }, { "from": 40, "to": 60, "color": "rgba(50,205,50,.5)" }, { "from": 60, "to": 80, "color": "rgba(0,191,255,.5)" }, { "from": 80, "to": 100, "color": "rgba(0,0,255,.5)" } ], colorPlate: "#fff", borders: true, needleType: "arrow", needleWidth: 4, animationDuration: 1500 }).draw();
@@ -749,7 +769,6 @@ return val < 0 ? 0 : val;
 });
 cRain.update();
 
-// Υπολογισμός Μέγιστων/Ελάχιστων μόνο για την τρέχουσα ημέρα
 let todayFeeds = feeds.filter(f => new Date(f.created_at).toLocaleDateString('el-GR') === todayStr);
 
 if(todayFeeds.length > 0) {
