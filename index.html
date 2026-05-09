@@ -743,8 +743,9 @@ const temp = parseFloat(last.field1);
 const hum = parseFloat(last.field2);
 const press = parseFloat(last.field3);
 
-// ΛΗΨΗ ΤΟΥ STATUS ΓΙΑ ΤΗΝ ΚΑΤΕΥΘΥΝΣΗ ΑΝΕΜΟΥ
-const windDirFromStatus = parseFloat(last.status) || 0;
+// ΛΗΨΗ ΤΟΥ STATUS ΚΑΙ ΕΦΑΡΜΟΓΗ CALIBRATION (-135°) ΓΙΑ ΤΗΝ ΚΑΤΕΥΘΥΝΣΗ ΑΝΕΜΟΥ
+const rawWindDir = parseFloat(last.field7) || 0;
+const windDirCalibrated = (rawWindDir - 135 + 360) % 360;
 
 let firstFeedToday = feeds.find(f => new Date(f.created_at).toLocaleDateString('el-GR') === todayStr);
 let resetVal = firstFeedToday ? parseFloat(firstFeedToday.field4) : (parseFloat(last.field4) || 0);
@@ -773,8 +774,8 @@ if(last.field2) gHum.value = last.field2;
 if(last.field3) gPress.value = last.field3;
 if(last.field6) gWindSpeed.value = last.field6;
 
-// ΕΝΗΜΕΡΩΣΗ ΚΑΤΕΥΘΥΝΣΗΣ ΑΠΟ ΤΟ STATUS
-gWindDir.value = windDirFromStatus;
+// ΕΝΗΜΕΡΩΣΗ ΚΑΤΕΥΘΥΝΣΗΣ ΜΕ ΤΗ ΔΙΟΡΘΩΜΕΝΗ ΤΙΜΗ
+gWindDir.value = windDirCalibrated;
 
 const alertBox = document.getElementById('alert-box');
 const month = d.getMonth() + 1;
