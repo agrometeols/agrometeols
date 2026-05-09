@@ -685,7 +685,7 @@ var gTemp = new RadialGauge({ renderTo: 'gauge-temp', width: 240, height: 240, u
 var gHum = new RadialGauge({ renderTo: 'gauge-hum', width: 240, height: 240, units: "%", minValue: 0, maxValue: 100, majorTicks: ["0","10","20","30","40","50","60","70","80","90","100"], minorTicks: 2, strokeTicks: true, highlights: [ { "from": 0, "to": 20, "color": "rgba(255,140,0,.5)" }, { "from": 20, "to": 40, "color": "rgba(255,165,0,.5)" }, { "from": 40, "to": 60, "color": "rgba(50,205,50,.5)" }, { "from": 60, "to": 80, "color": "rgba(0,191,255,.5)" }, { "from": 80, "to": 100, "color": "rgba(0,0,255,.5)" } ], colorPlate: "#fff", borders: true, needleType: "arrow", needleWidth: 4, animationDuration: 1500 }).draw();
 var gWindSpeed = new RadialGauge({ renderTo: 'gauge-wind-speed', width: 240, height: 240, units: "km/h", minValue: 0, maxValue: 30, majorTicks: ["0","5","10","15","20","25","30"], minorTicks: 2, strokeTicks: true, highlights: [{ "from": 8, "to": 30, "color": "rgba(200, 50, 50, .75)" }], colorPlate: "#fff", borders: true, needleType: "arrow", needleWidth: 4, animationDuration: 1500 }).draw();
 
-// gWindDir
+// gWindDir αναβαθμισμένο σε compass needle
 var gWindDir = new RadialGauge({
 renderTo: 'gauge-wind-dir',
 width: 240,
@@ -699,8 +699,11 @@ strokeTicks: true,
 highlights: [],
 colorPlate: "#fff",
 borders: true,
-needleType: "arrow",
-needleWidth: 4,
+needleType: "compas",
+needleWidth: 10,
+needleCircleSize: 10,
+needleCircleOuter: true,
+needleCircleInner: true,
 animationDuration: 1500,
 valueBox: true,
 ticksAngle: 360,
