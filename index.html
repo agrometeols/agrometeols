@@ -743,9 +743,10 @@ const temp = parseFloat(last.field1);
 const hum = parseFloat(last.field2);
 const press = parseFloat(last.field3);
 
-// ΛΗΨΗ ΤΟΥ STATUS ΚΑΙ ΕΦΑΡΜΟΓΗ CALIBRATION (-135°) ΓΙΑ ΤΗΝ ΚΑΤΕΥΘΥΝΣΗ ΑΝΕΜΟΥ
+// ΛΗΨΗ ΤΟΥ STATUS ΚΑΙ ΕΦΑΡΜΟΓΗ CALIBRATION (-225°) ΓΙΑ ΤΗΝ ΚΑΤΕΥΘΥΝΣΗ ΑΝΕΜΟΥ
+// Αφού διαβάζει 225 στον Βορρά, αφαιρούμε 225 για να πάει στο 0.
 const rawWindDir = parseFloat(last.field7) || 0;
-const windDirCalibrated = (rawWindDir - 135 + 360) % 360;
+const windDirCalibrated = (rawWindDir - 225 + 360) % 360;
 
 let firstFeedToday = feeds.find(f => new Date(f.created_at).toLocaleDateString('el-GR') === todayStr);
 let resetVal = firstFeedToday ? parseFloat(firstFeedToday.field4) : (parseFloat(last.field4) || 0);
