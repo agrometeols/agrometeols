@@ -742,9 +742,7 @@ if (!feeds || feeds.length === 0) return;
 
 const last = feeds[feeds.length - 1];
 
-// --- ΕΔΩ ΗΤΑΝ ΤΟ ΛΑΘΟΣ (last.status) ---
-// Δοκιμάζουμε field7 ή field8 ανάλογα πού στέλνεις την κατεύθυνση στο ThingSpeak
-// Αν είναι σε άλλο field, άλλαξε το field7 παρακάτω
+// ΕΝΗΜΕΡΩΣΗ ΚΑΤΕΥΘΥΝΣΗΣ ΑΝΕΜΟΥ
 let rawDir = last.field7 || last.field8 || last.status;
 
 if (rawDir) {
