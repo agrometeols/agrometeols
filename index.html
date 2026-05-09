@@ -748,6 +748,7 @@ let rawDir = last.field7 || last.field8 || last.status;
 if (rawDir) {
 let newDir = parseFloat(rawDir);
 if (!isNaN(newDir)) {
+// Μικρή απόκλιση αν η τιμή είναι η ίδια για να μην παγώνει η κίνηση
 if (newDir === lastDirValueForAnimation) {
 gWindDir.value = newDir + 0.01;
 } else {
