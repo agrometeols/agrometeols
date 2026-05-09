@@ -685,7 +685,7 @@ var gTemp = new RadialGauge({ renderTo: 'gauge-temp', width: 240, height: 240, u
 var gHum = new RadialGauge({ renderTo: 'gauge-hum', width: 240, height: 240, units: "%", minValue: 0, maxValue: 100, majorTicks: ["0","10","20","30","40","50","60","70","80","90","100"], minorTicks: 2, strokeTicks: true, highlights: [ { "from": 0, "to": 20, "color": "rgba(255,140,0,.5)" }, { "from": 20, "to": 40, "color": "rgba(255,165,0,.5)" }, { "from": 40, "to": 60, "color": "rgba(50,205,50,.5)" }, { "from": 60, "to": 80, "color": "rgba(0,191,255,.5)" }, { "from": 80, "to": 100, "color": "rgba(0,0,255,.5)" } ], colorPlate: "#fff", borders: true, needleType: "arrow", needleWidth: 4, animationDuration: 1500 }).draw();
 var gWindSpeed = new RadialGauge({ renderTo: 'gauge-wind-speed', width: 240, height: 240, units: "km/h", minValue: 0, maxValue: 30, majorTicks: ["0","5","10","15","20","25","30"], minorTicks: 2, strokeTicks: true, highlights: [{ "from": 8, "to": 30, "color": "rgba(200, 50, 50, .75)" }], colorPlate: "#fff", borders: true, needleType: "arrow", needleWidth: 4, animationDuration: 1500 }).draw();
 
-// gWindDir αναβαθμισμένο σε compass needle
+// --- ΑΝΑΒΑΘΜΙΣΜΕΝΟΣ ΔΕΙΚΤΗΣ ΠΥΞΙΔΑΣ ΜΕ ΒΕΛΟΣ ΚΑΙ ΟΥΡΑ ---
 var gWindDir = new RadialGauge({
 renderTo: 'gauge-wind-dir',
 width: 240,
@@ -699,12 +699,18 @@ strokeTicks: true,
 highlights: [],
 colorPlate: "#fff",
 borders: true,
-needleType: "compas",
-needleWidth: 10,
-needleCircleSize: 10,
+
+// needle settings για εφέ βέλους πυξίδας
+needleType: "arrow",
+needleWidth: 4,
+needleCircleSize: 7,
 needleCircleOuter: true,
-needleCircleInner: true,
+needleCircleInner: false,
+needleStart: 75, // Κάνει τον δείκτη να βγαίνει και από πίσω (σαν ουρά βέλους)
+needleEnd: 95,
+
 animationDuration: 1500,
+animationRule: "linear",
 valueBox: true,
 ticksAngle: 360,
 startAngle: 180,
@@ -745,13 +751,11 @@ if (!feeds || feeds.length === 0) return;
 
 const last = feeds[feeds.length - 1];
 
-// ΕΝΗΜΕΡΩΣΗ ΚΑΤΕΥΘΥΝΣΗΣ ΑΝΕΜΟΥ
 let rawDir = last.field7 || last.field8 || last.status;
 
 if (rawDir) {
 let newDir = parseFloat(rawDir);
 if (!isNaN(newDir)) {
-// Μικρή απόκλιση αν η τιμή είναι η ίδια για να μην παγώνει η κίνηση
 if (newDir === lastDirValueForAnimation) {
 gWindDir.value = newDir + 0.01;
 } else {
