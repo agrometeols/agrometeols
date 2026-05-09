@@ -454,11 +454,11 @@ footer { text-align: center; color: #ffffff; margin: 30px auto 10px auto; paddin
 
 <h2 class="section-title" id="txt-cur-title">Τρέχουσες Ενδείξεις</h2>
 <div class="dashboard">
-<div class="card"><h3 id="txt-g-temp">Θερμοκρασία</h3><canvas id="gauge-temp" style="max-width: 240px; width: 100%; height: auto;"></canvas></div>
-<div class="card"><h3 id="txt-g-hum">Υγρασία</h3><canvas id="gauge-hum" style="max-width: 240px; width: 100%; height: auto;"></canvas></div>
-<div class="card"><h3 id="txt-g-wind-speed">Ταχύτητα Ανέμου</h3><canvas id="gauge-wind-speed" style="max-width: 240px; width: 100%; height: auto;"></canvas></div>
-<div class="card"><h3 id="txt-g-wind-dir">Κατεύθυνση Ανέμου</h3><canvas id="gauge-wind-dir" style="max-width: 240px; width: 100%; height: auto;"></canvas></div>
-<div class="card"><h3 id="txt-g-press">Βαρομετρική πίεση</h3><canvas id="gauge-press" style="max-width: 240px; width: 100%; height: auto;"></canvas></div>
+<div class="card"><h3 id="txt-g-temp">Θερμοκρασία</h3><canvas id="gauge-temp"></canvas></div>
+<div class="card"><h3 id="txt-g-hum">Υγρασία</h3><canvas id="gauge-hum"></canvas></div>
+<div class="card"><h3 id="txt-g-wind-speed">Ταχύτητα Ανέμου</h3><canvas id="gauge-wind-speed"></canvas></div>
+<div class="card"><h3 id="txt-g-wind-dir">Κατεύθυνση Ανέμου</h3><canvas id="gauge-wind-dir"></canvas></div>
+<div class="card"><h3 id="txt-g-press">Βαρομετρική πίεση</h3><canvas id="gauge-press"></canvas></div>
 <div class="card" style="display: flex; flex-direction: column; justify-content: center; min-height: 270px;">
 <h3 id="txt-g-rain">Βροχόπτωση (Live)</h3>
 <div style="font-size: 4rem; font-weight: bold; margin: 20px 0;"><span id="r-val">--</span><span style="font-size: 1.5rem;">mm</span></div>
@@ -544,7 +544,7 @@ footer { text-align: center; color: #ffffff; margin: 30px auto 10px auto; paddin
 </div>
 
 <script>
-// --- SYNCED VISITOR TRACKING (REAL LIVE ONLY) ---
+// --- SYNCED VISITOR TRACKING ---
 function syncVisitors() {
 fetch("https://api.thingspeak.com/channels/3365350/status.json")
 .then(res => res.json())
@@ -643,11 +643,8 @@ document.getElementById('reset-msg').innerText = t.resetMsg;
 document.getElementById('txt-live').innerText = t.liveTxt;
 
 const foreFrame = document.getElementById('frame-fore');
-if(lang === 'en') {
-foreFrame.src = foreFrame.src.replace('/el/', '/en/');
-} else {
-foreFrame.src = foreFrame.src.replace('/en/', '/el/');
-}
+if(lang === 'en') { foreFrame.src = foreFrame.src.replace('/el/', '/en/'); }
+else { foreFrame.src = foreFrame.src.replace('/en/', '/el/'); }
 }
 
 function checkTime() {
@@ -686,27 +683,7 @@ setInterval(nextSlide, 5000);
 
 var gTemp = new RadialGauge({ renderTo: 'gauge-temp', width: 240, height: 240, units: "°C", minValue: -10, maxValue: 60, majorTicks: ["-10","0","10","20","30","40","50","60"], minorTicks: 2, strokeTicks: true, highlights: [ { "from": -10, "to": 0, "color": "rgba(0,255,255,.5)" }, { "from": 0, "to": 10, "color": "rgba(0,128,255,.5)" }, { "from": 10, "to": 20, "color": "rgba(154,205,50,.5)" }, { "from": 20, "to": 30, "color": "rgba(255,215,0,.5)" }, { "from": 30, "to": 40, "color": "rgba(255,165,0,.5)" }, { "from": 40, "to": 60, "color": "rgba(255,0,0,.5)" } ], colorPlate: "#fff", borderShadowWidth: 0, borders: true, needleType: "arrow", needleWidth: 4, needleCircleSize: 7, needleCircleOuter: true, needleCircleInner: false, animationDuration: 1500, animationRule: "linear" }).draw();
 var gHum = new RadialGauge({ renderTo: 'gauge-hum', width: 240, height: 240, units: "%", minValue: 0, maxValue: 100, majorTicks: ["0","10","20","30","40","50","60","70","80","90","100"], minorTicks: 2, strokeTicks: true, highlights: [ { "from": 0, "to": 20, "color": "rgba(255,140,0,.5)" }, { "from": 20, "to": 40, "color": "rgba(255,165,0,.5)" }, { "from": 40, "to": 60, "color": "rgba(50,205,50,.5)" }, { "from": 60, "to": 80, "color": "rgba(0,191,255,.5)" }, { "from": 80, "to": 100, "color": "rgba(0,0,255,.5)" } ], colorPlate: "#fff", borders: true, needleType: "arrow", needleWidth: 4, animationDuration: 1500 }).draw();
-
-var gWindSpeed = new RadialGauge({
-renderTo: 'gauge-wind-speed',
-width: 240,
-height: 240,
-units: "km/h",
-minValue: 0,
-maxValue: 30,
-majorTicks: ["0","5","10","15","20","25","30"],
-minorTicks: 2,
-strokeTicks: true,
-highlights: [
-{ "from": 8, "to": 30, "color": "rgba(200, 50, 50, .75)" }
-],
-colorPlate: "#fff",
-borders: true,
-needleType: "arrow",
-needleWidth: 4,
-animationDuration: 1500
-}).draw();
-
+var gWindSpeed = new RadialGauge({ renderTo: 'gauge-wind-speed', width: 240, height: 240, units: "km/h", minValue: 0, maxValue: 30, majorTicks: ["0","5","10","15","20","25","30"], minorTicks: 2, strokeTicks: true, highlights: [{ "from": 8, "to": 30, "color": "rgba(200, 50, 50, .75)" }], colorPlate: "#fff", borders: true, needleType: "arrow", needleWidth: 4, animationDuration: 1500 }).draw();
 var gWindDir = new RadialGauge({ renderTo: 'gauge-wind-dir', width: 240, height: 240, units: "Deg", minValue: 0, maxValue: 360, majorTicks: ["N","NE","E","SE","S","SW","W","NW","N"], minorTicks: 22.5, strokeTicks: true, highlights: [], colorPlate: "#fff", borders: true, needleType: "arrow", needleWidth: 4, animationDuration: 1500, valueBox: true, ticksAngle: 360, startAngle: 180 }).draw();
 var gPress = new RadialGauge({ renderTo: 'gauge-press', width: 240, height: 240, units: "hPa", minValue: 950, maxValue: 1050, majorTicks: ["950","960","970","980","990","1000","1010","1020","1030","1040","1050"], minorTicks: 2, strokeTicks: true, highlights: [ { "from": 950, "to": 1000, "color": "rgba(255,0,0,.5)" }, { "from": 1000, "to": 1020, "color": "rgba(0,255,0,.5)" }, { "from": 1020, "to": 1050, "color": "rgba(0,0,255,.5)" } ], colorPlate: "#fff", borders: true, needleType: "arrow", needleWidth: 4, animationDuration: 1500 }).draw();
 
@@ -733,7 +710,6 @@ document.getElementById('date').innerText = d.toLocaleDateString('el-GR', {weekd
 
 syncVisitors();
 
-// ΚΑΛΕΣΜΑ ΤΩΝ FEEDS ΚΑΙ ΤΟΥ STATUS
 fetch("https://api.thingspeak.com/channels/3365350/feeds.json?results=80&metadata=true")
 .then(res => res.json())
 .then(data => {
@@ -743,10 +719,8 @@ const temp = parseFloat(last.field1);
 const hum = parseFloat(last.field2);
 const press = parseFloat(last.field3);
 
-// ΛΗΨΗ ΤΟΥ STATUS ΚΑΙ ΕΦΑΡΜΟΓΗ CALIBRATION (-225°) ΓΙΑ ΤΗΝ ΚΑΤΕΥΘΥΝΣΗ ΑΝΕΜΟΥ
-// Αφού διαβάζει 225 στον Βορρά, αφαιρούμε 225 για να πάει στο 0.
-const rawWindDir = parseFloat(last.field7) || 0;
-const windDirCalibrated = (rawWindDir - 225 + 360) % 360;
+// --- ΔΙΟΡΘΩΣΗ: RAW WIND DIRECTION ---
+const windDirFromStatus = parseFloat(last.status) || 0;
 
 let firstFeedToday = feeds.find(f => new Date(f.created_at).toLocaleDateString('el-GR') === todayStr);
 let resetVal = firstFeedToday ? parseFloat(firstFeedToday.field4) : (parseFloat(last.field4) || 0);
@@ -775,8 +749,8 @@ if(last.field2) gHum.value = last.field2;
 if(last.field3) gPress.value = last.field3;
 if(last.field6) gWindSpeed.value = last.field6;
 
-// ΕΝΗΜΕΡΩΣΗ ΚΑΤΕΥΘΥΝΣΗΣ ΜΕ ΤΗ ΔΙΟΡΘΩΜΕΝΗ ΤΙΜΗ
-gWindDir.value = windDirCalibrated;
+// Εφαρμογή της Raw τιμής στο Gauge του ανέμου
+gWindDir.value = windDirFromStatus;
 
 const alertBox = document.getElementById('alert-box');
 const month = d.getMonth() + 1;
@@ -823,7 +797,6 @@ return val < 0 ? 0 : val;
 cRain.update();
 
 let todayFeeds = feeds.filter(f => new Date(f.created_at).toLocaleDateString('el-GR') === todayStr);
-
 if(todayFeeds.length > 0) {
 let tArrToday = todayFeeds.filter(f => f.field1 != null).map(f => ({v: parseFloat(f.field1), t: f.created_at}));
 let hArrToday = todayFeeds.filter(f => f.field2 != null).map(f => ({v: parseFloat(f.field2), t: f.created_at}));
@@ -857,7 +830,10 @@ document.getElementById('p-min-t').innerText = "(" + new Date(pMin.t).toLocaleTi
 }
 }
 })
-.catch(err => { document.getElementById('status-badge').innerText = "OFFLINE"; document.getElementById('status-badge').style.backgroundColor = "#ff0000"; });
+.catch(err => {
+document.getElementById('status-badge').innerText = "OFFLINE";
+document.getElementById('status-badge').style.backgroundColor = "#ff0000";
+});
 }
 
 window.onload = () => {
@@ -865,7 +841,6 @@ checkTime();
 changeLang('el');
 update();
 setInterval(update, 20000);
-
 if (showConstructionAlert) {
 document.getElementById('constructionAlert').style.display = 'flex';
 }
