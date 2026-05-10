@@ -324,7 +324,7 @@ footer { text-align: center; color: #ffffff; margin: 30px auto 10px auto; paddin
 /* SMART SPRAY MAP STYLE */
 .spray-map-container { display: flex; flex-direction: column; align-items: center; gap: 15px; }
 .drift-compass { width: 150px; height: 150px; position: relative; border-radius: 50%; background: rgba(255,255,255,0.1); border: 2px solid #fff; margin: 10px 0; }
-.drift-arrow { position: absolute; top: 50%; left: 50%; width: 4px; height: 60px; background: #00ff00; transform-origin: top center; transform: rotate(180deg); border-radius: 2px; box-shadow: 0 0 10px #00ff00; }
+.drift-arrow { position: absolute; top: 50%; left: 50%; width: 4px; height: 60px; background: #00ff00; transform-origin: top center; transform: translate(-50%, -100%) rotate(0deg); border-radius: 2px; box-shadow: 0 0 10px #00ff00; }
 .drift-arrow::after { content: ''; position: absolute; bottom: -5px; left: -5px; border-left: 7px solid transparent; border-right: 7px solid transparent; border-top: 10px solid #00ff00; }
 .compass-label { position: absolute; font-size: 0.7rem; font-weight: bold; }
 .spray-status { font-size: 1.2rem; font-weight: bold; padding: 10px 20px; border-radius: 8px; width: 80%; }
@@ -853,28 +853,24 @@ const speedText = document.getElementById('drift-speed');
 const dirText = document.getElementById('drift-dir');
 const riskText = document.getElementById('drift-risk');
 
-// Η διασπορά (drift) είναι αντίθετα από την πηγή του ανέμου
-const driftDirection = (windDir + 180) % 360;
-arrow.style.transform = `translate(-50%, -50%) rotate(${driftDirection}deg)`;
+// Η διασπορά (drift) είναι προς τα εκεί που ΦΥΣΑΕΙ ο άνεμος
+// Άρα το βέλος πρέπει να περιστραφεί κατά μοίρες ίσες με τη φορά του ανέμου
+arrow.style.transform = `translate(-50%, -100%) rotate(${windDir}deg)`;
 
 speedText.innerText = windSpeed.toFixed(1);
 
 let dirName = "Νότια";
-if(driftDirection >= 337.5 || driftDirection < 22.5) dirName = "Βόρεια";
-else if(driftDirection >= 22.5 && driftDirection < 67.5) dirName = "Βορειοανατολικά";
-else if(driftDirection >= 67.5 && driftDirection < 112.5) dirName = "Ανατολικά";
-else if(driftDirection >= 112.5 && driftDirection < 157.5) dirName = "Νοτιοανατολικά";
-else if(driftDirection >= 157.5 && driftDirection < 202.5) dirName = "Νότια";
-else if(driftDirection >= 202.5 && driftDirection < 247.5) dirName = "Νοτιοδυτικά";
-else if(driftDirection >= 247.5 && driftDirection < 292.5) dirName = "Δυτικά";
-else if(driftDirection >= 292.5 && driftDirection < 337.5) dirName = "Βορειοδυτικά";
+if(windDir >= 337.5 || windDir < 22.5) dirName = "Νότια"; // Ο Βόρειος άνεμος πάει Νότια
+else if(windDir >= 22.5 && windDir < 67.5) dirName = "Νοτιοδυτικά";
+else if(windDir >= 67.5 && windDir < 112.5) dirName = "Δυτικά";
+else if(windDir >= 112.5 && windDir < 157.5) dirName = "Βορειοδυτικά";
+else if(windDir >= 157.5 && windDir < 202.5) dirName = "Βόρεια";
+else if(windDir >= 202.5 && windDir < 247.5) dirName = "Βορειοανατολικά";
+else if(windDir >= 247.5 && windDir < 292.5) dirName = "Ανατολικά";
+else if(windDir >= 292.5 && windDir < 337.5) dirName = "Νοτιοανατολικά";
 dirText.innerText = dirName;
 
-if(windSpeed < 3.2) {
-statusBox.innerText = "⚠️ ΠΡΟΣΟΧΗ: Πολύ χαμηλός άνεμος (Κίνδυνος εγκλωβισμού)";
-statusBox.className = "spray-status status-caution";
-riskText.innerText = "Μέτριος (Inversion)";
-} else if(windSpeed >= 3.2 && windSpeed <= 12) {
+if(windSpeed <= 12) {
 statusBox.innerText = "✅ ΙΔΑΝΙΚΕΣ ΣΥΝΘΗΚΕΣ ΨΕΚΑΣΜΟΥ";
 statusBox.className = "spray-status status-safe";
 riskText.innerText = "Πολύ Χαμηλός";
