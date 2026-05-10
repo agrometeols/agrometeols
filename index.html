@@ -320,6 +320,17 @@ footer { text-align: center; color: #ffffff; margin: 30px auto 10px auto; paddin
 .gdd-bar-container { width: 100%; height: 25px; background: rgba(255,255,255,0.1); border-radius: 15px; overflow: hidden; margin: 15px 0; border: 1px solid rgba(255,255,255,0.2); }
 .gdd-bar-fill { height: 100%; background: linear-gradient(90deg, #004400, #00ff00); width: 0%; transition: width 1s ease-in-out; }
 .stage-box { background: rgba(0,255,0,0.1); border: 1px dashed #00ff00; border-radius: 8px; padding: 10px; margin-top: 10px; }
+
+/* SMART SPRAY MAP STYLE */
+.spray-map-container { display: flex; flex-direction: column; align-items: center; gap: 15px; }
+.drift-compass { width: 150px; height: 150px; position: relative; border-radius: 50%; background: rgba(255,255,255,0.1); border: 2px solid #fff; margin: 10px 0; }
+.drift-arrow { position: absolute; top: 50%; left: 50%; width: 4px; height: 60px; background: #00ff00; transform-origin: top center; transform: rotate(180deg); border-radius: 2px; box-shadow: 0 0 10px #00ff00; }
+.drift-arrow::after { content: ''; position: absolute; bottom: -5px; left: -5px; border-left: 7px solid transparent; border-right: 7px solid transparent; border-top: 10px solid #00ff00; }
+.compass-label { position: absolute; font-size: 0.7rem; font-weight: bold; }
+.spray-status { font-size: 1.2rem; font-weight: bold; padding: 10px 20px; border-radius: 8px; width: 80%; }
+.status-safe { background: rgba(0, 255, 0, 0.3); color: #00ff00; border: 1px solid #00ff00; }
+.status-caution { background: rgba(255, 255, 0, 0.3); color: #ffff00; border: 1px solid #ffff00; }
+.status-danger { background: rgba(255, 0, 0, 0.3); color: #ff0000; border: 1px solid #ff0000; }
 </style>
 </head>
 <body class="is-day">
@@ -521,6 +532,39 @@ footer { text-align: center; color: #ffffff; margin: 30px auto 10px auto; paddin
 </div>
 <div id="currentStage" style="font-size: 1.1rem; font-weight: bold;">Τρέχον Στάδιο: Λήθαργος</div>
 <div id="stageDesc" style="font-size: 0.9rem; opacity: 0.8; margin-top: 5px;">Το φυτό βρίσκεται σε αναμονή για την άνοιξη.</div>
+</div>
+</div>
+</div>
+
+<h2 class="section-title">Έξυπνος Χάρτης Ψεκασμού & Διασποράς (Wind-Drift)</h2>
+<div class="dashboard">
+<div class="card" style="grid-column: 1 / -1;">
+<h3>Ανάλυση Συνθηκών Ψεκασμού</h3>
+<div class="spray-map-container">
+<div id="spray-status-box" class="spray-status status-safe">Υπολογισμός...</div>
+
+<div style="display: flex; align-items: center; gap: 30px; flex-wrap: wrap; justify-content: center;">
+<div style="text-align: center;">
+<div style="font-size: 0.9rem; margin-bottom: 5px;">Πυξίδα Διασποράς</div>
+<div class="drift-compass">
+<span class="compass-label" style="top: 5px; left: 50%; transform: translateX(-50%);">Β</span>
+<span class="compass-label" style="bottom: 5px; left: 50%; transform: translateX(-50%);">Ν</span>
+<span class="compass-label" style="right: 5px; top: 50%; transform: translateY(-50%);">Α</span>
+<span class="compass-label" style="left: 5px; top: 50%; transform: translateY(-50%);">Δ</span>
+<div id="drift-arrow" class="drift-arrow"></div>
+</div>
+<div style="font-size: 0.75rem; opacity: 0.8;">Το βέλος δείχνει την<br>κατεύθυνση διασποράς</div>
+</div>
+
+<div style="text-align: left; background: rgba(255,255,255,0.05); padding: 15px; border-radius: 10px; min-width: 200px;">
+<div style="border-bottom: 1px solid rgba(255,255,255,0.2); margin-bottom: 10px; font-weight: bold;">Οδηγίες Drift:</div>
+<div id="drift-info" style="font-size: 0.9rem; line-height: 1.4;">
+• Ταχύτητα: <span id="drift-speed">--</span> km/h<br>
+• Διασπορά προς: <span id="drift-dir">--</span><br>
+• Κίνδυνος: <span id="drift-risk">Χαμηλός</span>
+</div>
+</div>
+</div>
 </div>
 </div>
 </div>
@@ -801,6 +845,50 @@ document.getElementById('currentStage').innerText = `Τρέχον Στάδιο: 
 document.getElementById('stageDesc').innerText = stage.desc;
 }
 
+// SMART SPRAY LOGIC
+function updateSprayAnalysis(windSpeed, windDir) {
+const statusBox = document.getElementById('spray-status-box');
+const arrow = document.getElementById('drift-arrow');
+const speedText = document.getElementById('drift-speed');
+const dirText = document.getElementById('drift-dir');
+const riskText = document.getElementById('drift-risk');
+
+// Η διασπορά (drift) είναι αντίθετα από την πηγή του ανέμου
+const driftDirection = (windDir + 180) % 360;
+arrow.style.transform = `translate(-50%, -50%) rotate(${driftDirection}deg)`;
+
+speedText.innerText = windSpeed.toFixed(1);
+
+let dirName = "Νότια";
+if(driftDirection >= 337.5 || driftDirection < 22.5) dirName = "Βόρεια";
+else if(driftDirection >= 22.5 && driftDirection < 67.5) dirName = "Βορειοανατολικά";
+else if(driftDirection >= 67.5 && driftDirection < 112.5) dirName = "Ανατολικά";
+else if(driftDirection >= 112.5 && driftDirection < 157.5) dirName = "Νοτιοανατολικά";
+else if(driftDirection >= 157.5 && driftDirection < 202.5) dirName = "Νότια";
+else if(driftDirection >= 202.5 && driftDirection < 247.5) dirName = "Νοτιοδυτικά";
+else if(driftDirection >= 247.5 && driftDirection < 292.5) dirName = "Δυτικά";
+else if(driftDirection >= 292.5 && driftDirection < 337.5) dirName = "Βορειοδυτικά";
+dirText.innerText = dirName;
+
+if(windSpeed < 3.2) {
+statusBox.innerText = "⚠️ ΠΡΟΣΟΧΗ: Πολύ χαμηλός άνεμος (Κίνδυνος εγκλωβισμού)";
+statusBox.className = "spray-status status-caution";
+riskText.innerText = "Μέτριος (Inversion)";
+} else if(windSpeed >= 3.2 && windSpeed <= 12) {
+statusBox.innerText = "✅ ΙΔΑΝΙΚΕΣ ΣΥΝΘΗΚΕΣ ΨΕΚΑΣΜΟΥ";
+statusBox.className = "spray-status status-safe";
+riskText.innerText = "Πολύ Χαμηλός";
+} else if(windSpeed > 12 && windSpeed <= 19) {
+statusBox.innerText = "⚠️ ΠΡΟΣΟΧΗ: Αυξημένος κίνδυνος διασποράς";
+statusBox.className = "spray-status status-caution";
+riskText.innerText = "Υψηλός";
+} else {
+statusBox.innerText = "❌ ΑΠΑΓΟΡΕΥΤΙΚΟ: Πολύ δυνατός άνεμος";
+statusBox.className = "spray-status status-danger";
+riskText.innerText = "Επικίνδυνος";
+}
+}
+
 function update() {
 const d = new Date();
 const todayStr = d.toLocaleDateString('el-GR');
@@ -819,6 +907,7 @@ const last = feeds[feeds.length - 1];
 const temp = parseFloat(last.field1);
 const hum = parseFloat(last.field2);
 const press = parseFloat(last.field3);
+const windSpeed = parseFloat(last.field6) || 0;
 
 // GDD Calculation (Simple approach for UI)
 if(!isNaN(temp)) {
@@ -845,14 +934,18 @@ dpBox.className = "dp-safe";
 }
 
 let rawDir = last.field7 || last.field8 || last.status;
+let currentWindDir = 0;
 if (rawDir) {
-let newDir = parseFloat(rawDir);
-if (!isNaN(newDir)) {
-if (newDir === lastDirValueForAnimation) { gWindDir.value = newDir + 0.01; } else { gWindDir.value = newDir; }
-lastDirValueForAnimation = newDir;
+currentWindDir = parseFloat(rawDir);
+if (!isNaN(currentWindDir)) {
+if (currentWindDir === lastDirValueForAnimation) { gWindDir.value = currentWindDir + 0.01; } else { gWindDir.value = currentWindDir; }
+lastDirValueForAnimation = currentWindDir;
 gWindDir.update();
 }
 }
+
+// Update Smart Spray Map
+updateSprayAnalysis(windSpeed, currentWindDir);
 
 let firstFeedToday = feeds.find(f => new Date(f.created_at).toLocaleDateString('el-GR') === todayStr);
 let resetVal = firstFeedToday ? parseFloat(firstFeedToday.field4) : (parseFloat(last.field4) || 0);
