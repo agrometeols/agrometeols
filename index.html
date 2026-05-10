@@ -308,6 +308,11 @@ footer { text-align: center; color: #ffffff; margin: 30px auto 10px auto; paddin
 .const-modal p { font-size: 1.1rem; line-height: 1.6; }
 .const-btn { background: #ffcc00; color: #000; border: none; padding: 12px 40px; border-radius: 30px; font-weight: bold; cursor: pointer; margin-top: 20px; font-size: 1rem; transition: transform 0.2s; }
 .const-btn:hover { transform: scale(1.05); }
+
+/* Dew Point Specific Style */
+#dp-alert { font-size: 0.75rem; margin-top: 8px; font-weight: bold; padding: 4px; border-radius: 4px; }
+.dp-safe { color: #00ff00; }
+.dp-danger { color: #ff3300; animation: blink 1.5s infinite; }
 </style>
 </head>
 <body class="is-day">
@@ -456,6 +461,11 @@ footer { text-align: center; color: #ffffff; margin: 30px auto 10px auto; paddin
 <div class="dashboard">
 <div class="card"><h3 id="txt-g-temp">Θερμοκρασία</h3><canvas id="gauge-temp"></canvas></div>
 <div class="card"><h3 id="txt-g-hum">Υγρασία</h3><canvas id="gauge-hum"></canvas></div>
+<div class="card">
+<h3 id="txt-g-dp">Σημείο Δρόσου</h3>
+<canvas id="gauge-dp"></canvas>
+<div id="dp-alert">--</div>
+</div>
 <div class="card"><h3 id="txt-g-wind-speed">Ταχύτητα Ανέμου</h3><canvas id="gauge-wind-speed"></canvas></div>
 <div class="card"><h3 id="txt-g-wind-dir">Κατεύθυνση Ανέμου</h3><canvas id="gauge-wind-dir"></canvas></div>
 <div class="card"><h3 id="txt-g-press">Βαρομετρική πίεση</h3><canvas id="gauge-press"></canvas></div>
@@ -574,13 +584,13 @@ tempExt: "Υψηλότερη Θερμοκρασία: ", humExt: "Υψηλότε�
 rDay: "Σημερινός Υετός", rStorm: "Τρέ/Kακοκαιρία", rRate: "Ραγδαιότητα", rMonth: "Μηνιαίος Υετός", rYear: "Ετήσιος Yετός",
 alertsTitle: "Γεωργικές Προειδοποιήσεις", cropStats: "Στατιστικά Καλλιέργειας", chillLbl: "Ώρες Ψύχους Κάτω Από",
 curTitle: "Τρέχουσες Ενδείξεις", gTemp: "Θερμοκρασία", gHum: "Υγρασία", gPress: "Βαρομετρική πίεση", gRain: "Βροχόπτωση (Live)",
-gWindSpeed: "Ταχύτητα Ανέμου", gWindDir: "Κατεύθυνση Ανέμου",
+gWindSpeed: "Ταχύτητα Ανέμου", gWindDir: "Κατεύθυνση Ανέμου", gDp: "Σημείο Δρόσου",
 foreTitle: "Πρόγνωση & Ραντάρ", foreSub: "Πρόγνωση: Νέος Μυλότοπος", radarTitle: "Ζωντανό Ραντάρ Βροχής",
 adsTitle: "Συνεργαζόμενοι Γεωπόνοι & Διαφημίσεις", histTitle: "Ιστορικά Γραφήματα",
 cTemp: "Πορεία Θερμοκρασία", cHum: "Πορεία Υγρασία", cPress: "Πορεία Πίεσης", cRain: "Πορεία Βροχόπτωσης",
-battTitle: "Μπαταρία Σταθμού", footer: "© 2026 Agro Meteo Ls | Προγραμματισμός Χρήστος Τσαβαλάκογλου Iot System",
+battTitle: "Σταθμός Μπαταρία", footer: "© 2026 Agro Meteo Ls | Προγραμματισμός Χρήστος Τσαβαλάκογλου Iot System",
 resetMsg: "Μηδενίζει αυτόματα στις 00:00", low: "ΧΑΜΗΛΗ", med: "ΜΕΤΡΙΑ", high: "ΚΑΛΗ", checking: "ΕΛΕΓΧΟΣ...",
-name: "Χρήστος Τσαβαλάκογλου", liveTxt: "Live"
+name: "Χρήστος Τσαβαλάκογλου", liveTxt: "Live", dpNormal: "✅ Ασφαλές Σημείο", dpWarning: "⚠️ Κίνδυνος Παγετού!"
 },
 en: {
 logoSub: "Ls System", stationTitle: "Agro-Meteorological Station Neos Mylotopos Pella",
@@ -590,13 +600,13 @@ tempExt: "Highest Temperature: ", humExt: "Highest Humidity: ", presExt: "Highes
 rDay: "Daily Rain", rStorm: "Storm Rain", rRate: "Rain Rate", rMonth: "Monthly Rain", rYear: "Yearly Rain",
 alertsTitle: "Agricultural Alerts", cropStats: "Crop Statistics", chillLbl: "Chill Hours Below",
 curTitle: "Current Readings", gTemp: "Temperature", gHum: "Humidity", gPress: "Barometric Pressure", gRain: "Rainfall (Live)",
-gWindSpeed: "Wind Speed", gWindDir: "Wind Direction",
+gWindSpeed: "Wind Speed", gWindDir: "Wind Direction", gDp: "Dew Point",
 foreTitle: "Forecast & Radar", foreSub: "Forecast: Neos Mylotopos", radarTitle: "Live Rain Radar",
 adsTitle: "Collaborating Agronomists & Ads", histTitle: "Historical Charts",
 cTemp: "Temperature Trend", cHum: "Humidity Trend", cPress: "Pressure Trend", cRain: "Rainfall Trend",
 battTitle: "Station Battery", footer: "© 2026 Agro Meteo Ls | Programming by Christos Tsavalakoglou Iot System",
 resetMsg: "Resets automatically at 00:00", low: "LOW", med: "MEDIUM", high: "GOOD", checking: "CHECKING...",
-name: "Christos Tsavalakoglou", liveTxt: "Live"
+name: "Christos Tsavalakoglou", liveTxt: "Live", dpNormal: "✅ Safe Point", dpWarning: "⚠️ Frost Risk!"
 }
 };
 
@@ -624,6 +634,7 @@ document.getElementById('txt-chill-lbl').innerText = t.chillLbl;
 document.getElementById('txt-cur-title').innerText = t.curTitle;
 document.getElementById('txt-g-temp').innerText = t.gTemp;
 document.getElementById('txt-g-hum').innerText = t.gHum;
+document.getElementById('txt-g-dp').innerText = t.gDp;
 document.getElementById('txt-g-wind-speed').innerText = t.gWindSpeed;
 document.getElementById('txt-g-wind-dir').innerText = t.gWindDir;
 document.getElementById('txt-g-press').innerText = t.gPress;
@@ -683,39 +694,13 @@ setInterval(nextSlide, 5000);
 
 var gTemp = new RadialGauge({ renderTo: 'gauge-temp', width: 240, height: 240, units: "°C", minValue: -10, maxValue: 60, majorTicks: ["-10","0","10","20","30","40","50","60"], minorTicks: 2, strokeTicks: true, highlights: [ { "from": -10, "to": 0, "color": "rgba(0,255,255,.5)" }, { "from": 0, "to": 10, "color": "rgba(0,128,255,.5)" }, { "from": 10, "to": 20, "color": "rgba(154,205,50,.5)" }, { "from": 20, "to": 30, "color": "rgba(255,215,0,.5)" }, { "from": 30, "to": 40, "color": "rgba(255,165,0,.5)" }, { "from": 40, "to": 60, "color": "rgba(255,0,0,.5)" } ], colorPlate: "#fff", borderShadowWidth: 0, borders: true, needleType: "arrow", needleWidth: 4, needleCircleSize: 7, needleCircleOuter: true, needleCircleInner: false, animationDuration: 1500, animationRule: "linear" }).draw();
 var gHum = new RadialGauge({ renderTo: 'gauge-hum', width: 240, height: 240, units: "%", minValue: 0, maxValue: 100, majorTicks: ["0","10","20","30","40","50","60","70","80","90","100"], minorTicks: 2, strokeTicks: true, highlights: [ { "from": 0, "to": 20, "color": "rgba(255,140,0,.5)" }, { "from": 20, "to": 40, "color": "rgba(255,165,0,.5)" }, { "from": 40, "to": 60, "color": "rgba(50,205,50,.5)" }, { "from": 60, "to": 80, "color": "rgba(0,191,255,.5)" }, { "from": 80, "to": 100, "color": "rgba(0,0,255,.5)" } ], colorPlate: "#fff", borders: true, needleType: "arrow", needleWidth: 4, animationDuration: 1500 }).draw();
+
+// NEW DEW POINT GAUGE
+var gDp = new RadialGauge({ renderTo: 'gauge-dp', width: 240, height: 240, units: "°C", minValue: -10, maxValue: 30, majorTicks: ["-10","-5","0","5","10","15","20","25","30"], minorTicks: 2, strokeTicks: true, highlights: [ { "from": -10, "to": 2, "color": "rgba(255,0,0,.5)" }, { "from": 2, "to": 30, "color": "rgba(0,255,0,.5)" } ], colorPlate: "#fff", borders: true, needleType: "arrow", needleWidth: 4, animationDuration: 1500 }).draw();
+
 var gWindSpeed = new RadialGauge({ renderTo: 'gauge-wind-speed', width: 240, height: 240, units: "km/h", minValue: 0, maxValue: 30, majorTicks: ["0","5","10","15","20","25","30"], minorTicks: 2, strokeTicks: true, highlights: [{ "from": 8, "to": 30, "color": "rgba(200, 50, 50, .75)" }], colorPlate: "#fff", borders: true, needleType: "arrow", needleWidth: 4, animationDuration: 1500 }).draw();
 
-// --- ΑΝΑΒΑΘΜΙΣΜΕΝΟΣ ΔΕΙΚΤΗΣ ΠΥΞΙΔΑΣ ΜΕ ΒΕΛΟΣ ΚΑΙ ΟΥΡΑ ---
-var gWindDir = new RadialGauge({
-renderTo: 'gauge-wind-dir',
-width: 240,
-height: 240,
-units: "Deg",
-minValue: 0,
-maxValue: 360,
-majorTicks: ["N","NE","E","SE","S","SW","W","NW","N"],
-minorTicks: 22.5,
-strokeTicks: true,
-highlights: [],
-colorPlate: "#fff",
-borders: true,
-
-// needle settings για εφέ βέλους πυξίδας
-needleType: "arrow",
-needleWidth: 4,
-needleCircleSize: 7,
-needleCircleOuter: true,
-needleCircleInner: false,
-needleStart: 75, // Κάνει τον δείκτη να βγαίνει και από πίσω (σαν ουρά βέλους)
-needleEnd: 95,
-
-animationDuration: 1500,
-animationRule: "linear",
-valueBox: true,
-ticksAngle: 360,
-startAngle: 180,
-forceRedraw: true
-}).draw();
+var gWindDir = new RadialGauge({ renderTo: 'gauge-wind-dir', width: 240, height: 240, units: "Deg", minValue: 0, maxValue: 360, majorTicks: ["N","NE","E","SE","S","SW","W","NW","N"], minorTicks: 22.5, strokeTicks: true, highlights: [], colorPlate: "#fff", borders: true, needleType: "arrow", needleWidth: 4, needleCircleSize: 7, needleCircleOuter: true, needleCircleInner: false, needleStart: 75, needleEnd: 95, animationDuration: 1500, animationRule: "linear", valueBox: true, ticksAngle: 360, startAngle: 180, forceRedraw: true }).draw();
 
 var gPress = new RadialGauge({ renderTo: 'gauge-press', width: 240, height: 240, units: "hPa", minValue: 950, maxValue: 1050, majorTicks: ["950","960","970","980","990","1000","1010","1020","1030","1040","1050"], minorTicks: 2, strokeTicks: true, highlights: [ { "from": 950, "to": 1000, "color": "rgba(255,0,0,.5)" }, { "from": 1000, "to": 1020, "color": "rgba(0,255,0,.5)" }, { "from": 1020, "to": 1050, "color": "rgba(0,0,255,.5)" } ], colorPlate: "#fff", borders: true, needleType: "arrow", needleWidth: 4, animationDuration: 1500 }).draw();
 
@@ -735,6 +720,13 @@ var cRain = createChart('chart-rain', 'Βροχόπτωση (mm)', '#00ccff', 0,
 let prevPress = 0;
 let lastDirValueForAnimation = -1;
 
+// CALCULATE DEW POINT
+function calculateDewPoint(T, RH) {
+const a = 17.27; const b = 237.7;
+const alpha = ((a * T) / (b + T)) + Math.log(RH / 100.0);
+return (b * alpha) / (a - alpha);
+}
+
 function update() {
 const d = new Date();
 const todayStr = d.toLocaleDateString('el-GR');
@@ -750,25 +742,34 @@ const feeds = data.feeds;
 if (!feeds || feeds.length === 0) return;
 
 const last = feeds[feeds.length - 1];
+const temp = parseFloat(last.field1);
+const hum = parseFloat(last.field2);
+const press = parseFloat(last.field3);
+
+// UPDATE DEW POINT
+if(!isNaN(temp) && !isNaN(hum)) {
+const dp = calculateDewPoint(temp, hum);
+gDp.value = dp;
+const dpBox = document.getElementById('dp-alert');
+const lang = document.documentElement.lang || 'el';
+if(dp <= 2) {
+dpBox.innerText = translations[lang].dpWarning;
+dpBox.className = "dp-danger";
+} else {
+dpBox.innerText = translations[lang].dpNormal;
+dpBox.className = "dp-safe";
+}
+}
 
 let rawDir = last.field7 || last.field8 || last.status;
-
 if (rawDir) {
 let newDir = parseFloat(rawDir);
 if (!isNaN(newDir)) {
-if (newDir === lastDirValueForAnimation) {
-gWindDir.value = newDir + 0.01;
-} else {
-gWindDir.value = newDir;
-}
+if (newDir === lastDirValueForAnimation) { gWindDir.value = newDir + 0.01; } else { gWindDir.value = newDir; }
 lastDirValueForAnimation = newDir;
 gWindDir.update();
 }
 }
-
-const temp = parseFloat(last.field1);
-const hum = parseFloat(last.field2);
-const press = parseFloat(last.field3);
 
 let firstFeedToday = feeds.find(f => new Date(f.created_at).toLocaleDateString('el-GR') === todayStr);
 let resetVal = firstFeedToday ? parseFloat(firstFeedToday.field4) : (parseFloat(last.field4) || 0);
@@ -833,7 +834,6 @@ let labels = feeds.map(f => new Date(f.created_at).toLocaleTimeString('el-GR', {
 cTemp.data.labels = labels; cTemp.data.datasets[0].data = feeds.map(f => f.field1); cTemp.update();
 cHum.data.labels = labels; cHum.data.datasets[0].data = feeds.map(f => f.field2); cHum.update();
 cPress.data.labels = labels; cPress.data.datasets[0].data = feeds.map(f => f.field3); cPress.update();
-
 cRain.data.labels = labels;
 cRain.data.datasets[0].data = feeds.map(f => {
 let val = parseFloat(f.field4) - resetVal;
@@ -887,15 +887,10 @@ checkTime();
 changeLang('el');
 update();
 setInterval(update, 20000);
-if (showConstructionAlert) {
-document.getElementById('constructionAlert').style.display = 'flex';
-}
+if (showConstructionAlert) { document.getElementById('constructionAlert').style.display = 'flex'; }
 }
 
-function closeConstModal() {
-document.getElementById('constructionAlert').style.display = 'none';
-}
-
+function closeConstModal() { document.getElementById('constructionAlert').style.display = 'none'; }
 const showConstructionAlert = true;
 </script>
 </body>
