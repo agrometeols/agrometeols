@@ -313,6 +313,13 @@ footer { text-align: center; color: #ffffff; margin: 30px auto 10px auto; paddin
 #dp-alert { font-size: 0.75rem; margin-top: 8px; font-weight: bold; padding: 4px; border-radius: 4px; }
 .dp-safe { color: #00ff00; }
 .dp-danger { color: #ff3300; animation: blink 1.5s infinite; }
+
+/* ΦΑΙΝΟΛΟΓΙΚΟ ΣΤΑΔΙΟ STYLE */
+.crop-select { background: rgba(255,255,255,0.2); color: white; border: 1px solid #00ff00; border-radius: 5px; padding: 10px; width: 100%; font-size: 1rem; margin-bottom: 15px; }
+.crop-select option { background: #1a1a1a; color: white; }
+.gdd-bar-container { width: 100%; height: 25px; background: rgba(255,255,255,0.1); border-radius: 15px; overflow: hidden; margin: 15px 0; border: 1px solid rgba(255,255,255,0.2); }
+.gdd-bar-fill { height: 100%; background: linear-gradient(90deg, #004400, #00ff00); width: 0%; transition: width 1s ease-in-out; }
+.stage-box { background: rgba(0,255,0,0.1); border: 1px dashed #00ff00; border-radius: 8px; padding: 10px; margin-top: 10px; }
 </style>
 </head>
 <body class="is-day">
@@ -485,6 +492,36 @@ footer { text-align: center; color: #ffffff; margin: 30px auto 10px auto; paddin
 <div class="card widget-card">
 <h3 class="widget-title" id="txt-radar-title">Ζωντανό Ραντάρ Βροχής</h3>
 <iframe class="radar-frame" src="https://embed.windy.com/embed2.html?lat=40.803&lon=22.348&zoom=8&level=surface&overlay=radar&product=radar&menu=&message=true&marker=&calendar=now&pressure=&type=map&location=coordinates&detail=&metricWind=km%2Fh&metricTemp=%C2%B0C&radarRange=-1" frameborder="0"></iframe>
+</div>
+</div>
+
+<h2 class="section-title">Φαινολογικό Στάδιο & Ανάπτυξη Καλλιέργειας</h2>
+<div class="dashboard">
+<div class="card" style="grid-column: 1 / -1;">
+<h3>Παρακολούθηση Σταδίου Άνθησης</h3>
+<p>Επιλέξτε την καλλιέργειά σας για να δείτε την εκτιμώμενη πρόοδο βάσει θερμικών μονάδων (GDD):</p>
+<select id="cropSelector" class="crop-select" onchange="updateCropStage()">
+<option value="peach">Ροδάκινα</option>
+<option value="nectarine">Νεκταρίνια</option>
+<option value="apricot">Βερίκοκα</option>
+<option value="persimmon">Λωτός</option>
+<option value="kiwi">Ακτινίδια</option>
+<option value="plum">Δαμάσκηνα</option>
+<option value="corn">Καλαμπόκι</option>
+<option value="apple">Μήλο</option>
+<option value="olive">Ελιές</option>
+<option value="cherry">Κεράσια</option>
+</select>
+
+<div class="stage-box">
+<div id="cropName" style="font-weight: bold; color: #00ff00; font-size: 1.2rem;">Ροδάκινα</div>
+<div id="gddValue" style="margin-top: 5px;">Συσσωρευμένες Θερμικές Μονάδες: 0 GDD</div>
+<div class="gdd-bar-container">
+<div id="gddBar" class="gdd-bar-fill"></div>
+</div>
+<div id="currentStage" style="font-size: 1.1rem; font-weight: bold;">Τρέχον Στάδιο: Λήθαργος</div>
+<div id="stageDesc" style="font-size: 0.9rem; opacity: 0.8; margin-top: 5px;">Το φυτό βρίσκεται σε αναμονή για την άνοιξη.</div>
+</div>
 </div>
 </div>
 
@@ -719,12 +756,49 @@ var cRain = createChart('chart-rain', 'Βροχόπτωση (mm)', '#00ccff', 0,
 
 let prevPress = 0;
 let lastDirValueForAnimation = -1;
+let globalGDD = 0; // Αθροιστικές μονάδες
 
 // CALCULATE DEW POINT
 function calculateDewPoint(T, RH) {
 const a = 17.27; const b = 237.7;
 const alpha = ((a * T) / (b + T)) + Math.log(RH / 100.0);
 return (b * alpha) / (a - alpha);
+}
+
+// ΦΑΙΝΟΛΟΓΙΚΟ ΣΥΣΤΗΜΑ LOGIC
+const cropData = {
+peach: { name: "Ροδάκινα", base: 7, maxGDD: 1200, stages: [{limit: 50, name: "Λήθαργος", desc: "Αναμονή για θέρμανση."}, {limit: 250, name: "Διόγκωση Οφθαλμών", desc: "Οι οφθαλμοί αρχίζουν να μεγαλώνουν."}, {limit: 500, name: "Ροζ Κορυφή", desc: "Τα πρώτα πέταλα γίνονται ορατά."}, {limit: 800, name: "Πλήρης Άνθηση", desc: "Το 50-70% των ανθέων έχει ανοίξει."}, {limit: 1200, name: "Πτώση Πετάλων", desc: "Έναρξη καρπόδεσης."}] },
+nectarine: { name: "Νεκταρίνια", base: 7, maxGDD: 1200, stages: [{limit: 50, name: "Λήθαργος", desc: "Αναμονή."}, {limit: 250, name: "Διόγκωση", desc: "Πρώτα σημάδια κίνησης."}, {limit: 800, name: "Άνθηση", desc: "Πλήρες άνοιγμα."}, {limit: 1200, name: "Καρπόδεση", desc: "Σχηματισμός καρπού."}] },
+apricot: { name: "Βερίκοκα", base: 6, maxGDD: 1000, stages: [{limit: 40, name: "Λήθαργος", desc: "Αναμονή."}, {limit: 200, name: "Λευκό Μπουμπούκι", desc: "Εμφάνιση ανθέων."}, {limit: 700, name: "Άνθηση", desc: "Πλήρης άνθηση."}, {limit: 1000, name: "Καρπόδεση", desc: "Πτώση πετάλων."}] },
+persimmon: { name: "Λωτός", base: 10, maxGDD: 1500, stages: [{limit: 100, name: "Λήθαργος", desc: "Αργή εκκίνηση."}, {limit: 500, name: "Έκπτυξη", desc: "Νέα φύλλα."}, {limit: 1500, name: "Ανάπτυξη", desc: "Πλήρης βλάστηση."}] },
+kiwi: { name: "Ακτινίδια", base: 8, maxGDD: 1400, stages: [{limit: 80, name: "Λήθαργος", desc: "Αναμονή."}, {limit: 400, name: "Έκπτυξη", desc: "Πράσινη κορυφή."}, {limit: 1400, name: "Άνθηση", desc: "Εμφάνιση ανθέων."}] },
+plum: { name: "Δαμάσκηνα", base: 7, maxGDD: 1100, stages: [{limit: 50, name: "Λήθαργος", desc: "Αναμονή."}, {limit: 300, name: "Λευκό Μπουμπούκι", desc: "Άνοιγμα οφθαλμών."}, {limit: 1100, name: "Άνθηση", desc: "Πλήρης άνθηση."}] },
+corn: { name: "Καλαμπόκι", base: 10, maxGDD: 1600, stages: [{limit: 100, name: "Σπορά", desc: "Φύτευση."}, {limit: 500, name: "Βλάστηση", desc: "Εμφάνιση στο έδαφος."}, {limit: 1600, name: "Άνθηση (Φούντωμα)", desc: "Εμφάνιση ταξιανθίας."}] },
+apple: { name: "Μήλο", base: 5, maxGDD: 1300, stages: [{limit: 60, name: "Λήθαργος", desc: "Αναμονή."}, {limit: 400, name: "Πράσινη Κορυφή", desc: "Πρώτα φύλλα."}, {limit: 900, name: "Άνθηση", desc: "Πλήρης άνθηση."}, {limit: 1300, name: "Καρπόδεση", desc: "Πτώση πετάλων."}] },
+olive: { name: "Ελιές", base: 9, maxGDD: 1800, stages: [{limit: 200, name: "Λήθαργος", desc: "Αναμονή."}, {limit: 800, name: "Ανάπτυξη Ταξιανθιών", desc: "Εμφάνιση 'μούρου'."}, {limit: 1800, name: "Άνθηση", desc: "Άνοιγμα ανθέων."}] },
+cherry: { name: "Κεράσια", base: 6, maxGDD: 1100, stages: [{limit: 50, name: "Λήθαργος", desc: "Αναμονή."}, {limit: 250, name: "Λευκή Κορυφή", desc: "Ορατά άνθη."}, {limit: 750, name: "Άνθηση", desc: "Πλήρης άνθηση."}, {limit: 1100, name: "Καρπόδεση", desc: "Έναρξη ανάπτυξης καρπού."}] }
+};
+
+function updateCropStage() {
+const cropKey = document.getElementById('cropSelector').value;
+const crop = cropData[cropKey];
+document.getElementById('cropName').innerText = crop.name;
+
+// Υπολογισμός GDD (Απλοποιημένος για το παράδειγμα βάσει μέσης θερμοκρασίας σταθμού)
+let gddValue = globalGDD;
+document.getElementById('gddValue').innerText = `Συσσωρευμένες Θερμικές Μονάδες: ${gddValue.toFixed(1)} GDD`;
+
+let percentage = (gddValue / crop.maxGDD) * 100;
+if(percentage > 100) percentage = 100;
+document.getElementById('gddBar').style.width = percentage + "%";
+
+let stage = crop.stages[0];
+for(let s of crop.stages) {
+if(gddValue >= s.limit) stage = s;
+}
+
+document.getElementById('currentStage').innerText = `Τρέχον Στάδιο: ${stage.name}`;
+document.getElementById('stageDesc').innerText = stage.desc;
 }
 
 function update() {
@@ -745,6 +819,15 @@ const last = feeds[feeds.length - 1];
 const temp = parseFloat(last.field1);
 const hum = parseFloat(last.field2);
 const press = parseFloat(last.field3);
+
+// GDD Calculation (Simple approach for UI)
+if(!isNaN(temp)) {
+let dailyAvg = feeds.slice(-20).reduce((a, b) => a + (parseFloat(b.field1) || 0), 0) / 20;
+let base = cropData[document.getElementById('cropSelector').value].base;
+let contribution = (dailyAvg - base > 0) ? (dailyAvg - base) * 0.1 : 0;
+globalGDD += contribution;
+updateCropStage();
+}
 
 // UPDATE DEW POINT
 if(!isNaN(temp) && !isNaN(hum)) {
