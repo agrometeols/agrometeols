@@ -487,6 +487,7 @@ footer { text-align: center; color: #ffffff; margin: 30px auto 10px auto; paddin
 </div>
 <div class="card"><h3 id="txt-g-wind-speed">Ταχύτητα Ανέμου</h3><canvas id="gauge-wind-speed"></canvas></div>
 <div class="card"><h3 id="txt-g-wind-dir">Κατεύθυνση Ανέμου</h3><canvas id="gauge-wind-dir"></canvas></div>
+<div class="card"><h3 id="txt-g-solar">Ηλιακή Ακτινοβολία</h3><canvas id="gauge-solar"></canvas></div>
 <div class="card" style="display: flex; flex-direction: column; justify-content: center; min-height: 270px;">
 <h3 id="txt-g-rain">Βροχόπτωση (Live)</h3>
 <div style="font-size: 4rem; font-weight: bold; margin: 20px 0;"><span id="r-val">--</span><span style="font-size: 1.5rem;">mm</span></div>
@@ -665,7 +666,7 @@ tempExt: "Υψηλότερη Θερμοκρασία: ", humExt: "Υψηλότε�
 rDay: "Σημερινός Υετός", rStorm: "Τρέ/Kακοκαιρία", rRate: "Ραγδαιότητα", rMonth: "Μηνιαίος Υετός", rYear: "Ετήσιος Yετός",
 alertsTitle: "Γεωργικές Προειδοποιήσεις", cropStats: "Στατιστικά Καλλιέργειας", chillLbl: "Ώρες Ψύχους Κάτω Από",
 curTitle: "Τρέχουσες Ενδείξεις", gTemp: "Θερμοκρασία", gHum: "Υγρασία", gPress: "Βαρομετρική πίεση", gRain: "Βροχόπτωση (Live)",
-gWindSpeed: "Ταχύτητα Ανέμου", gWindDir: "Κατεύθυνση Ανέμου", gDp: "Σημείο Δρόσου",
+gWindSpeed: "Ταχύτητα Ανέμου", gWindDir: "Κατεύθυνση Ανέμου", gDp: "Σημείο Δρόσου", gSolar: "Ηλιακή Ακτινοβολία",
 foreTitle: "Πρόγνωση & Ραντάρ", foreSub: "Πρόγνωση: Νέος Μυλότοπος", radarTitle: "Ζωντανό Ραντάρ Βροχής",
 adsTitle: "Συνεργαζόμενοι Γεωπόνοι & Διαφημίσεις", histTitle: "Ιστορικά Γραφήματα",
 cTemp: "Πορεία Θερμοκρασία", cHum: "Πορεία Υγρασία", cPress: "Πορεία Πίεσης", cRain: "Πορεία Βροχόπτωσης",
@@ -681,7 +682,7 @@ tempExt: "Highest Temperature: ", humExt: "Highest Humidity: ", presExt: "Highes
 rDay: "Daily Rain", rStorm: "Storm Rain", rRate: "Rain Rate", rMonth: "Monthly Rain", rYear: "Yearly Rain",
 alertsTitle: "Agricultural Alerts", cropStats: "Crop Statistics", chillLbl: "Chill Hours Below",
 curTitle: "Current Readings", gTemp: "Temperature", gHum: "Humidity", gPress: "Barometric Pressure", gRain: "Rainfall (Live)",
-gWindSpeed: "Wind Speed", gWindDir: "Wind Direction", gDp: "Dew Point",
+gWindSpeed: "Wind Speed", gWindDir: "Wind Direction", gDp: "Dew Point", gSolar: "Solar Radiation",
 foreTitle: "Forecast & Radar", foreSub: "Forecast: Neos Mylotopos", radarTitle: "Live Rain Radar",
 adsTitle: "Collaborating Agronomists & Ads", histTitle: "Historical Charts",
 cTemp: "Temperature Trend", cHum: "Humidity Trend", cPress: "Pressure Trend", cRain: "Rainfall Trend",
@@ -718,6 +719,7 @@ document.getElementById('txt-g-hum').innerText = t.gHum;
 document.getElementById('txt-g-dp').innerText = t.gDp;
 document.getElementById('txt-g-wind-speed').innerText = t.gWindSpeed;
 document.getElementById('txt-g-wind-dir').innerText = t.gWindDir;
+document.getElementById('txt-g-solar').innerText = t.gSolar;
 document.getElementById('txt-g-press').innerText = t.gPress;
 document.getElementById('txt-g-rain').innerText = t.gRain;
 document.getElementById('txt-fore-title').innerText = t.foreTitle;
@@ -782,6 +784,9 @@ var gDp = new RadialGauge({ renderTo: 'gauge-dp', width: 240, height: 240, units
 var gWindSpeed = new RadialGauge({ renderTo: 'gauge-wind-speed', width: 240, height: 240, units: "km/h", minValue: 0, maxValue: 30, majorTicks: ["0","5","10","15","20","25","30"], minorTicks: 2, strokeTicks: true, highlights: [{ "from": 8, "to": 30, "color": "rgba(200, 50, 50, .75)" }], colorPlate: "#fff", borders: true, needleType: "arrow", needleWidth: 4, animationDuration: 1500 }).draw();
 
 var gWindDir = new RadialGauge({ renderTo: 'gauge-wind-dir', width: 240, height: 240, units: "Deg", minValue: 0, maxValue: 360, majorTicks: ["N","NE","E","SE","S","SW","W","NW","N"], minorTicks: 22.5, strokeTicks: true, highlights: [], colorPlate: "#fff", borders: true, needleType: "arrow", needleWidth: 4, needleCircleSize: 7, needleCircleOuter: true, needleCircleInner: false, needleStart: 75, needleEnd: 95, animationDuration: 1500, animationRule: "linear", valueBox: true, ticksAngle: 360, startAngle: 180, forceRedraw: true }).draw();
+
+// NEW SOLAR RADIATION GAUGE
+var gSolar = new RadialGauge({ renderTo: 'gauge-solar', width: 240, height: 240, units: "W/m²", minValue: 0, maxValue: 1200, majorTicks: ["0","200","400","600","800","1000","1200"], minorTicks: 2, strokeTicks: true, highlights: [ { "from": 0, "to": 300, "color": "rgba(255,255,0,.2)" }, { "from": 300, "to": 600, "color": "rgba(255,220,0,.4)" }, { "from": 600, "to": 900, "color": "rgba(255,180,0,.6)" }, { "from": 900, "to": 1200, "color": "rgba(255,100,0,.7)" } ], colorPlate: "#fff", borders: true, needleType: "arrow", needleWidth: 4, animationDuration: 1500 }).draw();
 
 var gPress = new RadialGauge({ renderTo: 'gauge-press', width: 240, height: 240, units: "hPa", minValue: 950, maxValue: 1050, majorTicks: ["950","960","970","980","990","1000","1010","1020","1030","1040","1050"], minorTicks: 2, strokeTicks: true, highlights: [ { "from": 950, "to": 1000, "color": "rgba(255,0,0,.5)" }, { "from": 1000, "to": 1020, "color": "rgba(0,255,0,.5)" }, { "from": 1020, "to": 1050, "color": "rgba(0,0,255,.5)" } ], colorPlate: "#fff", borders: true, needleType: "arrow", needleWidth: 4, animationDuration: 1500 }).draw();
 
@@ -904,6 +909,7 @@ const temp = parseFloat(last.field1);
 const hum = parseFloat(last.field2);
 const press = parseFloat(last.field3);
 const windSpeed = parseFloat(last.field6) || 0;
+const solarRad = parseFloat(last.field8) || 0;
 
 // GDD Calculation (Simple approach for UI)
 if(!isNaN(temp)) {
@@ -929,7 +935,7 @@ dpBox.className = "dp-safe";
 }
 }
 
-let rawDir = last.field7 || last.field8 || last.status;
+let rawDir = last.field7 || last.status;
 let currentWindDir = 0;
 if (rawDir) {
 currentWindDir = parseFloat(rawDir);
@@ -969,6 +975,7 @@ if(last.field1) gTemp.value = last.field1;
 if(last.field2) gHum.value = last.field2;
 if(last.field3) gPress.value = last.field3;
 if(last.field6) gWindSpeed.value = last.field6;
+if(last.field8) gSolar.value = solarRad;
 
 const alertBox = document.getElementById('alert-box');
 const month = d.getMonth() + 1;
