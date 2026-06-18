@@ -798,27 +798,7 @@ function createChart(canvasId, label, color, minVal = null, maxVal = null, type 
 return new Chart(document.getElementById(canvasId), {
 type: type,
 data: { labels: [], datasets: [{ label: label, data: [], borderColor: color, backgroundColor: (type === 'bar' ? color : color + '22'), borderWidth: (type === 'bar' ? 1 : 3), tension: 0.3, fill: true }] },
-options: {
-responsive: true,
-maintainAspectRatio: false,
-scales: {
-x: {
-grid: { display: false },
-ticks: {
-color: '#ffffff',
-maxTicksLimit: 8,
-autoSkip: true
-}
-},
-y: {
-min: minVal,
-max: maxVal,
-grid: { color: 'rgba(255,255,255,0.1)' },
-ticks: { color: '#ffffff' }
-}
-},
-plugins: { legend: { labels: { color: '#fff' } } }
-}
+options: { responsive: true, maintainAspectRatio: false, scales: { x: { grid: { display: false }, ticks: { color: '#ffffff' } }, y: { min: minVal, max: maxVal, grid: { color: 'rgba(255,255,255,0.1)' }, ticks: { color: '#ffffff' } } }, plugins: { legend: { labels: { color: '#fff' } } } }
 });
 }
 
@@ -922,7 +902,7 @@ document.getElementById('date').innerText = d.toLocaleDateString('el-GR', {weekd
 
 syncVisitors();
 
-fetch("https://api.thingspeak.com/channels/3365350/feeds.json?results=1440&status=true&metadata=true")
+fetch("https://api.thingspeak.com/channels/3365350/feeds.json?results=80&status=true&metadata=true")
 .then(res => res.json())
 .then(data => {
 const feeds = data.feeds;
