@@ -806,7 +806,7 @@ x: {
 grid: { display: false },
 ticks: {
 color: '#ffffff',
-maxTicksLimit: 24,
+maxTicksLimit: 8,
 autoSkip: true
 }
 },
@@ -922,7 +922,7 @@ document.getElementById('date').innerText = d.toLocaleDateString('el-GR', {weekd
 
 syncVisitors();
 
-fetch("https://api.thingspeak.com/channels/3365350/feeds.json?results=1440&average=60&status=true&metadata=true")
+fetch("https://api.thingspeak.com/channels/3365350/feeds.json?results=1440&status=true&metadata=true")
 .then(res => res.json())
 .then(data => {
 const feeds = data.feeds;
