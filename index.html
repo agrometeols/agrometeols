@@ -280,7 +280,7 @@ z-index: 1;
 }
 
 /* Charts */
-.chart-container { position: relative; height: 380px; width: 100%; margin-top: 10px; }
+.chart-container { position: relative; height: 460px; width: 100%; margin-top: 10px; }
 canvas { max-width: 100%; height: auto; }
 
 #status-badge { font-weight: bold; padding: 5px 15px; border-radius: 4px; color: white !important; text-transform: uppercase; display: inline-block; margin-left: 5px; }
@@ -1036,7 +1036,7 @@ else if(b > 30) { lbl.innerText=t.med; lbl.style.color="orange"; }
 else { lbl.innerText=t.low; lbl.style.color="red"; }
 
 const last24Feeds = feeds.slice(-24);
-let labels = last24Feeds.map(f => new Date(f.created_at).toLocaleTimeString('el-GR', {hour:'2-digit'}));
+let labels = last24Feeds.map(f => new Date(f.created_at).toLocaleTimeString('el-GR', {hour:'2-digit', minute:'2-digit'}));
 cTemp.data.labels = labels; cTemp.data.datasets[0].data = last24Feeds.map(f => f.field1); cTemp.update();
 cHum.data.labels = labels; cHum.data.datasets[0].data = last24Feeds.map(f => f.field2); cHum.update();
 cPress.data.labels = labels; cPress.data.datasets[0].data = last24Feeds.map(f => f.field3); cPress.update();
