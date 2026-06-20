@@ -214,7 +214,7 @@ box-shadow: 0 10px 25px rgba(0,0,0,0.2);
 
 .top-dashboard { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px; max-width: 1200px; margin: 0 auto 20px auto; }
 .dashboard { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 15px; max-width: 1200px; margin: 0 auto 20px auto; }
-.charts-dashboard { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 15px; max-width: 1200px; margin: 0 auto 20px auto; }
+.charts-dashboard { display: grid; grid-template-columns: repeat(2, minmax(500px, 1fr)); gap: 20px; max-width: 1400px; margin: 0 auto 20px auto; }
 .bottom-dashboard { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px; max-width: 1200px; margin: 0 auto; justify-content: center; }
 .ads-dashboard { max-width: 1200px; margin: 0 auto 20px auto; }
 
@@ -280,7 +280,7 @@ z-index: 1;
 }
 
 /* Charts */
-.chart-container { position: relative; height: 460px; width: 100%; margin-top: 10px; }
+.chart-container { position: relative; height: 520px; width: 100%; margin-top: 10px; }
 canvas { max-width: 100%; height: auto; }
 
 #status-badge { font-weight: bold; padding: 5px 15px; border-radius: 4px; color: white !important; text-transform: uppercase; display: inline-block; margin-left: 5px; }
@@ -1035,7 +1035,11 @@ if(b > 75) { lbl.innerText=t.high; lbl.style.color="green"; }
 else if(b > 30) { lbl.innerText=t.med; lbl.style.color="orange"; }
 else { lbl.innerText=t.low; lbl.style.color="red"; }
 
-const last24Feeds = feeds.slice(-24);
+const hourlyFeeds = feeds.filter((f,index)=>{
+const h=new Date(f.created_at).getHours();
+return index===feeds.findIndex(x=>new Date(x.created_at).getHours()===h);
+});
+const last24Feeds = hourlyFeeds.slice(-24);
 let labels = last24Feeds.map(f => new Date(f.created_at).toLocaleTimeString('el-GR', {hour:'2-digit', minute:'2-digit'}));
 cTemp.data.labels = labels; cTemp.data.datasets[0].data = last24Feeds.map(f => f.field1); cTemp.update();
 cHum.data.labels = labels; cHum.data.datasets[0].data = last24Feeds.map(f => f.field2); cHum.update();
