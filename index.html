@@ -142,7 +142,7 @@ height: 16px;
 border-radius: 2px;
 }
 
-.logo-container {
+.logo-container { background: rgba(255,255,255,0.03); border-radius:16px; padding:12px;
 display: flex;
 align-items: center;
 justify-content: center;
@@ -161,7 +161,7 @@ animation: pulse 2s ease-in-out infinite;
 }
 
 .logo-text-wrapper { text-align: left; line-height: 1; }
-.logo-text-wrapper h1 { margin: 0; font-size: 2.2rem; letter-spacing: 1px; text-transform: uppercase; font-weight: 800; color: white; }
+.logo-text-wrapper h1 { margin: 0; font-size: 3rem; letter-spacing: 1px; text-transform: uppercase; font-weight: 800; color: white; }
 .logo-text-wrapper span { color: #00ff00; font-size: 1.1rem; font-weight: bold; letter-spacing: 6px; text-transform: uppercase; }
 
 .nav-menu {
@@ -185,6 +185,11 @@ transition: all 0.3s ease;
 .nav-btn:hover, .nav-btn.active {
 background: rgba(0,255,0,0.2);
 border-color: #00ff00;
+}
+
+
+@media (min-width: 769px){
+.nav-menu{justify-content:flex-end !important; max-width:1200px; margin:0 auto;}
 }
 
 .page-section { display: none; }
@@ -211,7 +216,7 @@ padding: 6px 10px;
 
 .top-dashboard { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px; max-width: 1200px; margin: 0 auto 20px auto; }
 .dashboard { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 15px; max-width: 1200px; margin: 0 auto 20px auto; }
-.charts-dashboard { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; max-width: 1200px; width: 100%; margin: 0 auto 20px auto; box-sizing: border-box; }
+.charts-dashboard { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; max-width: 1400px; width: 100%; margin: 0 auto 20px auto; box-sizing: border-box; }
 .bottom-dashboard { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px; max-width: 1200px; margin: 0 auto; justify-content: center; }
 .ads-dashboard { max-width: 1200px; margin: 0 auto 20px auto; }
 
@@ -627,7 +632,7 @@ footer { text-align: center; color: #ffffff; margin: 30px auto 10px auto; paddin
 <div id="section-contact" class="page-section">
 <h2 class="section-title">Επικοινωνία</h2>
 <div class="dashboard">
-<div class="card info-card" style="grid-column: 1 / -1; max-width: 1200px; width: 100%; margin: 0 auto;">
+<div class="card info-card" style="grid-column: 1 / -1; max-width: 1400px; width: 100%; margin: 0 auto;">
 <h3 style="border-bottom: 1px solid white; padding-bottom: 10px;">Στοιχεία Agro Meteo Ls</h3>
 <p><strong style="font-size: 1.2rem;">Υπεύθυνος Συστήματος:</strong> <span style="font-size: 1.2rem;">Χρήστος Τσαβαλάκογλου</span></p>
 <p><strong>Email Επικοινωνίας:</strong> info@agrometeols.gr</p>
