@@ -39,43 +39,16 @@ z-index: -2;
 transition: filter 3s ease;
 }
 
-body.is-day #bg-layer {
-filter: brightness(1) saturate(1.1);
-}
-
-body.is-night #bg-layer {
-filter: brightness(0.35) saturate(0.8) hue-rotate(200deg);
-}
-
-/* Η σκοτεινή επικάλυψη για τη νύχτα */
-body::before {
-content: '';
-position: fixed;
-top: 0;
-left: 0;
-width: 100%;
-height: 100%;
-background: linear-gradient(to bottom, rgba(0, 10, 25, 0.7), rgba(0, 0, 0, 0.5));
-z-index: -1;
-opacity: 0;
-transition: opacity 2s ease;
-pointer-events: none;
-}
-
-body.is-night::before {
-opacity: 1;
-}
-
-/* Container για αστέρια */
+/* Containers για τα αστέρια */
 #star-field {
 position: fixed;
 top: 0;
 left: 0;
 width: 100%;
 height: 100%;
-pointer-events: none;
 z-index: -1;
-overflow: hidden;
+pointer-events: none;
+transition: opacity 3s ease;
 }
 
 .star {
@@ -83,135 +56,165 @@ position: absolute;
 background: white;
 border-radius: 50%;
 opacity: 0.8;
-animation: twinkle linear infinite;
+box-shadow: 0 0 5px 2px rgba(255, 255, 255, 0.4);
+animation: fall linear infinite;
 }
 
-@keyframes twinkle {
-0%, 100% { opacity: 0.2; }
-50% { opacity: 1; }
+@keyframes fall {
+from { transform: translateY(-10vh) translateX(0); opacity: 1; }
+to { transform: translateY(110vh) translateX(100px); opacity: 0; }
 }
 
-.overlay {
-background: rgba(0, 0, 0, 0.25);
-min-height: 100vh;
-padding: 20px;
-box-sizing: border-box;
-}
+/* Κλάσεις για την εναλλαγή */
+.is-day #bg-layer { filter: brightness(1.0) contrast(1.0); }
+.is-day #star-field { opacity: 0; }
 
-header {
-max-width: 1200px;
-margin: 0 auto 20px auto;
-padding: 15px;
-background: rgba(0, 0, 0, 0.45);
-backdrop-filter: blur(10px);
-border-radius: 15px;
-box-shadow: 0 8px 32px rgba(0,0,0,0.3);
-border: 1px solid rgba(255,255,255,0.2);
-}
+.is-night #bg-layer { filter: brightness(0.3) contrast(1.1); }
+.is-night #star-field { opacity: 1; }
 
+/* --- LANGUAGE SWITCHER STYLE --- */
 .lang-switcher {
 display: flex;
-justify-content: flex-end;
+justify-content: center;
 gap: 10px;
-margin-bottom: 15px;
-flex-wrap: wrap;
+padding: 15px 0;
+z-index: 1000;
+position: relative;
+order: -1;
+}
+
+@media (min-width: 769px) {
+.lang-switcher {
+position: absolute;
+top: 20px;
+right: 20px;
+padding: 0;
+order: unset;
+}
 }
 
 .lang-btn {
-background: rgba(255,255,255,0.1);
-color: white;
-border: 1px solid rgba(255,255,255,0.3);
+background: rgba(255, 255, 255, 0.2);
+backdrop-filter: blur(8px);
+border: 1px solid rgba(255, 255, 255, 0.3);
 padding: 8px 15px;
 border-radius: 25px;
+color: white;
+font-size: 0.85rem;
 cursor: pointer;
 display: flex;
 align-items: center;
 gap: 8px;
-font-weight: bold;
-transition: all 0.3s ease;
+transition: all 0.3s;
 }
-
 .lang-btn:hover {
-background: rgba(255,255,255,0.2);
-transform: translateY(-2px);
+background: rgba(255, 255, 255, 0.4);
+transform: scale(1.05);
 }
-
 .flag-icon {
-width: 24px;
-height: 16px;
+width: 22px;
+height: 15px;
+object-fit: cover;
 border-radius: 2px;
+box-shadow: 0 0 5px rgba(0,0,0,0.3);
 }
 
-.logo-container {
+/* --- SOCIAL WIDGET --- */
+.social-widget {
+background: rgba(0, 0, 0, 0.3);
+border: 1px solid rgba(255, 255, 255, 0.2);
+border-radius: 8px;
+padding: 6px 10px;
+color: white;
+font-size: 0.7rem;
 display: flex;
-align-items: center;
-justify-content: center;
-gap: 15px;
-margin-bottom: 20px;
-flex-wrap: wrap;
+flex-direction: column;
+gap: 2px;
+min-width: 120px;
+text-align: left;
 }
 
-.logo-svg {
-animation: pulse 2s ease-in-out infinite;
+/* ΕΦΕ ΑΝΑΒΟΣΒΗΜΑ ΠΡΑΣΙΝΟ */
+.live-blink {
+color: #00ff00;
+font-weight: bold;
+animation: pulse-green 1.5s infinite;
 }
 
-@keyframes pulse {
-0%, 100% { transform: scale(1); }
-50% { transform: scale(1.05); }
+@keyframes pulse-green {
+0% { color: #00ff00; text-shadow: 0 0 5px #00ff00; }
+50% { color: #004400; text-shadow: 0 0 0px #00ff00; }
+100% { color: #00ff00; text-shadow: 0 0 5px #00ff00; }
 }
 
-.logo-text-wrapper { text-align: left; line-height: 1; }
-.logo-text-wrapper h1 { margin: 0; font-size: 2.2rem; letter-spacing: 1px; text-transform: uppercase; font-weight: 800; color: white; }
-.logo-text-wrapper span { color: #00ff00; font-size: 1.1rem; font-weight: bold; letter-spacing: 6px; text-transform: uppercase; }
+/* --- WAVING FLAG --- */
+.waving-flag {
+width: 32px;
+vertical-align: middle;
+margin-left: 10px;
+display: inline-block;
+filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+animation: wave-motion 2.5s infinite ease-in-out;
+}
 
+@keyframes wave-motion {
+0% { transform: translateZ(0) rotate(0deg); clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%); }
+25% { transform: translateZ(0) rotate(2deg) skewY(2deg); }
+50% { transform: translateZ(0) rotate(0deg) skewY(0deg); }
+75% { transform: translateZ(0) rotate(-2deg) skewY(-2deg); }
+100% { transform: translateZ(0) rotate(0deg); }
+}
+
+/* --- NAVIGATION MENU STYLE --- */
 .nav-menu {
 display: flex;
 justify-content: center;
 gap: 10px;
-flex-wrap: wrap;
+margin-top: 20px;
+width: 100%;
 }
-
 .nav-btn {
-background: rgba(255,255,255,0.1);
+background: rgba(255, 255, 255, 0.1);
+backdrop-filter: blur(10px);
+border: 1px solid rgba(255, 255, 255, 0.2);
+padding: 12px 25px;
+border-radius: 50px;
 color: white;
-border: 1px solid rgba(255,255,255,0.25);
-padding: 10px 18px;
-border-radius: 10px;
-cursor: pointer;
 font-weight: bold;
-transition: all 0.3s ease;
+text-transform: uppercase;
+cursor: pointer;
+transition: all 0.3s;
+font-size: 0.9rem;
 }
-
-.nav-btn:hover, .nav-btn.active {
-background: rgba(0,255,0,0.2);
-border-color: #00ff00;
-}
+.nav-btn:hover { background: rgba(0, 255, 0, 0.3); border-color: #00ff00; }
+.nav-btn.active { background: rgba(0, 255, 0, 0.5); border-color: #00ff00; box-shadow: 0 0 15px rgba(0, 255, 0, 0.3); }
 
 .page-section { display: none; }
 .page-section.active { display: block; }
 
-.live-blink {
-animation: blink 1.5s infinite;
-color: #00ff00;
-font-weight: bold;
-}
+/* --- DASHBOARD STYLES --- */
+.overlay { min-height: 100vh; background: rgba(0,0,0,0.2); padding: 20px; box-sizing: border-box; }
+header { text-align: center; color: white; margin-bottom: 30px; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; }
 
-.waving-flag {
-width: 24px;
-vertical-align: middle;
-margin-left: 6px;
-border-radius: 2px;
+.logo-container {
+display: flex;
+align-items: center;
+gap: 15px;
+background: rgba(255,255,255,0.1);
+padding: 15px 30px;
+border-radius: 50px;
+backdrop-filter: blur(5px);
+border: 1px solid rgba(255,255,255,0.2);
+box-shadow: 0 10px 25px rgba(0,0,0,0.2);
 }
-
-.social-widget {
-background: rgba(255,255,255,0.08);
-border-radius: 10px;
-padding: 6px 10px;
-}
+.logo-svg { filter: drop-shadow(0 0 5px rgba(0,255,0,0.5)); }
+.logo-text-wrapper { text-align: left; line-height: 1; }
+.logo-text-wrapper h1 { margin: 0; font-size: 2.2rem; letter-spacing: 1px; text-transform: uppercase; font-weight: 800; }
+.logo-text-wrapper span { color: #00ff00; font-size: 1.1rem; font-weight: bold; letter-spacing: 6px; text-transform: uppercase; }
 
 .top-dashboard { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px; max-width: 1200px; margin: 0 auto 20px auto; }
 .dashboard { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 15px; max-width: 1200px; margin: 0 auto 20px auto; }
-.charts-dashboard { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; max-width: 1400px; width:100%; width: 100%; margin: 0 auto 20px auto; box-sizing: border-box; }
+.charts-dashboard { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 15px; max-width: 1200px; margin: 0 auto 20px auto; }
 .bottom-dashboard { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px; max-width: 1200px; margin: 0 auto; justify-content: center; }
 .ads-dashboard { max-width: 1200px; margin: 0 auto 20px auto; }
 
@@ -227,8 +230,6 @@ overflow: hidden;
 transition: transform 0.3s ease, box-shadow 0.3s ease;
 border: 1px solid rgba(255, 255, 255, 0.1);
 color: white;
-box-sizing: border-box;
-min-width: 0;
 }
 .card:hover { transform: translateY(-10px); box-shadow: 0 15px 40px rgba(0,0,0,0.5); }
 .card span, .card small { color: white !important; }
@@ -242,8 +243,6 @@ display: flex;
 justify-content: space-between;
 align-items: center;
 margin-top: 10px;
-gap: 10px;
-flex-wrap: wrap;
 }
 
 #clock, #date, #r-val, #b-val, #reset-msg { color: white !important; }
@@ -281,11 +280,11 @@ z-index: 1;
 }
 
 /* Charts */
-.chart-container { position: relative; height: 380px; width: 100%; margin-top: 10px; }
+.chart-container { position: relative; height: 240px; width: 100%; margin-top: 10px; }
 canvas { max-width: 100%; height: auto; }
 
 #status-badge { font-weight: bold; padding: 5px 15px; border-radius: 4px; color: white !important; text-transform: uppercase; display: inline-block; margin-left: 5px; }
-.section-title { width: 100%; max-width: 1200px; margin: 20px auto 10px auto; color: white; border-left: 5px solid #fff; padding-left: 10px; box-sizing: border-box; }
+.section-title { width: 100%; max-width: 1200px; margin: 20px auto 10px auto; color: white; border-left: 5px solid #fff; padding-left: 10px; }
 
 /* Alerts */
 #alert-box, #chill-box, #tendency-box { font-weight: bold; padding: 15px; border-radius: 8px; margin-top: 10px; border: 2px solid transparent; color: white !important; }
@@ -332,18 +331,6 @@ footer { text-align: center; color: #ffffff; margin: 30px auto 10px auto; paddin
 .status-safe { background: rgba(0, 255, 0, 0.3); color: #00ff00; border: 1px solid #00ff00; }
 .status-caution { background: rgba(255, 255, 0, 0.3); color: #ffff00; border: 1px solid #ffff00; }
 .status-danger { background: rgba(255, 0, 0, 0.3); color: #ff0000; border: 1px solid #ff0000; }
-
-@media (max-width: 1100px) {
-.charts-dashboard { grid-template-columns: 1fr; }
-}
-
-@media (min-width:769px){
-header{position:relative;}
-.lang-switcher{position:absolute;top:10px;right:10px;}
-.nav-menu{position:absolute;top:60px;right:10px;justify-content:flex-end;}
-.logo-container{justify-content:flex-start;padding-right:320px;}
-}
-
 </style>
 </head>
 <body class="is-day">
@@ -370,7 +357,7 @@ header{position:relative;}
 
 <div class="logo-container">
 <div class="logo-svg">
-<svg width="110" height="110" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+<svg width="60" height="60" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path d="M50 5L85 40L50 75L15 40L50 5Z" stroke="white" stroke-width="2"/>
 <path d="M50 15L75 40L50 65L25 40L50 15Z" fill="#00ff00" fill-opacity="0.6"/>
 <path d="M50 10V40" stroke="white" stroke-width="3" stroke-linecap="round"/>
@@ -576,9 +563,9 @@ header{position:relative;}
 <div style="text-align: left; background: rgba(255,255,255,0.05); padding: 15px; border-radius: 10px; min-width: 200px;">
 <div style="border-bottom: 1px solid rgba(255,255,255,0.2); margin-bottom: 10px; font-weight: bold;">Οδηγίες Drift:</div>
 <div id="drift-info" style="font-size: 0.9rem; line-height: 1.4;">
-- Ταχύτητα: <span id="drift-speed">--</span> km/h<br>
-- Διασπορά προς: <span id="drift-dir">--</span><br>
-- Κίνδυνος: <span id="drift-risk">Χαμηλός</span>
+• Ταχύτητα: <span id="drift-speed">--</span> km/h<br>
+• Διασπορά προς: <span id="drift-dir">--</span><br>
+• Κίνδυνος: <span id="drift-risk">Χαμηλός</span>
 </div>
 </div>
 </div>
@@ -795,12 +782,14 @@ setInterval(nextSlide, 5000);
 var gTemp = new RadialGauge({ renderTo: 'gauge-temp', width: 240, height: 240, units: "°C", minValue: -10, maxValue: 60, majorTicks: ["-10","0","10","20","30","40","50","60"], minorTicks: 2, strokeTicks: true, highlights: [ { "from": -10, "to": 0, "color": "rgba(0,255,255,.5)" }, { "from": 0, "to": 10, "color": "rgba(0,128,255,.5)" }, { "from": 10, "to": 20, "color": "rgba(154,205,50,.5)" }, { "from": 20, "to": 30, "color": "rgba(255,215,0,.5)" }, { "from": 30, "to": 40, "color": "rgba(255,165,0,.5)" }, { "from": 40, "to": 60, "color": "rgba(255,0,0,.5)" } ], colorPlate: "#fff", borderShadowWidth: 0, borders: true, needleType: "arrow", needleWidth: 4, needleCircleSize: 7, needleCircleOuter: true, needleCircleInner: false, animationDuration: 1500, animationRule: "linear" }).draw();
 var gHum = new RadialGauge({ renderTo: 'gauge-hum', width: 240, height: 240, units: "%", minValue: 0, maxValue: 100, majorTicks: ["0","10","20","30","40","50","60","70","80","90","100"], minorTicks: 2, strokeTicks: true, highlights: [ { "from": 0, "to": 20, "color": "rgba(255,140,0,.5)" }, { "from": 20, "to": 40, "color": "rgba(255,165,0,.5)" }, { "from": 40, "to": 60, "color": "rgba(50,205,50,.5)" }, { "from": 60, "to": 80, "color": "rgba(0,191,255,.5)" }, { "from": 80, "to": 100, "color": "rgba(0,0,255,.5)" } ], colorPlate: "#fff", borders: true, needleType: "arrow", needleWidth: 4, animationDuration: 1500 }).draw();
 
+// NEW DEW POINT GAUGE
 var gDp = new RadialGauge({ renderTo: 'gauge-dp', width: 240, height: 240, units: "°C", minValue: -10, maxValue: 30, majorTicks: ["-10","-5","0","5","10","15","20","25","30"], minorTicks: 2, strokeTicks: true, highlights: [ { "from": -10, "to": 2, "color": "rgba(255,0,0,.5)" }, { "from": 2, "to": 30, "color": "rgba(0,255,0,.5)" } ], colorPlate: "#fff", borders: true, needleType: "arrow", needleWidth: 4, animationDuration: 1500 }).draw();
 
 var gWindSpeed = new RadialGauge({ renderTo: 'gauge-wind-speed', width: 240, height: 240, units: "km/h", minValue: 0, maxValue: 30, majorTicks: ["0","5","10","15","20","25","30"], minorTicks: 2, strokeTicks: true, highlights: [{ "from": 8, "to": 30, "color": "rgba(200, 50, 50, .75)" }], colorPlate: "#fff", borders: true, needleType: "arrow", needleWidth: 4, animationDuration: 1500 }).draw();
 
 var gWindDir = new RadialGauge({ renderTo: 'gauge-wind-dir', width: 240, height: 240, units: "Deg", minValue: 0, maxValue: 360, majorTicks: ["N","NE","E","SE","S","SW","W","NW","N"], minorTicks: 22.5, strokeTicks: true, highlights: [], colorPlate: "#fff", borders: true, needleType: "arrow", needleWidth: 4, needleCircleSize: 7, needleCircleOuter: true, needleCircleInner: false, needleStart: 75, needleEnd: 95, animationDuration: 1500, animationRule: "linear", valueBox: true, ticksAngle: 360, startAngle: 180, forceRedraw: true }).draw();
 
+// NEW SOLAR RADIATION GAUGE
 var gSolar = new RadialGauge({ renderTo: 'gauge-solar', width: 240, height: 240, units: "W/m²", minValue: 0, maxValue: 1200, majorTicks: ["0","200","400","600","800","1000","1200"], minorTicks: 2, strokeTicks: true, highlights: [ { "from": 0, "to": 300, "color": "rgba(255,255,0,.2)" }, { "from": 300, "to": 600, "color": "rgba(255,220,0,.4)" }, { "from": 600, "to": 900, "color": "rgba(255,180,0,.6)" }, { "from": 900, "to": 1200, "color": "rgba(255,100,0,.7)" } ], colorPlate: "#fff", borders: true, needleType: "arrow", needleWidth: 4, animationDuration: 1500 }).draw();
 
 var gPress = new RadialGauge({ renderTo: 'gauge-press', width: 240, height: 240, units: "hPa", minValue: 950, maxValue: 1050, majorTicks: ["950","960","970","980","990","1000","1010","1020","1030","1040","1050"], minorTicks: 2, strokeTicks: true, highlights: [ { "from": 950, "to": 1000, "color": "rgba(255,0,0,.5)" }, { "from": 1000, "to": 1020, "color": "rgba(0,255,0,.5)" }, { "from": 1020, "to": 1050, "color": "rgba(0,0,255,.5)" } ], colorPlate: "#fff", borders: true, needleType: "arrow", needleWidth: 4, animationDuration: 1500 }).draw();
@@ -809,18 +798,7 @@ function createChart(canvasId, label, color, minVal = null, maxVal = null, type 
 return new Chart(document.getElementById(canvasId), {
 type: type,
 data: { labels: [], datasets: [{ label: label, data: [], borderColor: color, backgroundColor: (type === 'bar' ? color : color + '22'), borderWidth: (type === 'bar' ? 1 : 3), tension: 0.3, fill: true }] },
-options: {
-responsive: true,
-maintainAspectRatio: false,
-scales: {
-x: {
-grid: { display: false },
-ticks: { color: '#ffffff', maxRotation: 0, minRotation: 0, autoSkip: false }
-},
-y: { min: minVal, max: maxVal, grid: { color: 'rgba(255,255,255,0.1)' }, ticks: { color: '#ffffff' } }
-},
-plugins: { legend: { labels: { color: '#fff' } } }
-}
+options: { responsive: true, maintainAspectRatio: false, scales: { x: { grid: { display: false }, ticks: { color: '#ffffff' } }, y: { min: minVal, max: maxVal, grid: { color: 'rgba(255,255,255,0.1)' }, ticks: { color: '#ffffff' } } }, plugins: { legend: { labels: { color: '#fff' } } } }
 });
 }
 
@@ -831,14 +809,16 @@ var cRain = createChart('chart-rain', 'Βροχόπτωση (mm)', '#00ccff', 0,
 
 let prevPress = 0;
 let lastDirValueForAnimation = -1;
-let globalGDD = 0;
+let globalGDD = 0; // Αθροιστικές μονάδες
 
+// CALCULATE DEW POINT
 function calculateDewPoint(T, RH) {
 const a = 17.27; const b = 237.7;
 const alpha = ((a * T) / (b + T)) + Math.log(RH / 100.0);
 return (b * alpha) / (a - alpha);
 }
 
+// ΦΑΙΝΟΛΟΓΙΚΟ ΣΥΣΤΗΜΑ LOGIC
 const cropData = {
 peach: { name: "Ροδάκινα", base: 7, maxGDD: 1200, stages: [{limit: 50, name: "Λήθαργος", desc: "Αναμονή για θέρμανση."}, {limit: 250, name: "Διόγκωση Οφθαλμών", desc: "Οι οφθαλμοί αρχίζουν να μεγαλώνουν."}, {limit: 500, name: "Ροζ Κορυφή", desc: "Τα πρώτα πέταλα γίνονται ορατά."}, {limit: 800, name: "Πλήρης Άνθηση", desc: "Το 50-70% των ανθέων έχει ανοίξει."}, {limit: 1200, name: "Πτώση Πετάλων", desc: "Έναρξη καρπόδεσης."}] },
 nectarine: { name: "Νεκταρίνια", base: 7, maxGDD: 1200, stages: [{limit: 50, name: "Λήθαργος", desc: "Αναμονή."}, {limit: 250, name: "Διόγκωση", desc: "Πρώτα σημάδια κίνησης."}, {limit: 800, name: "Άνθηση", desc: "Πλήρες άνοιγμα."}, {limit: 1200, name: "Καρπόδεση", desc: "Σχηματισμός καρπού."}] },
@@ -856,29 +836,40 @@ function updateCropStage() {
 const cropKey = document.getElementById('cropSelector').value;
 const crop = cropData[cropKey];
 document.getElementById('cropName').innerText = crop.name;
+
+// Υπολογισμός GDD (Απλοποιημένος για το παράδειγμα βάσει μέσης θερμοκρασίας σταθμού)
 let gddValue = globalGDD;
 document.getElementById('gddValue').innerText = `Συσσωρευμένες Θερμικές Μονάδες: ${gddValue.toFixed(1)} GDD`;
+
 let percentage = (gddValue / crop.maxGDD) * 100;
 if(percentage > 100) percentage = 100;
 document.getElementById('gddBar').style.width = percentage + "%";
+
 let stage = crop.stages[0];
 for(let s of crop.stages) {
 if(gddValue >= s.limit) stage = s;
 }
+
 document.getElementById('currentStage').innerText = `Τρέχον Στάδιο: ${stage.name}`;
 document.getElementById('stageDesc').innerText = stage.desc;
 }
 
+// SMART SPRAY LOGIC
 function updateSprayAnalysis(windSpeed, windDir) {
 const statusBox = document.getElementById('spray-status-box');
 const arrow = document.getElementById('drift-arrow');
 const speedText = document.getElementById('drift-speed');
 const dirText = document.getElementById('drift-dir');
 const riskText = document.getElementById('drift-risk');
+
+// Η διασπορά (drift) είναι προς τα εκεί που ΦΥΣΑΕΙ ο άνεμος
+// Άρα το βέλος πρέπει να περιστραφεί κατά μοίρες ίσες με τη φορά του ανέμου
 arrow.style.transform = `translate(-50%, -100%) rotate(${windDir}deg)`;
+
 speedText.innerText = windSpeed.toFixed(1);
+
 let dirName = "Νότια";
-if(windDir >= 337.5 || windDir < 22.5) dirName = "Νότια";
+if(windDir >= 337.5 || windDir < 22.5) dirName = "Νότια"; // Ο Βόρειος άνεμος πάει Νότια
 else if(windDir >= 22.5 && windDir < 67.5) dirName = "Νοτιοδυτικά";
 else if(windDir >= 67.5 && windDir < 112.5) dirName = "Δυτικά";
 else if(windDir >= 112.5 && windDir < 157.5) dirName = "Βορειοδυτικά";
@@ -887,6 +878,7 @@ else if(windDir >= 202.5 && windDir < 247.5) dirName = "Βορειοανατολ
 else if(windDir >= 247.5 && windDir < 292.5) dirName = "Ανατολικά";
 else if(windDir >= 292.5 && windDir < 337.5) dirName = "Νοτιοανατολικά";
 dirText.innerText = dirName;
+
 if(windSpeed <= 12) {
 statusBox.innerText = "✅ ΙΔΑΝΙΚΕΣ ΣΥΝΘΗΚΕΣ ΨΕΚΑΣΜΟΥ";
 statusBox.className = "spray-status status-safe";
@@ -902,20 +894,10 @@ riskText.innerText = "Επικίνδυνος";
 }
 }
 
-function buildHourlySeries(feeds) {
-const map = new Map();
-feeds.forEach(f => {
-const date = new Date(f.created_at);
-const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')} ${String(date.getHours()).padStart(2, '0')}:00`;
-map.set(key, f);
-});
-return Array.from(map.values()).slice(-24);
-}
-
 function update() {
 const d = new Date();
 const todayStr = d.toLocaleDateString('el-GR');
-document.getElementById('clock').innerText = d.toLocaleTimeString('el-GR', { hour12: false });
+document.getElementById('clock').innerText = d.toLocaleTimeString('el-GR');
 document.getElementById('date').innerText = d.toLocaleDateString('el-GR', {weekday:'long', day:'numeric', month:'long'});
 
 syncVisitors();
@@ -933,6 +915,7 @@ const press = parseFloat(last.field3);
 const windSpeed = parseFloat(last.field6) || 0;
 const solarRad = parseFloat(last.field8) || 0;
 
+// GDD Calculation (Simple approach for UI)
 if(!isNaN(temp)) {
 let dailyAvg = feeds.slice(-20).reduce((a, b) => a + (parseFloat(b.field1) || 0), 0) / 20;
 let base = cropData[document.getElementById('cropSelector').value].base;
@@ -941,6 +924,7 @@ globalGDD += contribution;
 updateCropStage();
 }
 
+// UPDATE DEW POINT
 if(!isNaN(temp) && !isNaN(hum)) {
 const dp = calculateDewPoint(temp, hum);
 gDp.value = dp;
@@ -966,6 +950,7 @@ gWindDir.update();
 }
 }
 
+// Update Smart Spray Map
 updateSprayAnalysis(windSpeed, currentWindDir);
 
 let firstFeedToday = feeds.find(f => new Date(f.created_at).toLocaleDateString('el-GR') === todayStr);
@@ -1009,6 +994,7 @@ else if (temp > 28 && hum < 40) { alertBox.innerText = "🕷️ Κίνδυνος
 else if (temp >= 15 && temp <= 25 && hum >= 50 && hum <= 75) { alertBox.innerText = "🚜 Ιδανικές συνθήκες για ψεκασμό."; alertBox.className = "alert-normal"; }
 else { alertBox.innerText = "✅ Ομαλές Συνθήκες."; alertBox.className = "alert-normal"; }
 
+// Υπολογισμός Τάσης Βαρομετρικής Πίεσης (Live Barometric Tendency)
 const tendencyBox = document.getElementById('tendency-box');
 if (prevPress > 0 && !isNaN(press)) {
 let diff = press - prevPress;
@@ -1031,9 +1017,10 @@ tendencyBox.className = "alert-normal";
 }
 prevPress = press;
 
+let currentRainValue = 0;
 if(last.field4) {
 let liveRain = parseFloat(last.field4);
-let currentRainValue = liveRain - resetVal;
+currentRainValue = liveRain - resetVal;
 if (currentRainValue < 0) currentRainValue = 0;
 document.getElementById('r-val').innerText = currentRainValue.toFixed(2);
 document.getElementById('bar-day').style.height = Math.min((currentRainValue / 50) * 100, 100) + "%";
@@ -1048,13 +1035,12 @@ if(b > 75) { lbl.innerText=t.high; lbl.style.color="green"; }
 else if(b > 30) { lbl.innerText=t.med; lbl.style.color="orange"; }
 else { lbl.innerText=t.low; lbl.style.color="red"; }
 
-const hourlyFeeds = buildHourlySeries(feeds);
-const labels = hourlyFeeds.map(f => new Date(f.created_at).toLocaleTimeString('el-GR', { hour: '2-digit', hour12: false }));
-cTemp.data.labels = labels; cTemp.data.datasets[0].data = hourlyFeeds.map(f => f.field1); cTemp.update();
-cHum.data.labels = labels; cHum.data.datasets[0].data = hourlyFeeds.map(f => f.field2); cHum.update();
-cPress.data.labels = labels; cPress.data.datasets[0].data = hourlyFeeds.map(f => f.field3); cPress.update();
+let labels = feeds.map(f => new Date(f.created_at).toLocaleTimeString('el-GR', {hour: '2-digit', minute:'2-digit'}));
+cTemp.data.labels = labels; cTemp.data.datasets[0].data = feeds.map(f => f.field1); cTemp.update();
+cHum.data.labels = labels; cHum.data.datasets[0].data = feeds.map(f => f.field2); cHum.update();
+cPress.data.labels = labels; cPress.data.datasets[0].data = feeds.map(f => f.field3); cPress.update();
 cRain.data.labels = labels;
-cRain.data.datasets[0].data = hourlyFeeds.map(f => {
+cRain.data.datasets[0].data = feeds.map(f => {
 let val = parseFloat(f.field4) - resetVal;
 return val < 0 ? 0 : val;
 });
@@ -1070,9 +1056,9 @@ if(tArrToday.length > 0) {
 let tMax = tArrToday.reduce((p, c) => (p.v > c.v) ? p : c);
 let tMin = tArrToday.reduce((p, c) => (p.v < c.v) ? p : c);
 document.getElementById('t-max').innerText = tMax.v.toFixed(1);
-document.getElementById('t-max-t').innerText = "(" + new Date(tMax.t).toLocaleTimeString('el-GR', {hour:'2-digit', minute:'2-digit', hour12: false}) + ")";
+document.getElementById('t-max-t').innerText = "(" + new Date(tMax.t).toLocaleTimeString('el-GR', {hour:'2-digit', minute:'2-digit'}) + ")";
 document.getElementById('t-min').innerText = tMin.v.toFixed(1);
-document.getElementById('t-min-t').innerText = "(" + new Date(tMin.t).toLocaleTimeString('el-GR', {hour:'2-digit', minute:'2-digit', hour12: false}) + ")";
+document.getElementById('t-min-t').innerText = "(" + new Date(tMin.t).toLocaleTimeString('el-GR', {hour:'2-digit', minute:'2-digit'}) + ")";
 let cHrs = tArrToday.filter(f => f.v < 7).length * (20/60);
 document.getElementById('chill-hours').innerText = cHrs.toFixed(1);
 }
@@ -1080,17 +1066,17 @@ if(hArrToday.length > 0) {
 let hMax = hArrToday.reduce((p, c) => (p.v > c.v) ? p : c);
 let hMin = hArrToday.reduce((p, c) => (p.v < c.v) ? p : c);
 document.getElementById('h-max').innerText = hMax.v.toFixed(0);
-document.getElementById('h-max-t').innerText = "(" + new Date(hMax.t).toLocaleTimeString('el-GR', {hour:'2-digit', minute:'2-digit', hour12: false}) + ")";
+document.getElementById('h-max-t').innerText = "(" + new Date(hMax.t).toLocaleTimeString('el-GR', {hour:'2-digit', minute:'2-digit'}) + ")";
 document.getElementById('h-min').innerText = hMin.v.toFixed(0);
-document.getElementById('h-min-t').innerText = "(" + new Date(hMin.t).toLocaleTimeString('el-GR', {hour:'2-digit', minute:'2-digit', hour12: false}) + ")";
+document.getElementById('h-min-t').innerText = "(" + new Date(hMin.t).toLocaleTimeString('el-GR', {hour:'2-digit', minute:'2-digit'}) + ")";
 }
 if(pArrToday.length > 0) {
 let pMax = pArrToday.reduce((p, c) => (p.v > c.v) ? p : c);
 let pMin = pArrToday.reduce((p, c) => (p.v < c.v) ? p : c);
 document.getElementById('p-max').innerText = pMax.v.toFixed(1);
-document.getElementById('p-max-t').innerText = "(" + new Date(pMax.t).toLocaleTimeString('el-GR', {hour:'2-digit', minute:'2-digit', hour12: false}) + ")";
+document.getElementById('p-max-t').innerText = "(" + new Date(pMax.t).toLocaleTimeString('el-GR', {hour:'2-digit', minute:'2-digit'}) + ")";
 document.getElementById('p-min').innerText = pMin.v.toFixed(1);
-document.getElementById('p-min-t').innerText = "(" + new Date(pMin.t).toLocaleTimeString('el-GR', {hour:'2-digit', minute:'2-digit', hour12: false}) + ")";
+document.getElementById('p-min-t').innerText = "(" + new Date(pMin.t).toLocaleTimeString('el-GR', {hour:'2-digit', minute:'2-digit'}) + ")";
 }
 }
 })
