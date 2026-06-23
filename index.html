@@ -355,11 +355,32 @@ footer { text-align: center; color: #ffffff; margin: 30px auto 10px auto; paddin
 </button>
 </div>
 
-<!-- Αρχή Λογοτύπου (Τέλεια Κεντραρισμένο με Κενό Πάνω και Κάτω) -->
-<div class="logo-container" style="display: flex; align-items: center; justify-content: center; gap: 24px; transform: scale(1.3); transform-origin: center center; position: relative; padding: 16px 36px; border-radius: 9999px; background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.2); width: fit-content; max-width: 100%; margin: 40px auto 40px auto;">
+<!-- Αρχή Λογοτύπου (Responsive για Κινητά και Υπολογιστές) -->
+<div class="logo-container">
   
   <style>
-    /* 1. Απαλό Πράσινο RGB LED που κάνει κύκλους γύρω-γύρω στην περίμετρο */
+    /* Βασικό στυλ για Υπολογιστές */
+    .logo-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 24px;
+      transform: scale(1.3);
+      transform-origin: center center;
+      position: relative;
+      padding: 16px 36px;
+      border-radius: 9999px;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      width: fit-content;
+      max-width: 95%; /* Αποτρέπει το logo από το να βγαίνει εκτός οθόνης */
+      margin: 40px auto;
+      box-sizing: border-box;
+    }
+
+    /* 1. Απαλό Πράσινο RGB LED που κάνει κύκλους γύρω-γύρω */
     .logo-container::before {
       content: '';
       position: absolute;
@@ -379,7 +400,7 @@ footer { text-align: center; color: #ffffff; margin: 30px auto 10px auto; paddin
       100% { background-position: 200% center; }
     }
 
-    /* 2. Εφέ Παλμού (Breathing) για τον Κύβο */
+    /* 2. Εφέ Παλμού (Breathing) για τον Κύβο/Ρόμβο */
     .cube-pulse {
       animation: cubeBreathe 3s ease-in-out infinite;
       transform-origin: center;
@@ -389,9 +410,36 @@ footer { text-align: center; color: #ffffff; margin: 30px auto 10px auto; paddin
       50% { transform: scale(1.15); filter: drop-shadow(0 0 20px rgba(0, 255, 0, 0.8)); }
       100% { transform: scale(1); filter: drop-shadow(0 0 5px rgba(0, 255, 0, 0.4)); }
     }
+
+    /* ------------------------------------------------------- */
+    /* ΕΙΔΙΚΕΣ ΡΥΘΜΙΣΕΙΣ ΓΙΑ ΚΙΝΗΤΑ (Smartphones)              */
+    /* ------------------------------------------------------- */
+    @media (max-width: 640px) {
+      .logo-container {
+        transform: scale(0.85); /* Μικραίνει ελαφρώς για να χωράει τέλεια στην οθόνη του κινητού */
+        gap: 12px; /* Μικραίνει το κενό ανάμεσα σε σήμα και γράμματα */
+        padding: 10px 20px; /* Μικραίνει το εσωτερικό κενό */
+        margin: 20px auto; /* Λιγότερο κενό πάνω/κάτω στα κινητά */
+        width: 95%; /* Αναγκάζει το logo να μένει μέσα στα όρια */
+      }
+      
+      .logo-svg.cube-pulse {
+        width: 50px !important; /* Πιο μαζεμένος ρόμβος στο κινητό */
+        height: 50px !important;
+      }
+
+      .logo-text-wrapper h1 {
+        font-size: 24px !important; /* Πιο μικρά γράμματα για να μην σπάνε σε 2 γραμμές */
+      }
+
+      .logo-text-wrapper span {
+        font-size: 12px !important;
+        letter-spacing: 2px !important;
+      }
+    }
   </style>
 
-  <!-- Ο Κύβος/Ρόμβος - Μεγαλωμένος κατά πολύ και με Παλμό -->
+  <!-- Ο Κύβος/Ρόμβος -->
   <div class="logo-svg cube-pulse" style="width: 80px; height: 80px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; position: relative;">
     <svg viewBox="0 0 100 100" style="width: 100%; height: 100%;">
       <path d="M50 5 L95 50 L50 95 L5 50 Z" fill="none" stroke="#ffffff" stroke-width="3"></path>
@@ -401,7 +449,7 @@ footer { text-align: center; color: #ffffff; margin: 30px auto 10px auto; paddin
     </svg>
   </div>
 
-  <!-- Τα Γράμματα - Ίδια ακριβώς στην εμφάνιση -->
+  <!-- Τα Γράμματα -->
   <div class="logo-text-wrapper" style="display: flex; flex-direction: column; justify-content: center; align-items: flex-start;">
     <h1 id="txt-logo-main" style="font-family: sans-serif; font-size: 38px; font-weight: 900; color: #ffffff; margin: 0; line-height: 1; text-transform: uppercase;">AGRO METEO</h1>
     <span id="txt-logo-sub" style="font-family: sans-serif; font-size: 18px; font-weight: 800; color: #00ff00; margin: 5px 0 0 0; text-transform: uppercase; letter-spacing: 4px;">LS SYSTEM</span>
@@ -409,6 +457,7 @@ footer { text-align: center; color: #ffffff; margin: 30px auto 10px auto; paddin
 
 </div>
 <!-- Τέλος Λογοτύπου -->
+
 
 
 
