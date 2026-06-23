@@ -199,22 +199,22 @@ header { text-align: center; color: white; margin-bottom: 30px; display: flex; f
 .logo-container {
     display: flex;
     align-items: center;
-    gap: 24px;
-    transform: scale(1.3); /* [Απαίτηση 1] Μεγαλώνει όλο το λογότυπο κατά 30% όπως είναι */
+    gap: 12px;
+    transform: scale(1.3); /* [1] Μεγαλώνει όλο το λογότυπο ακριβώς όπως είναι */
     transform-origin: left center;
     position: relative;
     padding: 10px 20px;
-    border-radius: 50px; /* Κυκλική περίμετρος */
+    border-radius: 50px; /* Κυκλική περίμετρος για το RGB */
     background: rgb(30, 41, 59); /* Σκούρο φόντο */
 }
 
-/* [Απαίτηση 3] Απαλός RGB Gaming φωτισμός που τρέχει κυκλικά (μόνο πράσινες αποχρώσεις) */
+/* [3] Απαλός RGB Gaming φωτισμός στην περίμετρο (πράσινο στυλ) */
 .logo-container::before {
     content: '';
     position: absolute;
     inset: 0;
     border-radius: 50px;
-    padding: 2px; /* Πάχος RGB γραμμής */
+    padding: 2px;
     background: linear-gradient(90deg, #10b981, #059669, #34d399, #059669, #10b981);
     background-size: 200% auto;
     -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
@@ -230,14 +230,13 @@ header { text-align: center; color: white; margin-bottom: 30px; display: flex; f
 }
 
 .logo-svg {
+    width: 85px; /* [2] Μεγαλώνει κατά πολύ τον κύβο/σπιτάκι */
+    height: 85px;
     flex-shrink: 0;
     display: flex;
     align-items: center;
     justify-content: center;
-    /* [Απαίτηση 2] Μεγαλώνει κατά πολύ το σπιτάκι/κύβο και προσθέτει εφέ παλμού */
-    width: 75px; 
-    height: 75px;
-    animation: cubeBreathe 3s ease-in-out infinite;
+    animation: cubeBreathe 3s ease-in-out infinite; /* [2] Παλμός που αναβοσβήνει όμορφα */
 }
 
 @keyframes cubeBreathe {
@@ -246,12 +245,13 @@ header { text-align: center; color: white; margin-bottom: 30px; display: flex; f
     100% { transform: scale(1); opacity: 0.85; filter: drop-shadow(0 0 4px rgba(16, 185, 129, 0.4)); }
 }
 
+/* Τα δικά σου στυλ για τα γράμματα, χωρίς καμία αλλαγή */
 .logo-text-wrapper {
     display: flex;
     flex-direction: column;
 }
 
-.logo-text-wrapper h1 {
+#txt-logo-main {
     font-size: 24px;
     font-weight: 700;
     color: #ffffff;
@@ -259,11 +259,12 @@ header { text-align: center; color: white; margin-bottom: 30px; display: flex; f
     line-height: 1;
 }
 
-.logo-text-wrapper span {
+#txt-logo-sub {
     font-size: 12px;
-    color: #a7f3d0;
+    color: var(--emerald-200);
     margin: 0;
 }
+
 
 .logo-svg { filter: drop-shadow(0 0 5px rgba(0,255,0,0.5)); }
 .logo-text-wrapper { text-align: left; line-height: 1; }
