@@ -199,22 +199,22 @@ header { text-align: center; color: white; margin-bottom: 30px; display: flex; f
 .logo-container {
     display: flex;
     align-items: center;
-    gap: 12px;
-    transform: scale(1.3); /* [1] Μεγαλώνει όλο το λογότυπο ακριβώς όπως είναι */
+    gap: 24px;
+    transform: scale(1.3); /* [Απαίτηση 1] Μεγαλώνει όλο το λογότυπο κατά 30% όπως είναι */
     transform-origin: left center;
     position: relative;
     padding: 10px 20px;
-    border-radius: 50px; /* Κυκλική περίμετρος για το RGB */
+    border-radius: 50px; /* Κυκλική περίμετρος */
     background: rgb(30, 41, 59); /* Σκούρο φόντο */
 }
 
-/* [3] Απαλός RGB Gaming φωτισμός στην περίμετρο (πράσινο στυλ) */
+/* [Απαίτηση 3] Απαλός RGB Gaming φωτισμός που τρέχει κυκλικά (μόνο πράσινες αποχρώσεις) */
 .logo-container::before {
     content: '';
     position: absolute;
     inset: 0;
     border-radius: 50px;
-    padding: 2px;
+    padding: 2px; /* Πάχος RGB γραμμής */
     background: linear-gradient(90deg, #10b981, #059669, #34d399, #059669, #10b981);
     background-size: 200% auto;
     -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
@@ -230,13 +230,14 @@ header { text-align: center; color: white; margin-bottom: 30px; display: flex; f
 }
 
 .logo-svg {
-    width: 85px; /* [2] Μεγαλώνει κατά πολύ τον κύβο/σπιτάκι */
-    height: 85px;
     flex-shrink: 0;
     display: flex;
     align-items: center;
     justify-content: center;
-    animation: cubeBreathe 3s ease-in-out infinite; /* [2] Παλμός που αναβοσβήνει όμορφα */
+    /* [Απαίτηση 2] Μεγαλώνει κατά πολύ το σπιτάκι/κύβο και προσθέτει εφέ παλμού */
+    width: 75px; 
+    height: 75px;
+    animation: cubeBreathe 3s ease-in-out infinite;
 }
 
 @keyframes cubeBreathe {
@@ -245,13 +246,12 @@ header { text-align: center; color: white; margin-bottom: 30px; display: flex; f
     100% { transform: scale(1); opacity: 0.85; filter: drop-shadow(0 0 4px rgba(16, 185, 129, 0.4)); }
 }
 
-/* Τα δικά σου στυλ για τα γράμματα, χωρίς καμία αλλαγή */
 .logo-text-wrapper {
     display: flex;
     flex-direction: column;
 }
 
-#txt-logo-main {
+.logo-text-wrapper h1 {
     font-size: 24px;
     font-weight: 700;
     color: #ffffff;
@@ -259,12 +259,11 @@ header { text-align: center; color: white; margin-bottom: 30px; display: flex; f
     line-height: 1;
 }
 
-#txt-logo-sub {
+.logo-text-wrapper span {
     font-size: 12px;
-    color: var(--emerald-200);
+    color: #a7f3d0;
     margin: 0;
 }
-
 
 .logo-svg { filter: drop-shadow(0 0 5px rgba(0,255,0,0.5)); }
 .logo-text-wrapper { text-align: left; line-height: 1; }
@@ -414,20 +413,64 @@ footer { text-align: center; color: #ffffff; margin: 30px auto 10px auto; paddin
 </button>
 </div>
 
-<div class="logo-container">
-    <div class="logo-svg">
-        <svg viewBox="0 0 100 100" class="w-full h-full text-emerald-500" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M50 10 L90 30 L90 70 L50 90 L10 70 L10 30 Z" stroke-width="3"></path>
-            <path d="M50 10 L50 90"></path>
-            <path d="M10 30 L50 50 L90 30"></path>
-            <path d="M10 70 L50 50 L90 70"></path>
-        </svg>
-    </div>
-    <div class="logo-text-wrapper">
-        <h1 id="txt-logo-main">Agro Meteo</h1>
-        <span id="txt-logo-sub">Ls System</span>
-    </div>
+<!-- Αρχή Λογοτύπου (Μεγαλύτερο, Κεντραρισμένο, με Παλμό στον Κύβο και RGB Led) -->
+<div class="logo-container" style="display: flex; align-items: center; justify-content: center; gap: 24px; transform: scale(1.3); transform-origin: left center; position: relative; padding: 16px 36px; border-radius: 9999px; background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.2); width: fit-content; max-width: 100%;">
+  
+  <style>
+    /* 1. Απαλό Πράσινο RGB LED που κάνει κύκλους γύρω-γύρω στην περίμετρο */
+    .logo-container::before {
+      content: '';
+      position: absolute;
+      inset: -2px;
+      border-radius: 9999px;
+      padding: 2px;
+      background: linear-gradient(90deg, #00ff00, #00aa00, #a3e635, #00aa00, #00ff00);
+      background-size: 200% auto;
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      animation: ledRotate 4s linear infinite;
+      pointer-events: none;
+    }
+    @keyframes ledRotate {
+      0% { background-position: 0% center; }
+      100% { background-position: 200% center; }
+    }
+
+    /* 2. Εφέ Παλμού (Breathing) για τον Κύβο */
+    .cube-pulse {
+      animation: cubeBreathe 3s ease-in-out infinite;
+      transform-origin: center;
+    }
+    @keyframes cubeBreathe {
+      0% { transform: scale(1); filter: drop-shadow(0 0 5px rgba(0, 255, 0, 0.4)); }
+      50% { transform: scale(1.15); filter: drop-shadow(0 0 20px rgba(0, 255, 0, 0.8)); }
+      100% { transform: scale(1); filter: drop-shadow(0 0 5px rgba(0, 255, 0, 0.4)); }
+    }
+  </style>
+
+  <!-- Ο Κύβος από τη φωτογραφία - Μεγαλωμένος κατά πολύ και με Παλμό -->
+  <div class="logo-svg cube-pulse" style="width: 80px; height: 80px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; position: relative;">
+    <svg viewBox="0 0 100 100" style="width: 100%; height: 100%;">
+      <!-- Το εξωτερικό λευκό/πράσινο περίγραμμα του ρόμβου -->
+      <path d="M50 5 L95 50 L50 95 L5 50 Z" fill="none" stroke="#ffffff" stroke-width="3"></path>
+      <!-- Το εσωτερικό πράσινο γεμάτο σχήμα -->
+      <path d="M50 15 L85 50 L50 85 L15 50 Z" fill="#00ff00" opacity="0.9"></path>
+      <!-- Η λευκή γραμμή με τον κύκλο (κεραία/σταγόνα) στο κέντρο -->
+      <line x1="50" y1="15" x2="50" y2="70" stroke="#ffffff" stroke-width="4" stroke-linecap="round"></line>
+      <circle cx="50" cy="45" r="6" fill="#ffffff"></circle>
+    </svg>
+  </div>
+
+  <!-- Τα Γράμματα - Ίδια ακριβώς όπως στη φωτογραφία και κεντραρισμένα -->
+  <div class="logo-text-wrapper" style="display: flex; flex-direction: column; justify-content: center; align-items: flex-start;">
+    <h1 id="txt-logo-main" style="font-family: sans-serif; font-size: 38px; font-weight: 900; color: #ffffff; margin: 0; line-height: 1; tracking-width: 1px; text-transform: uppercase;">AGRO METEO</h1>
+    <span id="txt-logo-sub" style="font-family: sans-serif; font-size: 18px; font-weight: 800; color: #00ff00; margin: 5px 0 0 0; tracking-width: 2px; text-transform: uppercase; letter-spacing: 4px;">LS SYSTEM</span>
+  </div>
+
 </div>
+<!-- Τέλος Λογοτύπου -->
+
 
 
 <div class="nav-menu">
