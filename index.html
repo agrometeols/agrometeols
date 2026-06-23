@@ -196,17 +196,36 @@ font-size: 0.9rem;
 .overlay { min-height: 100vh; background: rgba(0,0,0,0.2); padding: 20px; box-sizing: border-box; }
 header { text-align: center; color: white; margin-bottom: 30px; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; }
 
+
 .logo-container {
-display: flex;
-align-items: center;
-gap: 15px;
-background: rgba(255,255,255,0.1);
-padding: 15px 30px;
-border-radius: 50px;
-backdrop-filter: blur(5px);
-border: 1px solid rgba(255,255,255,0.2);
-box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+display:flex;
+align-items:center;
+gap:30px;
+background:rgba(255,255,255,0.08);
+padding:20px 70px;
+border-radius:90px;
+position:relative;
+overflow:hidden;
+border:2px solid rgba(0,255,0,0.35);
 }
+.logo-container::before{
+content:'';
+position:absolute;
+inset:-4px;
+border-radius:95px;
+background:conic-gradient(from 0deg, transparent 0deg, transparent 320deg, #00ff00 340deg, #b6ffb6 350deg, #00ff00 360deg);
+animation:spin 2.5s linear infinite;
+}
+.logo-container::after{
+content:'';
+position:absolute;
+inset:3px;
+border-radius:87px;
+background:rgba(20,20,20,.75);
+}
+.logo-container>*{position:relative;z-index:2;}
+@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+
 .logo-svg { filter: drop-shadow(0 0 5px rgba(0,255,0,0.5)); }
 .logo-text-wrapper { text-align: left; line-height: 1; }
 .logo-text-wrapper h1 { margin: 0; font-size: 2.2rem; letter-spacing: 1px; text-transform: uppercase; font-weight: 800; }
