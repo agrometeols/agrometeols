@@ -197,16 +197,74 @@ font-size: 0.9rem;
 header { text-align: center; color: white; margin-bottom: 30px; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; }
 
 .logo-container {
-display: flex;
-align-items: center;
-gap: 15px;
-background: rgba(255,255,255,0.1);
-padding: 15px 30px;
-border-radius: 50px;
-backdrop-filter: blur(5px);
-border: 1px solid rgba(255,255,255,0.2);
-box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    transform: scale(1.3); /* [Απαίτηση 1] Μεγαλώνει όλο το λογότυπο κατά 30% όπως είναι */
+    transform-origin: left center;
+    position: relative;
+    padding: 10px 20px;
+    border-radius: 50px; /* Κυκλική περίμετρος */
+    background: rgb(30, 41, 59); /* Σκούρο φόντο */
 }
+
+/* [Απαίτηση 3] Απαλός RGB Gaming φωτισμός που τρέχει κυκλικά (μόνο πράσινες αποχρώσεις) */
+.logo-container::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50px;
+    padding: 2px; /* Πάχος RGB γραμμής */
+    background: linear-gradient(90deg, #10b981, #059669, #34d399, #059669, #10b981);
+    background-size: 200% auto;
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    animation: rgbRotation 4s linear infinite;
+    pointer-events: none;
+}
+
+@keyframes rgbRotation {
+    0% { background-position: 0% center; }
+    100% { background-position: 200% center; }
+}
+
+.logo-svg {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* [Απαίτηση 2] Μεγαλώνει κατά πολύ το σπιτάκι/κύβο και προσθέτει εφέ παλμού */
+    width: 75px; 
+    height: 75px;
+    animation: cubeBreathe 3s ease-in-out infinite;
+}
+
+@keyframes cubeBreathe {
+    0% { transform: scale(1); opacity: 0.85; filter: drop-shadow(0 0 4px rgba(16, 185, 129, 0.4)); }
+    50% { transform: scale(1.15); opacity: 1; filter: drop-shadow(0 0 15px rgba(16, 185, 129, 0.8)); }
+    100% { transform: scale(1); opacity: 0.85; filter: drop-shadow(0 0 4px rgba(16, 185, 129, 0.4)); }
+}
+
+.logo-text-wrapper {
+    display: flex;
+    flex-direction: column;
+}
+
+.logo-text-wrapper h1 {
+    font-size: 24px;
+    font-weight: 700;
+    color: #ffffff;
+    margin: 0;
+    line-height: 1;
+}
+
+.logo-text-wrapper span {
+    font-size: 12px;
+    color: #a7f3d0;
+    margin: 0;
+}
+
 .logo-svg { filter: drop-shadow(0 0 5px rgba(0,255,0,0.5)); }
 .logo-text-wrapper { text-align: left; line-height: 1; }
 .logo-text-wrapper h1 { margin: 0; font-size: 2.2rem; letter-spacing: 1px; text-transform: uppercase; font-weight: 800; }
@@ -356,20 +414,20 @@ footer { text-align: center; color: #ffffff; margin: 30px auto 10px auto; paddin
 </div>
 
 <div class="logo-container">
-<div class="logo-svg">
-<svg width="60" height="60" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M50 5L85 40L50 75L15 40L50 5Z" stroke="white" stroke-width="2"/>
-<path d="M50 15L75 40L50 65L25 40L50 15Z" fill="#00ff00" fill-opacity="0.6"/>
-<path d="M50 10V40" stroke="white" stroke-width="3" stroke-linecap="round"/>
-<circle cx="50" cy="40" r="5" fill="white"/>
-<path d="M30 60C40 55 60 55 70 60" stroke="#00ff00" stroke-width="4" stroke-linecap="round"/>
-</svg>
+    <div class="logo-svg">
+        <svg viewBox="0 0 100 100" class="w-full h-full text-emerald-500" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M50 10 L90 30 L90 70 L50 90 L10 70 L10 30 Z" stroke-width="3"></path>
+            <path d="M50 10 L50 90"></path>
+            <path d="M10 30 L50 50 L90 30"></path>
+            <path d="M10 70 L50 50 L90 70"></path>
+        </svg>
+    </div>
+    <div class="logo-text-wrapper">
+        <h1 id="txt-logo-main">Agro Meteo</h1>
+        <span id="txt-logo-sub">Ls System</span>
+    </div>
 </div>
-<div class="logo-text-wrapper">
-<h1 id="txt-logo-main">Agro Meteo</h1>
-<span id="txt-logo-sub">Ls System</span>
-</div>
-</div>
+
 
 <div class="nav-menu">
 <button class="nav-btn active" id="btn-home" onclick="showSection('home')">Αρχική</button>
