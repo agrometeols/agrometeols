@@ -196,45 +196,42 @@ font-size: 0.9rem;
 .overlay { min-height: 100vh; background: rgba(0,0,0,0.2); padding: 20px; box-sizing: border-box; }
 header { text-align: center; color: white; margin-bottom: 30px; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; }
 
-.logo-container {
-display:flex;
-align-items:center;
-gap:35px;
-background:rgba(255,255,255,0.08);
-padding:35px 90px;
+
+.logo-container{
+display:flex;align-items:center;gap:35px;
+padding:35px 80px;
 border-radius:120px;
+background:rgba(0,20,0,.35);
 backdrop-filter:blur(10px);
-border:4px solid #00ff66;
-box-shadow:0 0 25px rgba(0,255,0,.5);
+border:3px solid #39ff14;
 position:relative;
-overflow:visible;
+overflow:hidden;
+box-shadow:0 0 25px #00ff00,inset 0 0 20px rgba(0,255,0,.3);
 }
 .logo-container::before{
 content:'';
 position:absolute;
-inset:-8px;
-border-radius:130px;
-border:6px solid #00ff66;
-box-shadow:0 0 20px #00ff66,0 0 50px #00ff66;
-animation:borderRun 2s linear infinite;
+top:-20%;left:-20%;
+width:40%;height:140%;
+background:linear-gradient(90deg,transparent,rgba(255,255,255,.95),transparent);
+animation:runLight 4s linear infinite;
 }
-@keyframes borderRun{
-0%{filter:brightness(0.6);}
-50%{filter:brightness(2.2);}
-100%{filter:brightness(0.6);}
+@keyframes runLight{
+0%{left:-40%}
+100%{left:120%}
 }
 .logo-svg{
 transform:scale(1.8);
-filter:drop-shadow(0 0 18px #00ff66);
-animation:cubeBlink 1.2s infinite;
+filter:drop-shadow(0 0 10px #00ff00);
+animation:cubeBlink 1.4s infinite;
 }
 @keyframes cubeBlink{
-0%,100%{filter:drop-shadow(0 0 10px #00ff66) brightness(1);}
-50%{filter:drop-shadow(0 0 35px #00ff66) brightness(1.8);}
+0%,100%{filter:drop-shadow(0 0 8px #00ff00) brightness(1)}
+50%{filter:drop-shadow(0 0 35px #00ff00) brightness(1.8)}
 }
-.logo-text-wrapper{text-align:left;line-height:1;}
-.logo-text-wrapper h1{margin:0;font-size:4rem;letter-spacing:2px;text-transform:uppercase;font-weight:900;}
-.logo-text-wrapper span{color:#00ff00;font-size:1.8rem;font-weight:bold;letter-spacing:10px;text-transform:uppercase;}
+.logo-text-wrapper h1{margin:0;font-size:4.5rem;font-weight:900;text-shadow:0 0 15px #fff;}
+.logo-text-wrapper span{font-size:1.8rem;letter-spacing:12px;color:#39ff14;text-shadow:0 0 12px #39ff14;}
+
 
 .top-dashboard { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px; max-width: 1200px; margin: 0 auto 20px auto; }
 .dashboard { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 15px; max-width: 1200px; margin: 0 auto 20px auto; }
