@@ -462,11 +462,58 @@ footer { text-align: center; color: #ffffff; margin: 30px auto 10px auto; paddin
 
 
 
-<div class="nav-menu">
-<button class="nav-btn active" id="btn-home" onclick="showSection('home')">Αρχική</button>
-<button class="nav-btn" id="btn-cams" onclick="showSection('cams')">Live Κάμερες</button>
-<button class="nav-btn" id="btn-contact" onclick="showSection('contact')">Επικοινωνία</button>
+<!-- Αρχή Μενού / Κουμπιών (Responsive για Κινητά) -->
+<div class="custom-nav-container">
+    <style>
+        .custom-nav-container {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            margin-bottom: 32px;
+            flex-wrap: wrap;
+            padding: 0 10px;
+        }
+        .custom-nav-btn {
+            background-color: #27272a;
+            color: #d4d4d8;
+            font-weight: 600;
+            padding: 8px 24px;
+            border-radius: 9999px;
+            border: 1px solid #3f3f46;
+            transition: all 0.2s;
+            cursor: pointer;
+            text-align: center;
+            text-transform: uppercase;
+            font-size: 14px;
+        }
+        .custom-nav-btn:hover {
+            background-color: #3f3f46;
+        }
+        .custom-nav-btn.active {
+            background-color: #10b981;
+            color: #ffffff;
+            border-color: #10b981;
+        }
+        @media (max-width: 640px) {
+            .custom-nav-container {
+                gap: 10px;
+                margin-bottom: 20px;
+            }
+            .custom-nav-btn {
+                padding: 8px 16px;
+                font-size: 12px;
+                flex: 1 1 calc(50% - 10px);
+                min-width: 120px;
+            }
+        }
+    </style>
+
+    <button class="custom-nav-btn active">ΑΡΧΙΚΗ</button>
+    <button class="custom-nav-btn">LIVE ΚΑΜΕΡΕΣ</button>
+    <button class="custom-nav-btn">ΕΠΙΚΟΙΝΩΝΙΑ</button>
 </div>
+<!-- Τέλος Μενού -->
+
 </header>
 
 <div id="section-home" class="page-section active">
