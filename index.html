@@ -196,36 +196,17 @@ font-size: 0.9rem;
 .overlay { min-height: 100vh; background: rgba(0,0,0,0.2); padding: 20px; box-sizing: border-box; }
 header { text-align: center; color: white; margin-bottom: 30px; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; }
 
-
 .logo-container {
-display:flex;
-align-items:center;
-gap:30px;
-background:rgba(255,255,255,0.08);
-padding:20px 70px;
-border-radius:90px;
-position:relative;
-overflow:hidden;
-border:2px solid rgba(0,255,0,0.35);
+display: flex;
+align-items: center;
+gap: 15px;
+background: rgba(255,255,255,0.1);
+padding: 15px 30px;
+border-radius: 50px;
+backdrop-filter: blur(5px);
+border: 1px solid rgba(255,255,255,0.2);
+box-shadow: 0 10px 25px rgba(0,0,0,0.2);
 }
-.logo-container::before{
-content:'';
-position:absolute;
-inset:-4px;
-border-radius:95px;
-background:conic-gradient(from 0deg, transparent 0deg, transparent 320deg, #00ff00 340deg, #b6ffb6 350deg, #00ff00 360deg);
-animation:spin 2.5s linear infinite;
-}
-.logo-container::after{
-content:'';
-position:absolute;
-inset:3px;
-border-radius:87px;
-background:rgba(20,20,20,.75);
-}
-.logo-container>*{position:relative;z-index:2;}
-@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
-
 .logo-svg { filter: drop-shadow(0 0 5px rgba(0,255,0,0.5)); }
 .logo-text-wrapper { text-align: left; line-height: 1; }
 .logo-text-wrapper h1 { margin: 0; font-size: 2.2rem; letter-spacing: 1px; text-transform: uppercase; font-weight: 800; }
@@ -373,70 +354,22 @@ footer { text-align: center; color: #ffffff; margin: 30px auto 10px auto; paddin
 <img src="https://flagcdn.com/w40/gb.png" class="flag-icon" alt="English"> English
 </button>
 </div>
-}
-<!-- Αρχή Νέου Λογοτύπου με Εφέ RGB και Παλμό Κύβου -->
-<style>
-  /* 1. Εφέ RGB Gaming Φωτισμού στην Περίμετρο (Χαλαρό) */
-  .rgb-perimeter {
-    position: relative;
-    border-radius: 0.5rem; /* Στρογγυλεμένες γωνίες */
-    padding: 4px; /* Απόσταση για να φαίνεται το RGB */
-    background: linear-gradient(90deg, #10b981, #3b82f6, #6366f1, #10b981);
-    background-size: 300% 300%;
-    animation: rgbBorder 6s linear infinite;
-  }
-  
-  /* Εσωτερικό κουτί για να μην κρύβει το background το RGB εφέ */
-  .logo-inner-bg {
-    background-color: rgb(30, 41, 59); /* Το σκούρο φόντο της σελίδας σου */
-    display: flex;
-    align-items: center;
-    gap: 1.5rem;
-    padding: 0.75rem 2rem;
-    border-radius: 0.4rem;
-    width: 100%;
-    height: 100%;
-  }
 
-  @keyframes rgbBorder {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
-  }
-
-  /* 2. Εφέ Παλμού (Breathing) για τον Κύβο */
-  .cube-pulse {
-    animation: cubeBreathe 3s ease-in-out infinite;
-    transform-origin: center;
-  }
-
-  @keyframes cubeBreathe {
-    0% { transform: scale(1); filter: drop-shadow(0 0 5px rgba(16, 185, 129, 0.6)); }
-    50% { transform: scale(1.18); filter: drop-shadow(0 0 20px rgba(16, 185, 129, 0.9)); }
-    100% { transform: scale(1); filter: drop-shadow(0 0 5px rgba(16, 185, 129, 0.6)); }
-  }
-</style>
-
-<div class="logo-container rgb-perimeter" style="width: 480px; max-width: 100%;">
-  <div class="logo-inner-bg">
-    <!-- Ο Κύβος (SVG) - Μεγαλύτερος από τα γράμματα και με Παλμό -->
-    <div class="logo-svg cube-pulse" style="width: 85px; height: 85px; flex-shrink: 0;">
-      <svg viewBox="0 0 100 100" class="w-full h-full text-emerald-500" fill="none" stroke="currentColor" stroke-width="2">
-        <path d="M50 10 L90 30 L90 70 L50 90 L10 70 L10 30 Z" stroke-width="3"></path>
-        <path d="M50 10 L50 90"></path>
-        <path d="M10 30 L50 50 L90 30"></path>
-        <path d="M10 70 L50 50 L90 70"></path>
-      </svg>
-    </div>
-    
-    <!-- Τα Γράμματα (Κείμενο) -->
-    <div class="flex flex-col justify-center">
-      <h1 id="txt-logo-main" class="text-3xl font-extrabold tracking-wider text-white uppercase m-0 leading-tight">Agro Meteo</h1>
-      <span id="txt-logo-sub" class="text-xs font-semibold tracking-widest text-emerald-400 uppercase mt-1">Ls System</span>
-    </div>
-  </div>
+<div class="logo-container">
+<div class="logo-svg">
+<svg width="60" height="60" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M50 5L85 40L50 75L15 40L50 5Z" stroke="white" stroke-width="2"/>
+<path d="M50 15L75 40L50 65L25 40L50 15Z" fill="#00ff00" fill-opacity="0.6"/>
+<path d="M50 10V40" stroke="white" stroke-width="3" stroke-linecap="round"/>
+<circle cx="50" cy="40" r="5" fill="white"/>
+<path d="M30 60C40 55 60 55 70 60" stroke="#00ff00" stroke-width="4" stroke-linecap="round"/>
+</svg>
 </div>
-<!-- Τέλος Νέου Λογοτύπου -->
+<div class="logo-text-wrapper">
+<h1 id="txt-logo-main">Agro Meteo</h1>
+<span id="txt-logo-sub">Ls System</span>
+</div>
+</div>
 
 <div class="nav-menu">
 <button class="nav-btn active" id="btn-home" onclick="showSection('home')">Αρχική</button>
