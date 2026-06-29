@@ -791,10 +791,44 @@ footer { text-align: center; color: #ffffff; margin: 30px auto 10px auto; paddin
         <div class="card info-card" style="grid-column: 1 / -1; max-width: 1200px; width: 100%; margin: 0 auto; text-align: center;">
             <h3 style="border-bottom: 1px solid white; padding-bottom: 10px;">Download App Android</h3>
             <p style="margin: 20px 0; opacity: 0.9;">Κατεβάστε την επίσημη εφαρμογή του σταθμού για συσκευές Android.</p>
+            <p style="margin: 20px 0; opacity: 0.9;">Κατεβάστε την επίσημη εφαρμογή του σταθμού για συσκευές Windows 64x 32x.</p>
             <p style="margin: 20px 0; opacity: 0.9;">Για συσκευές iOS (Apple), μπορείτε να προσθέσετε το site στην οθόνη αφετηρίας σας ως συντόμευση, ώστε να λειτουργεί κανονικά σαν εφαρμογή (Web App).</p>
             <!-- Το κουμπί λήψης με εφέ που αλλάζει χρώμα στο hover -->
 
-   <!-- ΚΑΡΤΑ 2: WINDOWS (ΝΕΑ ΠΡΟΣΘΗΚΗ) -->
+   <!-- ΚΑΡΤΑ 1: ΑΝDROID -->
+        <div class="card info-card" style="text-align: center; display: flex; flex-direction: column; justify-content: space-between; padding: 25px;">
+            <div>
+                <h3 style="border-bottom: 1px solid white; padding-bottom: 10px; margin-bottom: 15px;">Download App Android</h3>
+                <p style="margin: 20px 0; opacity: 0.9; font-size: 0.95rem;">Κατεβάστε την επίσημη εφαρμογή του σταθμού για συσκευές Android.</p>
+            </div>
+            
+            <a href="https://drive.google.com/file/d/1_v3JsqBUv7Ov74rI8lUHXKINm0catnCk/view?usp=drive_link" class="btn-download" style="
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                gap: 12px;
+                background: #27272a;
+                color: #d4d4d8;
+                font-weight: bold;
+                text-decoration: none;
+                padding: 15px 25px;
+                border-radius: 50px;
+                font-size: 1.1rem;
+                border: 1px solid #3f3f46;
+                box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+                transition: all 0.2s ease-in-out;
+                margin-top: 15px;
+            " onmouseover="this.style.background='#00ff00'; this.style.color='#000000'; this.style.borderColor='#00ff00'; this.style.transform='scale(1.05)'; this.style.box-shadow='0 0 25px rgba(0, 255, 0, 0.7)';" onmouseout="this.style.background='#27272a'; this.style.color='#d4d4d8'; this.style.borderColor='#3f3f46'; this.style.transform='scale(1)'; this.style.box-shadow='0 4px 6px -1px rgba(0, 0, 0, 0.1)';">
+                <svg xmlns="http://w3.org" viewBox="0 0 1443.06 1249.7" style="width: 22px; height: 22px; display: block; flex-shrink: 0;">
+                    <path d="M481.12,0,0,833.27,240.56,1249.7,721.68,416.43Z" fill="#ffcc00"/>
+                    <path d="M240.56,1249.7h962l240.55-416.43H481.12Z" fill="#33a852"/>
+                    <path d="M962.19,0H481.12L721.68,416.43,1202.75,1249.7l240.31-416.43Z" fill="#167ee6"/>
+                </svg>
+                DOWNLOAD APK
+            </a>
+        </div>
+
+        <!-- ΚΑΡΤΑ 2: WINDOWS (ΝΕΑ ΠΡΟΣΘΗΚΗ) -->
         <div class="card info-card" style="text-align: center; display: flex; flex-direction: column; justify-content: space-between; padding: 25px;">
             <div>
                 <h3 style="border-bottom: 1px solid white; padding-bottom: 10px; margin-bottom: 15px;">Download App Windows</h3>
@@ -822,54 +856,11 @@ footer { text-align: center; color: #ffffff; margin: 30px auto 10px auto; paddin
                 <svg xmlns="http://w3.org" viewBox="0 0 24 24" style="width: 22px; height: 22px; display: block; flex-shrink: 0;">
                     <path d="M0 3.449L9.75 2.1v9.451H0V3.449zM0 12.55h9.75v9.451L0 20.651V12.55zm10.8-10.601L24 0v11.55H10.8V1.949zM10.8 12.55H24v11.55l-13.2-1.95V12.55z" fill="currentColor"/>
                 </svg>
-                Download For Winfows (exe)
+                Download Windows (exe)
             </a>
         </div>
 
-    </div> <!-- Κλείνει το dashboard -->       
-          
-  <a href="https://drive.google.com/file/d/1_v3JsqBUv7Ov74rI8lUHXKINm0catnCk/view?usp=drive_link" class="btn-download" style="
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
-    background: #27272a; /* Σκούρο γκρι (όπως τα άλλα) */
-    color: #d4d4d8; /* Ανοιχτό γκρι κείμενο */
-    font-weight: bold;
-    text-decoration: none;
-    padding: 15px 35px;
-    border-radius: 50px;
-    font-size: 1.2rem;
-    border: 1px solid #3f3f46; /* Περίγραμμα */
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-    transition: all 0.2s ease-in-out;
-    margin: 15px 0;
-" onmouseover="
-    this.style.background='#00ff00'; /* Γίνεται πράσινο */
-    this.style.color='#000000'; /* Μαύρα γράμματα */
-    this.style.borderColor='#00ff00';
-    this.style.transform='scale(1.05)';
-    this.style.box-shadow='0 0 25px rgba(0, 255, 0, 0.7)';
-" onmouseout="
-    this.style.background='#27272a'; /* Επιστρέφει στο σκούρο γκρι */
-    this.style.color='#d4d4d8'; /* Επιστρέφει στο γκρι κείμενο */
-    this.style.borderColor='#3f3f46';
-    this.style.transform='scale(1)';
-    this.style.box-shadow='0 4px 6px -1px rgba(0, 0, 0, 0.1)';
-">
-    
-    <!-- Αυθεντικό Εικονίδιο Google Drive -->
-    <svg xmlns="http://w3.org" viewBox="0 0 1443.06 1249.7" style="width: 24px; height: 24px; display: block; flex-shrink: 0;">
-        <path d="M481.12,0,0,833.27,240.56,1249.7,721.68,416.43Z" fill="#ffcc00"/>
-        <path d="M240.56,1249.7h962l240.55-416.43H481.12Z" fill="#33a852"/>
-        <path d="M962.19,0H481.12L721.68,416.43,1202.75,1249.7l240.31-416.43Z" fill="#167ee6"/>
-    </svg>
-    
-    Download For Android
-</a>
-        </div>
     </div> <!-- Κλείνει το dashboard -->
-</div> <!-- Κλείνει το section-app -->
   
   
 <footer id="txt-footer">&copy; 2026 Agro Meteo Ls | Προγραμματισμός Χρήστος Τσαβαλάκογλου Iot System</footer>
