@@ -382,18 +382,20 @@ footer { text-align: center; color: #ffffff; margin: 30px auto 10px auto; paddin
 /* 🔼 ΜΕΧΡΙ ΕΔΩ 🔼 */    
 
 #txt-footer {
+    display: block !important;
     width: 100% !important;
     text-align: center !important;
-    padding: 20px 10px !important;
+    padding: 20px 0 !important;
     margin-top: 40px !important;
-    position: relative !important; 
+    position: relative !important; /* Ξεκολλάει από αριστερά και πάει κάτω */
     left: 0 !important;
     bottom: 0 !important;
-    background: rgba(39, 39, 42, 0.6) !important;
+    background: rgba(39, 39, 42, 0.6) !important; /* Όμορφο σκούρο φόντο */
     color: #a1a1aa !important;
     font-size: 0.85rem !important;
     border-top: 1px solid rgba(63, 63, 70, 0.4) !important;
     box-sizing: border-box !important;
+    z-index: 100 !important;
 }
 
 </style>
@@ -898,6 +900,11 @@ document.querySelectorAll('.page-section').forEach(s => s.classList.remove('acti
 document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
 document.getElementById('section-' + sectionId).classList.add('active');
 document.getElementById('btn-' + (sectionId === 'home' ? 'home' : sectionId === 'cams' ? 'cams' : sectionId === 'contact' ? 'contact' : 'app')).classList.add('active');
+const footer = document.getElementById('txt-footer');
+if (footer) {
+footer.style.display = 'block';
+}
+    
 window.scrollTo(0,0);
 }
 
