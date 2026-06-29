@@ -192,8 +192,16 @@ font-size: 0.9rem;
 .nav-btn:hover { background: rgba(0, 255, 0, 0.3); border-color: #00ff00; }
 .nav-btn.active { background: rgba(0, 255, 0, 0.5); border-color: #00ff00; box-shadow: 0 0 15px rgba(0, 255, 0, 0.3); }
 
-.page-section { display: none; }
-.page-section.active { display: block; }
+.page-section { 
+    display: none; 
+    height: auto !important; 
+    min-height: auto !important; 
+}
+.page-section.active { 
+    display: block !important; 
+    height: auto !important; 
+    min-height: auto !important; 
+}
 
 /* --- DASHBOARD STYLES --- */
 .overlay { min-height: 100vh; background: rgba(0,0,0,0.2); padding: 20px; box-sizing: border-box; }
