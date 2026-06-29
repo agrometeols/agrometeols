@@ -334,37 +334,20 @@ footer { text-align: center; color: #ffffff; margin: 30px auto 10px auto; paddin
 .status-safe { background: rgba(0, 255, 0, 0.3); color: #00ff00; border: 1px solid #00ff00; }
 .status-caution { background: rgba(255, 255, 0, 0.3); color: #ffff00; border: 1px solid #ffff00; }
 .status-danger { background: rgba(255, 0, 0, 0.3); color: #ff0000; border: 1px solid #ff0000; }
-/* 🔽 ΕΔΩ ΤΟ ΒΑΖΕΙΣ (Γραμμή 220) 🔽 */
+/* ΔΙΟΡΘΩΣΗ ΓΙΑ ΚΙΝΗΤΑ - ΜΕΝΟΥ ΣΕ ΜΙΑ ΣΕΙΡΑ & ΟΛΟΚΛΗΡΟ ΤΟ POPUP */
 @media (max-width: 768px) {
-    html, body {
-        overflow-y: auto !important;
-        height: auto !important;
-    }
-    .overlay, .min-h-screen, main {
-        height: auto !important;
-        min-height: 100vh !important;
-        overflow: visible !important;
-    }
-    .page-section {
-        height: auto !important;
-        min-height: calc(100vh - 200px) !important;
-        overflow: visible !important;
-        padding-bottom: 60px !important;
-    }
-    .page-section.active {
-        display: block !important;
-    }
-    .nav-menu {
-        gap: 5px !important;
-        padding: 0 4px !important;
-        box-sizing: border-box;
-    }
-    .nav-menu .nav-btn {
-        font-size: 10px !important;
-        padding: 10px 8px !important;
-        white-space: nowrap !important;
-        letter-spacing: -0.4px !important;
-    }
+    /* Διασφάλιση ομαλής κύλισης και ύψους */
+    html, body { overflow-y: auto !important; height: auto !important; }
+    
+    /* Ρύθμιση ύψους ΜΟΝΟ για κινητά - Κατάργηση 100vh */
+    .page-section { height: auto !important; min-height: auto !important; }
+    .page-section.active { display: block !important; }
+}
+
+/* 🌟 ΔΙΟΡΘΩΣΗ ΓΙΑ ΥΠΟΛΟΓΙΣΤΗ (Γραμμή 260~ περίπου) */
+.page-section { height: auto !important; min-height: auto !important; }
+.page-section.active { display: block !important; }
+
     /* 🛠️ ΕΔΩ ΕΙΝΑΙ Η ΔΙΟΡΘΩΣΗ ΓΙΑ ΤΟ ΚΟΥΤΑΚΙ ΠΡΟΣΟΧΗΣ */
     .const-modal {
         width: 90% !important; /* Πιάνει το 90% της οθόνης του κινητού για να μην εξέχει */
