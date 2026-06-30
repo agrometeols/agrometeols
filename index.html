@@ -190,16 +190,14 @@ transition: all 0.3s;
 font-size: 0.9rem;
 }
 
-/* 🛠️ Η ΔΙΟΡΘΩΣΗ: ΠΙΟ ΜΙΚΡΑ ΚΑΙ ΠΙΟ ΠΛΑΚΕ ΜΟΝΟ ΣΤΑ ΚΙΝΗΤΑ */
+/* 🛠️ ΔΙΟΡΘΩΣΗ ΓΙΑ ΝΑ ΜΗΝ ΚΟΒΟΝΤΑΙ ΟΙ 3 ΣΕΛΙΔΕΣ ΣΤΑ ΚΙΝΗΤΑ */
 @media (max-width: 480px) {
-  .nav-menu {
-    gap: 5px !important; /* Πιο κοντά τα κουμπιά μεταξύ τους */
-  }
-  .nav-btn {
-    padding: 6px 12px !important; /* Μειώνεται το πάνω-κάτω (πιο πλακέ) και το δεξιά-αριστερά */
-    font-size: 0.65rem !important; /* Μικραίνουν τα γράμματα για να χωράνε */
+  /* Μειώνει το padding του κεντρικού πλαισίου στο κινητό για να κεντραριστεί το περιεχόμενο */
+  .max-w-4xl.p-8 {
+    padding: 16px !important; 
   }
 }
+  
 .nav-btn:hover { background: rgba(0, 255, 0, 0.3); border-color: #00ff00; }
 .nav-btn.active { background: rgba(0, 255, 0, 0.5); border-color: #00ff00; box-shadow: 0 0 15px rgba(0, 255, 0, 0.3); }
 
