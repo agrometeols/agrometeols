@@ -200,6 +200,28 @@ font-size: 0.9rem;
     font-size: 0.65rem !important; /* Μικραίνουν τα γράμματα για να χωράνε */
   }
 }
+/* 🛠️ Η ΝΕΑ ΔΙΟΡΘΩΣΗ ΓΙΑ ΝΑ ΜΗΝ ΚΟΒΟΝΤΑΙ ΟΙ 3 ΣΕΛΙΔΕΣ: */
+@media (max-width: 480px) {
+  /* Μαζεύει τα μεγάλα πλαίσια για να μην βγαίνουν εκτός οθόνης στα κινητά */
+  .max-w-4xl, 
+  div[class*="bg-white/10"], 
+  div[class*="backdrop-blur"] {
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    padding-left: 15px !important;  /* Κεντράρει το περιεχόμενο με σωστά περιθώρια */
+    padding-right: 15px !important;
+  }
+  
+  /* Εμποδίζει τις μεγάλες λέξεις ή links να σπάνε το πλάτος */
+  h1, h2, h3, p, span, a {
+    word-wrap: break-word !important;
+    overflow-wrap: break-word !important;
+    white-space: normal !important;
+  }
+}
 .nav-btn:hover { background: rgba(0, 255, 0, 0.3); border-color: #00ff00; }
 .nav-btn.active { background: rgba(0, 255, 0, 0.5); border-color: #00ff00; box-shadow: 0 0 15px rgba(0, 255, 0, 0.3); }
 
