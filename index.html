@@ -190,7 +190,7 @@ transition: all 0.3s;
 font-size: 0.9rem;
 }
 
-/* 🛠️ Η ΑΠΟΛΥΤΗ ΔΙΟΡΘΩΣΗ ΓΙΑ ΜΕΝΟΥ ΚΑΙ ΟΛΕΣ ΤΙΣ ΣΕΛΙΔΕΣ ΣΤΑ ΚΙΝΗΤΑ */
+/* 🛠️ Η ΔΙΟΡΘΩΣΗ ΓΙΑ ΜΕΝΟΥ ΚΑΙ ΓΙΑ ΤΙΣ 3 ΣΕΛΙΔΕΣ (ΚΑΜΕΡΕΣ, ΕΠΙΚΟΙΝΩΝΙΑ, DOWNLOAD) ΣΤΑ ΚΙΝΗΤΑ */
 @media (max-width: 480px) {
   /* 1. Μικραίνει τα κουμπιά του μενού για να χωράνε σε μία ευθεία */
   .nav-menu {
@@ -201,22 +201,23 @@ font-size: 0.9rem;
     font-size: 0.65rem !important;
   }
 
-  /* 2. Κλειδώνει ΟΛΑ τα στοιχεία του site να μην ξεπερνούν την οθόνη */
-  div, section, main, a, button {
-    max-width: 100% !important;
+  /* 2. Μαζεύει το πράσινο πλαίσιο της Tailwind για να κεντραριστεί στο κινητό */
+  .max-w-4xl {
+    width: 92% !important; /* Αναγκάζει το πλαίσιο να πιάνει το 92% της οθόνης */
+    max-width: 92% !important;
+    margin-left: auto !important; /* Κεντράρει το πλαίσιο απόλυτα */
+    margin-right: auto !important;
+    padding: 16px !important; /* Μειώνει το μεγάλο p-8 για να χωράει το περιεχόμενο */
     box-sizing: border-box !important;
   }
 
-  /* 3. Μαζεύει τα εσωτερικά paddings των πλαισίων για να κεντραριστούν */
-  div[class*="p-8"], div[class*="p-6"] {
-    padding: 16px !important;
-  }
-
-  /* 4. Δίνει ένα μικρό περιθώριο δεξιά-αριστερά στο κεντρικό block για να κάθεται όμορφα */
-  div.max-w-4xl {
-    width: 92% !important;
-    margin-left: auto !important;
-    margin-right: auto !important;
+  /* 3. Μαζεύει τα μαύρα κουμπιά λήψης (Apk, exe) για να μην σπρώχνουν τη σελίδα δεξιά */
+  .max-w-4xl a, 
+  .max-w-4xl button,
+  .max-w-4xl div[class*="bg-black"] {
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
   }
 }
   
