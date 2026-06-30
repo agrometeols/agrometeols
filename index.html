@@ -192,9 +192,22 @@ font-size: 0.9rem;
 
 /* 🛠️ ΔΙΟΡΘΩΣΗ ΓΙΑ ΝΑ ΜΗΝ ΚΟΒΟΝΤΑΙ ΟΙ 3 ΣΕΛΙΔΕΣ ΣΤΑ ΚΙΝΗΤΑ */
 @media (max-width: 480px) {
-  /* Μειώνει το padding του κεντρικού πλαισίου στο κινητό για να κεντραριστεί το περιεχόμενο */
-  .max-w-4xl.p-8 {
-    padding: 16px !important; 
+  /* Μαζεύει τα κουμπιά λήψης (Apk, exe) για να μην σπρώχνουν τη σελίδα δεξιά */
+  div[class*="bg-black/40"],
+  a[class*="bg-black/40"],
+  button[class*="bg-black/40"] {
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+  }
+
+  /* Αναγκάζει το κείμενο μέσα στα κουμπιά να μικρύνει αν δεν χωράει */
+  div[class*="bg-black/40"] span,
+  a[class*="bg-black/40"] span {
+    font-size: 0.8rem !important;
+    white-space: nowrap !important;
   }
 }
   
