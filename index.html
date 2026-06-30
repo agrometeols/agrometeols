@@ -169,27 +169,29 @@ animation: wave-motion 2.5s infinite ease-in-out;
 
 /*--- NAVIGATION MENU STYLE ---*/
 .nav-menu {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-  margin-top: 20px;
-  flex-wrap: nowrap !important; /* Εξασφαλίζει μία σειρά */
+display: flex;
+justify-content: center;
+gap: 10px;
+margin-top: 20px;
+width: 100%;
+flex-wrap: nowrap !important; /* Κλειδώνει όλα τα κουμπιά σε ΜΙΑ σειρά */
 }
 .nav-btn {
-  /* ... (τα δικά σου styles για desktop) ... */
-  padding: 12px 25px;
-  font-size: 0.9rem;
-}
-
-/* 🛠️ Η ΔΙΟΡΘΩΣΗ ΜΟΝΟ ΓΙΑ ΚΙΝΗΤΑ: */
-@media (max-width: 600px) {
-  .nav-menu {
-    gap: 4px; /* Μικρότερο κενό */
-  }
-  .nav-btn {
-    padding: 8px 10px !important; /* Λιγότερο padding */
-    font-size: 0.65rem !important; /* Μικρότερα γράμματα */
-  }
+background: rgba(255, 255, 255, 0.1);
+backdrop-filter: blur(10px);
+border: 1px solid rgba(255, 255, 255, 0.2);
+padding: 12px 25px;
+border-radius: 50px;
+color: white;
+font-weight: bold;
+text-transform: uppercase;
+cursor: pointer;
+transition: all 0.3s;
+font-size: 0.9rem;
+flex-shrink: 1; /* Προσθήκη για σμίκρυνση σε κινητά */
+/* 🛠️ ΟΙ ΜΟΝΕΣ ΔΥΟ ΓΡΑΜΜΕΣ ΠΟΥ ΠΡΕΠΕΙ ΝΑ ΠΡΟΣΘΕΣΕΙΣ: */
+flex-shrink: 1;
+min-width: 0;
 }
 .nav-btn:hover { background: rgba(0, 255, 0, 0.3); border-color: #00ff00; }
 .nav-btn.active { background: rgba(0, 255, 0, 0.5); border-color: #00ff00; box-shadow: 0 0 15px rgba(0, 255, 0, 0.3); }
