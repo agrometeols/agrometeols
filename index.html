@@ -188,10 +188,10 @@ text-transform: uppercase;
 cursor: pointer;
 transition: all 0.3s;
 font-size: 0.9rem;
-flex-shrink: 1; /* Προσθήκη για σμίκρυνση σε κινητά */
-/* 🛠️ ΟΙ ΜΟΝΕΣ ΔΥΟ ΓΡΑΜΜΕΣ ΠΟΥ ΠΡΕΠΕΙ ΝΑ ΠΡΟΣΘΕΣΕΙΣ: */
-flex-shrink: 1;
-min-width: 0;
+
+/* 🛠️ ΟΙ ΡΥΘΜΙΣΕΙΣ ΓΙΑ ΝΑ ΜΙΚΡΑΙΝΟΥΝ ΣΤΑ ΚΙΝΗΤΑ ΧΩΡΙΣ ΑΛΛΑΓΗ ΣΕΙΡΑΣ: */
+flex: 1 1 auto;  /* Αναγκάζει τα κουμπιά να μικραίνουν ισόποσα */
+min-width: 0;    /* Επιτρέπει στο flexbox να τα μικρύνει κάτω από το αρχικό τους μέγεθος */
 }
 .nav-btn:hover { background: rgba(0, 255, 0, 0.3); border-color: #00ff00; }
 .nav-btn.active { background: rgba(0, 255, 0, 0.5); border-color: #00ff00; box-shadow: 0 0 15px rgba(0, 255, 0, 0.3); }
