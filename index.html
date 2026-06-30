@@ -169,26 +169,24 @@ animation: wave-motion 2.5s infinite ease-in-out;
 
 /*--- NAVIGATION MENU STYLE ---*/
 .nav-menu {
-    display: flex !important;
-    justify-content: center !important;
-    gap: 5px !important;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
     margin-top: 20px;
-    width: 100% !important;
-    flex-wrap: nowrap !important;
-    padding: 0 10px !important;
+    width: 100%;
+    flex-wrap: nowrap !important; /* Κλειδώνει όλα τα κουμπιά σε ΜΙΑ σειρά */
+    
+    /* 🛠️ Η ΠΡΟΣΘΗΚΗ ΓΙΑ ΝΑ ΜΙΚΡΑΙΝΕΙ ΟΛΟ ΤΟ ΜΕΝΟΥ ΜΑΖΙ ΣΤΑ ΚΙΝΗΤΑ: */
+    transform-origin: center top;
 }
 
-.nav-btn {
-    /* ... (διατήρηση των στυλ: background, border, radius, color, transition) ... */
-    
-    /* 🛠️ ΔΙΟΡΘΩΣΕΙΣ ΓΙΑ ΣΥΡΡΙΚΝΩΣΗ: */
-    flex: 1 1 0% !important;
-    min-width: 0 !important;
-    padding: 10px 5px !important;
-    font-size: clamp(10px, 2.5vw, 14px) !important;
-    white-space: nowrap !important;
-    overflow: hidden !important;
-    text-overflow: ellipsis !important;
+/* 🛠️ MEDIA QUERY ΓΙΑ ΚΙΝΗΤΑ (Κάτω από 480px πλάτος οθόνης) */
+@media (max-width: 480px) {
+    .nav-menu {
+        transform: scale(0.75); /* Μικραίνει όλο το μενού κατά 25% για να χωράει χωρίς να χαλάει τίποτα */
+        width: 133%; /* Αντισταθμίζει το scale για να μένει κεντραρισμένο */
+        margin-left: -16.5%; /* Ευθυγραμμίζει το μενού στην οθόνη */
+    }
 }
 .nav-btn:hover { background: rgba(0, 255, 0, 0.3); border-color: #00ff00; }
 .nav-btn.active { background: rgba(0, 255, 0, 0.5); border-color: #00ff00; box-shadow: 0 0 15px rgba(0, 255, 0, 0.3); }
