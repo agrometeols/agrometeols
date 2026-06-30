@@ -169,23 +169,34 @@ animation: wave-motion 2.5s infinite ease-in-out;
 
 /*--- NAVIGATION MENU STYLE ---*/
 .nav-menu {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-  width: 100%;
-  flex-wrap: nowrap !important; /* Κλειδώνει όλα τα κουμπιά σε ΜΙΑ σειρά */
+display: flex;
+justify-content: center;
+gap: 10px;
+margin-top: 20px;
+width: 100%;
+flex-wrap: nowrap !important; /* Κλειδώνει όλα τα κουμπιά σε ΜΙΑ σειρά */
 }
 .nav-btn {
-  /* ... τα υπόλοιπα styles σου ... */
-  flex-shrink: 1; /* Επιτρέπει το μίκρυμα */
-  min-width: 0;   /* Απαραίτητο για το flex-shrink */
+background: rgba(255, 255, 255, 0.1);
+backdrop-filter: blur(10px);
+border: 1px solid rgba(255, 255, 255, 0.2);
+padding: 12px 25px;
+border-radius: 50px;
+color: white;
+font-weight: bold;
+text-transform: uppercase;
+cursor: pointer;
+transition: all 0.3s;
+font-size: 0.9rem;
 }
 
-/* 🛠️ ΔΙΟΡΘΩΣΗ ΓΙΑ ΚΙΝΗΤΑ (Κάτω από 768px): */
-@media (max-width: 768px) {
-  .nav-btn {
-    padding: 8px 10px !important; /* Μικρότερα περιθώρια */
-    font-size: 0.7rem !important; /* Μικρότερο κείμενο */
+/* 🛠️ Η ΜΟΝΗ ΠΡΟΣΘΗΚΗ: ΜΙΚΡΑΙΝΕΙ ΟΛΟ ΤΟ ΜΕΝΟΥ ΣΑΝ ΕΙΚΟΝΑ ΜΟΝΟ ΣΤΑ ΚΙΝΗΤΑ */
+@media (max-width: 480px) {
+  .nav-menu {
+    transform: scale(0.7); /* Μικραίνει όλο το μενού ομοιόμορφα στο 70% */
+    transform-origin: center top;
+    width: 142%; /* Κρατάει το μενού κεντραρισμένο μετά το scale */
+    margin-left: -21%;
   }
 }
 .nav-btn:hover { background: rgba(0, 255, 0, 0.3); border-color: #00ff00; }
