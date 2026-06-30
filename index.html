@@ -190,9 +190,9 @@ transition: all 0.3s;
 font-size: 0.9rem;
 }
 
-/* 🛠️ ΔΙΟΡΘΩΣΗ ΓΙΑ ΜΕΝΟΥ ΚΑΙ ΣΕΛΙΔΕΣ ΣΤΑ ΚΙΝΗΤΑ */
+/* 🛠️ Η ΑΠΟΛΥΤΗ ΔΙΟΡΘΩΣΗ ΓΙΑ ΜΕΝΟΥ ΚΑΙ ΟΛΕΣ ΤΙΣ ΣΕΛΙΔΕΣ ΣΤΑ ΚΙΝΗΤΑ */
 @media (max-width: 480px) {
-  /* 1. Κάνει τα πάνω κουμπιά του μενού πιο πλακέ και πιο μικρά */
+  /* 1. Μικραίνει τα κουμπιά του μενού για να χωράνε σε μία ευθεία */
   .nav-menu {
     gap: 5px !important;
   }
@@ -201,32 +201,22 @@ font-size: 0.9rem;
     font-size: 0.65rem !important;
   }
 
-  /* 2. Μαζεύει το κεντρικό πράσινο πλαίσιο για να μην βγαίνει δεξιά */
-  #page-content > div {
-    max-width: 95% !important;
-    margin: 20px auto !important;
-    padding: 15px !important;
-    box-sizing: border-box !important;
-  }
-
-  /* 3. Μικραίνει τα μαύρα κουμπιά λήψης (Apk, Windows) για να χωράνε */
-  #page-content div[class*="bg-black"],
-  #page-content a[class*="bg-black"],
-  #page-content button[class*="bg-black"] {
-    width: 100% !important;
+  /* 2. Κλειδώνει ΟΛΑ τα στοιχεία του site να μην ξεπερνούν την οθόνη */
+  div, section, main, a, button {
     max-width: 100% !important;
     box-sizing: border-box !important;
-    padding: 10px !important;
-    display: flex !important;
-    justify-content: center !important;
-    align-items: center !important;
   }
 
-  /* 4. Προσαρμόζει το κείμενο μέσα στα κουμπιά λήψης */
-  #page-content div[class*="bg-black"] span,
-  #page-content a[class*="bg-black"] span,
-  #page-content button[class*="bg-black"] span {
-    font-size: 0.8rem !important;
+  /* 3. Μαζεύει τα εσωτερικά paddings των πλαισίων για να κεντραριστούν */
+  div[class*="p-8"], div[class*="p-6"] {
+    padding: 16px !important;
+  }
+
+  /* 4. Δίνει ένα μικρό περιθώριο δεξιά-αριστερά στο κεντρικό block για να κάθεται όμορφα */
+  div.max-w-4xl {
+    width: 92% !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
   }
 }
   
