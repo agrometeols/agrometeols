@@ -190,29 +190,43 @@ transition: all 0.3s;
 font-size: 0.9rem;
 }
 
-/* 🛠️ ΔΙΟΡΘΩΣΗ ΓΙΑ ΝΑ ΜΗΝ ΚΟΒΟΝΤΑΙ ΟΙ 3 ΣΕΛΙΔΕΣ ΣΤΑ ΚΙΝΗΤΑ */
+/* 🛠️ ΔΙΟΡΘΩΣΗ ΓΙΑ ΜΕΝΟΥ ΚΑΙ ΣΕΛΙΔΕΣ ΣΤΑ ΚΙΝΗΤΑ */
 @media (max-width: 480px) {
-  /* Μαζεύει το κεντρικό πλαίσιο περιεχομένου για να μην βγαίνει δεξιά */
-  #content-area > div {
+  /* 1. Κάνει τα πάνω κουμπιά του μενού πιο πλακέ και πιο μικρά */
+  .nav-menu {
+    gap: 5px !important;
+  }
+  .nav-btn {
+    padding: 6px 12px !important;
+    font-size: 0.65rem !important;
+  }
+
+  /* 2. Μαζεύει το κεντρικό πράσινο πλαίσιο για να μην βγαίνει δεξιά */
+  #page-content > div {
     max-width: 95% !important;
     margin: 20px auto !important;
     padding: 15px !important;
     box-sizing: border-box !important;
   }
 
-  /* Μικραίνει τα μαύρα κουμπιά λήψης (Apk, Windows) για να χωράνε στο κινητό */
-  #content-area div[class*="bg-black"],
-  #content-area a[class*="bg-black"] {
+  /* 3. Μικραίνει τα μαύρα κουμπιά λήψης (Apk, Windows) για να χωράνε */
+  #page-content div[class*="bg-black"],
+  #page-content a[class*="bg-black"],
+  #page-content button[class*="bg-black"] {
     width: 100% !important;
     max-width: 100% !important;
     box-sizing: border-box !important;
     padding: 10px !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
   }
 
-  /* Προσαρμόζει το κείμενο μέσα στα κουμπιά λήψης */
-  #content-area div[class*="bg-black"] span,
-  #content-area a[class*="bg-black"] span {
-    font-size: 0.85rem !important;
+  /* 4. Προσαρμόζει το κείμενο μέσα στα κουμπιά λήψης */
+  #page-content div[class*="bg-black"] span,
+  #page-content a[class*="bg-black"] span,
+  #page-content button[class*="bg-black"] span {
+    font-size: 0.8rem !important;
   }
 }
   
