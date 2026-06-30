@@ -190,13 +190,14 @@ transition: all 0.3s;
 font-size: 0.9rem;
 }
 
-/* 🛠️ Η ΜΟΝΗ ΠΡΟΣΘΗΚΗ: ΜΙΚΡΑΙΝΕΙ ΟΛΟ ΤΟ ΜΕΝΟΥ ΣΑΝ ΕΙΚΟΝΑ ΜΟΝΟ ΣΤΑ ΚΙΝΗΤΑ */
+/* 🛠️ Η ΔΙΟΡΘΩΣΗ: ΠΙΟ ΜΙΚΡΑ ΚΑΙ ΠΙΟ ΠΛΑΚΕ ΜΟΝΟ ΣΤΑ ΚΙΝΗΤΑ */
 @media (max-width: 480px) {
   .nav-menu {
-    transform: scale(0.7); /* Μικραίνει όλο το μενού ομοιόμορφα στο 70% */
-    transform-origin: center top;
-    width: 142%; /* Κρατάει το μενού κεντραρισμένο μετά το scale */
-    margin-left: -21%;
+    gap: 5px !important; /* Πιο κοντά τα κουμπιά μεταξύ τους */
+  }
+  .nav-btn {
+    padding: 6px 12px !important; /* Μειώνεται το πάνω-κάτω (πιο πλακέ) και το δεξιά-αριστερά */
+    font-size: 0.65rem !important; /* Μικραίνουν τα γράμματα για να χωράνε */
   }
 }
 .nav-btn:hover { background: rgba(0, 255, 0, 0.3); border-color: #00ff00; }
