@@ -1074,13 +1074,15 @@ var gSolar = new RadialGauge({ renderTo: 'gauge-solar', width: 240, height: 240,
 var gPress = new RadialGauge({ renderTo: 'gauge-press', width: 240, height: 240, units: "hPa", minValue: 950, maxValue: 1050, majorTicks: ["950","960","970","980","990","1000","1010","1020","1030","1040","1050"], minorTicks: 2, strokeTicks: true, highlights: [ { "from": 950, "to": 1000, "color": "rgba(255,0,0,.5)" }, { "from": 1000, "to": 1020, "color": "rgba(0,255,0,.5)" }, { "from": 1020, "to": 1050, "color": "rgba(0,0,255,.5)" } ], colorPlate: "#fff", borders: true, needleType: "arrow", needleWidth: 4, animationDuration: 1500 }).draw();
 
 const fixedHoursLabels = ["00:00", "01:00", "02:00", "03:00", "04:00", "05:00", "06:00", "07:00", "08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00", "21:00", "22:00", "23:00"];    
+
 function createChart(canvasId, label, color, minVal = null, maxVal = null, type = 'line') {
 return new Chart(document.getElementById(canvasId), {
 type: type,
-data: { fixedHoursLabels, datasets: [{ label: label, data: [], borderColor: color, backgroundColor: (type === 'bar' ? color : color + '22'), borderWidth: (type === 'bar' ? 1 : 3), tension: 0.3, fill: true }] },
+data: { labels: fixedHoursLabels, datasets: [{ label: label, data: [], borderColor: color, backgroundColor: (type === 'bar' ? color : color + '22'), borderWidth: (type === 'bar' ? 1 : 3), tension: 0.3, fill: true }] }, // Διορθώθηκε εδώ
 options: { responsive: true, maintainAspectRatio: false, scales: { x: { grid: { display: false }, ticks: { color: '#ffffff' } }, y: { min: minVal, max: maxVal, grid: { color: 'rgba(255,255,255,0.1)' }, ticks: { color: '#ffffff' } } }, plugins: { legend: { labels: { color: '#fff' } } } }
 });
 }
+
 
 var cTemp = createChart('chart-temp', 'Θερμοκρασία (°C)', '#d53a35');
 var cHum = createChart('chart-hum', 'Υγρασία (%)', '#2f89fc');
@@ -1316,9 +1318,9 @@ else if(b > 30) { lbl.innerText=t.med; lbl.style.color="orange"; }
 else { lbl.innerText=t.low; lbl.style.color="red"; }
 
 let labels = feeds.map(f => new Date(f.created_at).toLocaleTimeString('el-GR', {hour: '2-digit', minute:'2-digit'}));
-cTemp.data.labels = labels; cTemp.data.datasets[0].data = feeds.map(f => f.field1); cTemp.update();
-cHum.data.labels = labels; cHum.data.datasets[0].data = feeds.map(f => f.field2); cHum.update();
-cPress.data.labels = labels; cPress.data.datasets[0].data = feeds.map(f => f.field3); cPress.update();
+cTemp.data.datasets[0].data = feeds.map(f => f.field1); cTemp.update();
+cHum.data.datasets[0].data = feeds.map(f => f.field2); cHum.update();
+cPress.data.datasets[0].data = feeds.map(f => f.field3); cPress.update();
 cRain.data.labels = labels;
 cRain.data.datasets[0].data = feeds.map(f => {
 let val = parseFloat(f.field4) - resetVal;
