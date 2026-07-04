@@ -1206,7 +1206,7 @@ document.getElementById('date').innerText = d.toLocaleDateString('el-GR', {weekd
 
 syncVisitors();
 
-fetch("https://api.thingspeak.com/channels/3365350/feeds.json?results=288&status=true&metadata=true")
+fetch("https://api.thingspeak.com/channels/3365350/feeds.json?minutes=1440&status=true&metadata=true")
 .then(res => res.json())
 .then(data => {
 const feeds = data.feeds;
