@@ -331,7 +331,7 @@ z-index: 1;
 }
 
 /* Charts */
-.chart-container { position: relative; height: 400px; width: 100%; margin-top: 10px; }
+.chart-container { position: relative; height: 240px; width: 100%; margin-top: 10px; }
 canvas { max-width: 100%; height: auto; }
 
 #status-badge { font-weight: bold; padding: 5px 15px; border-radius: 4px; color: white !important; text-transform: uppercase; display: inline-block; margin-left: 5px; }
@@ -1077,32 +1077,7 @@ function createChart(canvasId, label, color, minVal = null, maxVal = null, type 
 return new Chart(document.getElementById(canvasId), {
 type: type,
 data: { labels: [], datasets: [{ label: label, data: [], borderColor: color, backgroundColor: (type === 'bar' ? color : color + '22'), borderWidth: (type === 'bar' ? 1 : 3), tension: 0.3, fill: true }] },
-options: { 
-    responsive: true, 
-    maintainAspectRatio: false, 
-    scales: { 
-        x: { 
-            grid: { display: false }, 
-            ticks: { 
-                color: '#ffffff',
-                maxTicksLimit: 24, // Εξασφαλίζει ότι θα δείχνει έως 24 ώρες στον άξονα για να μην στριμώχνονται
-                autoSkip: true,    // Προσπερνάει ενδιάμεσα στίγματα για να είναι ευανάγνωστες οι ώρες
-                maxRotation: 0,    // Κρατάει τις ώρες οριζόντιες για να διαβάζονται εύκολα
-                minRotation: 0
-            } 
-        }, 
-        y: { 
-            min: minVal, 
-            max: maxVal, 
-            grid: { color: 'rgba(255,255,255,0.1)' }, 
-            ticks: { color: '#ffffff' } 
-        } 
-    }, 
-    plugins: { 
-        legend: { labels: { color: '#fff' } } 
-    } 
-}
-
+options: { responsive: true, maintainAspectRatio: false, scales: { x: { grid: { display: false }, ticks: { color: '#ffffff' } }, y: { min: minVal, max: maxVal, grid: { color: 'rgba(255,255,255,0.1)' }, ticks: { color: '#ffffff' } } }, plugins: { legend: { labels: { color: '#fff' } } } }
 });
 }
 
@@ -1206,7 +1181,7 @@ document.getElementById('date').innerText = d.toLocaleDateString('el-GR', {weekd
 
 syncVisitors();
 
-fetch("https://api.thingspeak.com/channels/3365350/feeds.json?results=500&status=true&metadata=true")
+fetch("https://api.thingspeak.com/channels/3365350/feeds.json?results=80&status=true&metadata=true")
 .then(res => res.json())
 .then(data => {
 const feeds = data.feeds;
