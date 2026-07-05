@@ -1395,40 +1395,5 @@ window.smartsupp||(function(d) {
 
 <footer id="txt-footer">&copy; 2026 Agro Meteo Ls | Προγραμματισμός Χρήστος Τσαβαλάκογλου Iot System</footer>      
 
-
-<script>
-const extraTranslations={
-el:{},
-en:{
-"Επικοινωνία":"Contact",
-"Αρχική":"Home",
-"Live Κάμερες":"Live Cameras",
-"Download App":"Download App",
-"Η υπηρεσία θα είναι σύντομα διαθέσιμη.":"Service will be available soon.",
-"Στοιχεία Agro Meteo Ls":"Agro Meteo Ls Information",
-"Υπεύθυνος Συστήματος":"System Administrator",
-"Τοποθεσία Σταθμού":"Station Location",
-"Τεχνική Υποστήριξη":"Technical Support"
-}
-};
-const _oldChangeLang = window.changeLang;
-window.changeLang = function(lang){
- if(_oldChangeLang) _oldChangeLang(lang);
- if(lang==='en'){
-   document.querySelectorAll('*').forEach(el=>{
-      if(el.children.length===0){
-        let t=el.textContent.trim();
-        if(extraTranslations.en[t]) el.textContent=extraTranslations.en[t];
-      }
-   });
- }
- localStorage.setItem('siteLang',lang);
-}
-document.addEventListener('DOMContentLoaded',()=>{
- const saved=localStorage.getItem('siteLang')||'el';
- setTimeout(()=>{ if(window.changeLang) window.changeLang(saved); },300);
-});
-</script>
-
 </body>
 </html>
