@@ -58,6 +58,10 @@ header { text-align: center; color: white; margin-bottom: 30px; display: flex; f
 .info-card { background: rgba(45,90,39,0.7) !important; color: white !important; text-align: left !important; }
 .time-widget-row { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; }
 #clock, #date, #r-val, #b-val, #reset-msg { color: white !important; }
+#date { margin-top: 8px; }
+.digital-clock { font-family: 'Courier New', monospace; font-size: 2rem; font-weight: bold; letter-spacing: 4px; text-shadow: 0 0 10px rgba(0, 255, 0, 0.8), 0 0 25px rgba(0, 255, 0, 0.5), 0 0 40px rgba(0, 255, 0, 0.3); color: #00ff00; background: rgba(0, 0, 0, 0.7); border: 2px solid rgba(0, 255, 0, 0.5); border-radius: 8px; padding: 8px 16px; display: inline-block; box-shadow: 0 0 15px rgba(0, 255, 0, 0.2), inset 0 0 10px rgba(0, 255, 0, 0.1); }
+.clock-separator { opacity: 1; transition: opacity 0.1s; }
+.clock-separator.blink-off { opacity: 0; }
 .rain-gauges-container { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: 10px; background: rgba(255,255,255,0.1); padding: 10px 5px; border-radius: 8px; }
 .rain-box { flex: 1; min-width: 100px; display: flex; flex-direction: column; align-items: center; border: 1px solid rgba(255,255,255,0.3); }
 .rain-box-title { background: #2d5a27; color: white; width: 100%; font-size: 0.65rem; font-weight: bold; padding: 4px 0; text-align: center; }
@@ -180,7 +184,7 @@ footer { text-align: center; color: #ffffff; margin: 30px auto 10px auto; paddin
 <p><strong id="txt-lbl-status">Κατάσταση:</strong> <span id="status-badge">ΕΛΕΓΧΟΣ...</span></p>
 <p><strong id="txt-lbl-op">Λειτουργία:</strong> 24 ώρες το 24ωρο</p>
 <div class="time-widget-row">
-<div id="clock" style="font-size:1.8rem; font-weight:bold">--:--:--</div>
+<div id="clock" class="digital-clock">--:--:--</div>
 <div class="social-widget">
 <div style="font-size: 1.1rem; padding: 5px;"><span id="txt-live" class="live-blink">Live</span> Επισκέπτες: <strong id="val-live">1</strong></div>
 </div>
@@ -664,7 +668,11 @@ else { statusBox.innerText = t.sprayStatusDanger; statusBox.className = "spray-s
 function update() {
 const d = new Date();
 const todayStr = d.toLocaleDateString('el-GR');
-document.getElementById('clock').innerText = d.toLocaleTimeString('el-GR');
+let h = d.getHours().toString().padStart(2, '0');
+let m = d.getMinutes().toString().padStart(2, '0');
+let s = d.getSeconds().toString().padStart(2, '0');
+let blinkClass = (s % 2 === 0) ? 'blink-off' : '';
+document.getElementById('clock').innerHTML = '<span class="clock-separator">' + h + '</span>:<span class="clock-separator">' + m + '</span><span class="clock-separator ' + blinkClass + '">:' + s + '</span>';
 document.getElementById('date').innerText = d.toLocaleDateString('el-GR', {weekday:'long', day:'numeric', month:'long'});
 syncVisitors();
 const lang = document.documentElement.lang || 'el';
@@ -743,11 +751,52 @@ let b = parseFloat(last.field5);
 document.getElementById('b-val').innerText = b.toFixed(0);
 let lbl = document.getElementById('b-label');
 if(b > 75) { lbl.innerText=t.high; lbl.style.color="green"; } else if(b > 30) { lbl.innerText=t.med; lbl.style.color="orange"; } else { lbl.innerText=t.low; lbl.style.color="red"; }
-let labels = feeds.map(f => new Date(f.created_at).toLocaleTimeString('el-GR', {hour: '2-digit', minute:'2-digit'}));
-cTemp.data.labels = labels; cTemp.data.datasets[0].data = feeds.map(f => f.field1); cTemp.update();
-cHum.data.labels = labels; cHum.data.datasets[0].data = feeds.map(f => f.field2); cHum.update();
-cPress.data.labels = labels; cPress.data.datasets[0].data = feeds.map(f => f.field3); cPress.update();
-cRain.data.labels = labels; cRain.data.datasets[0].data = feeds.map(f => { let val = parseFloat(f.field4) - resetVal; return val < 0 ? 0 : val; }); cRain.update();
+let hourlyLabels = [];
+for (let h = 0; h < 24; h++) {
+    hourlyLabels.push(h.toString().padStart(2, '0') + ":00");
+}
+
+function getHourlyData(feeds, fieldName, resetVal) {
+    let hourlyData = new Array(24).fill(null);
+    feeds.forEach(f => {
+        let d = new Date(f.created_at);
+        if (d.toLocaleDateString('el-GR') !== todayStr) return;
+        let hour = d.getHours();
+        let val = parseFloat(f[fieldName]);
+        if (!isNaN(val)) {
+            if (fieldName === 'field4' && resetVal !== undefined) {
+                val = val - resetVal;
+                if (val < 0) val = 0;
+            }
+            if (hourlyData[hour] === null) {
+                hourlyData[hour] = { sum: val, count: 1 };
+            } else {
+                hourlyData[hour].sum += val;
+                hourlyData[hour].count += 1;
+            }
+        }
+    });
+    return hourlyData.map(h => h === null ? null : (h.sum / h.count));
+}
+
+cTemp.data.labels = hourlyLabels;
+cTemp.data.datasets[0].data = getHourlyData(feeds, 'field1');
+cTemp.data.datasets[0].spanGaps = true;
+cTemp.update();
+
+cHum.data.labels = hourlyLabels;
+cHum.data.datasets[0].data = getHourlyData(feeds, 'field2');
+cHum.data.datasets[0].spanGaps = true;
+cHum.update();
+
+cPress.data.labels = hourlyLabels;
+cPress.data.datasets[0].data = getHourlyData(feeds, 'field3');
+cPress.data.datasets[0].spanGaps = true;
+cPress.update();
+
+cRain.data.labels = hourlyLabels;
+cRain.data.datasets[0].data = getHourlyData(feeds, 'field4', resetVal);
+cRain.update();
 let todayFeeds = feeds.filter(f => new Date(f.created_at).toLocaleDateString('el-GR') === todayStr);
 if(todayFeeds.length > 0) {
 let tArrToday = todayFeeds.filter(f => f.field1 != null).map(f => ({v: parseFloat(f.field1), t: f.created_at}));
@@ -755,19 +804,19 @@ let hArrToday = todayFeeds.filter(f => f.field2 != null).map(f => ({v: parseFloa
 let pArrToday = todayFeeds.filter(f => f.field3 != null).map(f => ({v: parseFloat(f.field3), t: f.created_at}));
 if(tArrToday.length > 0) {
 let tMax = tArrToday.reduce((p, c) => (p.v > c.v) ? p : c); let tMin = tArrToday.reduce((p, c) => (p.v < c.v) ? p : c);
-document.getElementById('t-max').innerText = tMax.v.toFixed(1); document.getElementById('t-max-t').innerText = "(" + new Date(tMax.t).toLocaleTimeString('el-GR', {hour:'2-digit', minute:'2-digit'}) + ")";
-document.getElementById('t-min').innerText = tMin.v.toFixed(1); document.getElementById('t-min-t').innerText = "(" + new Date(tMin.t).toLocaleTimeString('el-GR', {hour:'2-digit', minute:'2-digit'}) + ")";
+document.getElementById('t-max').innerText = tMax.v.toFixed(1); document.getElementById('t-max-t').innerText = "(" + new Date(tMax.t).toLocaleTimeString('el-GR', {hour:'2-digit', minute:'2-digit', hour12: false}) + ")";
+document.getElementById('t-min').innerText = tMin.v.toFixed(1); document.getElementById('t-min-t').innerText = "(" + new Date(tMin.t).toLocaleTimeString('el-GR', {hour:'2-digit', minute:'2-digit', hour12: false}) + ")";
 let cHrs = tArrToday.filter(f => f.v < 7).length * (20/60); document.getElementById('chill-hours').innerText = cHrs.toFixed(1);
 }
 if(hArrToday.length > 0) {
 let hMax = hArrToday.reduce((p, c) => (p.v > c.v) ? p : c); let hMin = hArrToday.reduce((p, c) => (p.v < c.v) ? p : c);
-document.getElementById('h-max').innerText = hMax.v.toFixed(0); document.getElementById('h-max-t').innerText = "(" + new Date(hMax.t).toLocaleTimeString('el-GR', {hour:'2-digit', minute:'2-digit'}) + ")";
-document.getElementById('h-min').innerText = hMin.v.toFixed(0); document.getElementById('h-min-t').innerText = "(" + new Date(hMin.t).toLocaleTimeString('el-GR', {hour:'2-digit', minute:'2-digit'}) + ")";
+document.getElementById('h-max').innerText = hMax.v.toFixed(0); document.getElementById('h-max-t').innerText = "(" + new Date(hMax.t).toLocaleTimeString('el-GR', {hour:'2-digit', minute:'2-digit', hour12: false}) + ")";
+document.getElementById('h-min').innerText = hMin.v.toFixed(0); document.getElementById('h-min-t').innerText = "(" + new Date(hMin.t).toLocaleTimeString('el-GR', {hour:'2-digit', minute:'2-digit', hour12: false}) + ")";
 }
 if(pArrToday.length > 0) {
 let pMax = pArrToday.reduce((p, c) => (p.v > c.v) ? p : c); let pMin = pArrToday.reduce((p, c) => (p.v < c.v) ? p : c);
-document.getElementById('p-max').innerText = pMax.v.toFixed(1); document.getElementById('p-max-t').innerText = "(" + new Date(pMax.t).toLocaleTimeString('el-GR', {hour:'2-digit', minute:'2-digit'}) + ")";
-document.getElementById('p-min').innerText = pMin.v.toFixed(1); document.getElementById('p-min-t').innerText = "(" + new Date(pMin.t).toLocaleTimeString('el-GR', {hour:'2-digit', minute:'2-digit'}) + ")";
+document.getElementById('p-max').innerText = pMax.v.toFixed(1); document.getElementById('p-max-t').innerText = "(" + new Date(pMax.t).toLocaleTimeString('el-GR', {hour:'2-digit', minute:'2-digit', hour12: false}) + ")";
+document.getElementById('p-min').innerText = pMin.v.toFixed(1); document.getElementById('p-min-t').innerText = "(" + new Date(pMin.t).toLocaleTimeString('el-GR', {hour:'2-digit', minute:'2-digit', hour12: false}) + ")";
 }
 }
 })
