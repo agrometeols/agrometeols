@@ -27,7 +27,7 @@ body { margin: 0; padding: 0; background: #000; font-family: sans-serif; overflo
 .lang-btn { background: rgba(255,255,255,0.2); backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.3); padding: 8px 15px; border-radius: 25px; color: white; font-size: 0.85rem; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: all 0.3s; }
 .lang-btn:hover { background: rgba(255,255,255,0.4); transform: scale(1.05); }
 .flag-icon { width: 22px; height: 15px; object-fit: cover; border-radius: 2px; box-shadow: 0 0 5px rgba(0,0,0,0.3); }
-.social-widget { background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; padding: 6px 10px; color: white; font-size: 0.7rem; display: flex; flex-direction: column; gap: 2px; min-width: 120px; text-align: left; }
+.social-widget { background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.2); border-radius: 6px; padding: 3px 6px; color: white; font-size: 0.55rem; display: flex; flex-direction: column; gap: 1px; min-width: 80px; text-align: left; }
 .live-blink { color: #00ff00; font-weight: bold; animation: pulse-green 1.5s infinite; }
 @keyframes pulse-green { 0% { color: #00ff00; text-shadow: 0 0 5px #00ff00; } 50% { color: #004400; text-shadow: 0 0 0px #00ff00; } 100% { color: #00ff00; text-shadow: 0 0 5px #00ff00; } }
 .waving-flag { width: 32px; vertical-align: middle; margin-left: 10px; display: inline-block; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3)); animation: wave-motion 2.5s infinite ease-in-out; }
@@ -186,7 +186,7 @@ footer { text-align: center; color: #ffffff; margin: 30px auto 10px auto; paddin
 <div class="time-widget-row">
 <div id="clock" class="digital-clock">--:--:--</div>
 <div class="social-widget">
-<div style="font-size: 1.1rem; padding: 5px;"><span id="txt-live" class="live-blink">Live</span> Επισκέπτες: <strong id="val-live">1</strong></div>
+<div style="font-size: 0.75rem; padding: 2px;"><span id="txt-live" class="live-blink">Live</span> Επισκέπτες: <strong id="val-live">1</strong></div>
 </div>
 </div>
 <div id="date">------</div>
