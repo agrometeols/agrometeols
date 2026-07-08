@@ -223,6 +223,74 @@ footer { text-align: center; color: #ffffff; margin: 30px auto 10px auto; paddin
 <div class="card"><h3 id="txt-g-wind-dir">Κατεύθυνση Ανέμου</h3><canvas id="gauge-wind-dir"></canvas></div>
 <div class="card"><h3 id="txt-g-solar">Ηλιακή Ακτινοβολία</h3><canvas id="gauge-solar"></canvas></div>
 <div class="card" style="display: flex; flex-direction: column; justify-content: center; min-height: 270px;"><h3 id="txt-g-rain">Βροχόπτωση (Live)</h3><div style="font-size: 4rem; font-weight: bold; margin: 20px 0;"><span id="r-val">--</span><span style="font-size: 1.5rem;">mm</span></div><small id="reset-msg">Μηδενίζει αυτόματα στις 00:00</small></div>
+<div class="card" style="display: flex; flex-direction: column; justify-content: flex-start; min-height: 270px; padding: 20px;">
+<h3 id="txt-g-sun" style="margin-bottom: 12px;">Ανατολή &amp; Δύση Ηλίου</h3>
+<div style="display: flex; justify-content: center; align-items: center; gap: 8px; margin-bottom: 12px;">
+<div id="sun-moon-icon" style="width: 80px; height: 80px; position: relative;">
+<svg id="sun-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" style="width: 100%; height: 100%; display: none;">
+<circle cx="50" cy="50" r="18" fill="#ffcc00" filter="drop-shadow(0 0 12px rgba(255,204,0,0.8))">
+<animate attributeName="r" values="18;20;18" dur="3s" repeatCount="indefinite"/>
+</circle>
+<g stroke="#ffcc00" stroke-width="2.5" stroke-linecap="round">
+<line x1="50" y1="8" x2="50" y2="20"><animate attributeName="y1" values="8;6;8" dur="2s" repeatCount="indefinite"/></line>
+<line x1="50" y1="80" x2="50" y2="92"><animate attributeName="y2" values="92;94;92" dur="2s" repeatCount="indefinite"/></line>
+<line x1="8" y1="50" x2="20" y2="50"><animate attributeName="x1" values="8;6;8" dur="2s" repeatCount="indefinite"/></line>
+<line x1="80" y1="50" x2="92" y2="50"><animate attributeName="x2" values="92;94;92" dur="2s" repeatCount="indefinite"/></line>
+<line x1="20.3" y1="20.3" x2="28.8" y2="28.8"/>
+<line x1="71.2" y1="71.2" x2="79.7" y2="79.7"/>
+<line x1="20.3" y1="79.7" x2="28.8" y2="71.2"/>
+<line x1="71.2" y1="28.8" x2="79.7" y2="20.3"/>
+</g>
+</svg>
+<svg id="moon-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" style="width: 100%; height: 100%; display: none;">
+<path d="M55 15 A 30 30 0 1 0 55 75 A 22 22 0 1 1 55 15" fill="#e0e0e0" filter="drop-shadow(0 0 10px rgba(200,200,220,0.6))">
+<animateTransform attributeName="transform" type="translate" values="0,0; 0,-2; 0,0" dur="4s" repeatCount="indefinite"/>
+</path>
+<circle cx="70" cy="25" r="1.5" fill="rgba(255,255,255,0.3)"/>
+<circle cx="80" cy="40" r="1" fill="rgba(255,255,255,0.2)"/>
+<circle cx="65" cy="70" r="1.2" fill="rgba(255,255,255,0.2)"/>
+</svg>
+</div>
+<div style="display: flex; flex-direction: column; align-items: center; gap: 4px;">
+<div id="day-night-badge" style="background: linear-gradient(135deg, #ffcc00, #ff6600); color: #000; font-weight: bold; font-size: 0.75rem; padding: 4px 12px; border-radius: 20px; text-transform: uppercase; letter-spacing: 1px;">ΗΜΕΡΑ</div>
+<div id="sun-moon-status" style="font-size: 0.85rem; opacity: 0.9; font-weight: 500;">Φωτεινό</div>
+</div>
+</div>
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
+<div style="background: rgba(255,255,255,0.08); border-radius: 10px; padding: 10px; text-align: center; border: 1px solid rgba(255,255,255,0.1);">
+<div style="font-size: 0.65rem; opacity: 0.7; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px;">Ανατολή</div>
+<div id="val-sunrise" style="font-size: 1.3rem; font-weight: bold; color: #ffcc00; text-shadow: 0 0 8px rgba(255,204,0,0.4);">--:--</div>
+</div>
+<div style="background: rgba(255,255,255,0.08); border-radius: 10px; padding: 10px; text-align: center; border: 1px solid rgba(255,255,255,0.1);">
+<div style="font-size: 0.65rem; opacity: 0.7; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px;">Δύση</div>
+<div id="val-sunset" style="font-size: 1.3rem; font-weight: bold; color: #ff6600; text-shadow: 0 0 8px rgba(255,102,0,0.4);">--:--</div>
+</div>
+</div>
+<div style="margin-bottom: 10px;">
+<div style="display: flex; justify-content: space-between; font-size: 0.7rem; opacity: 0.8; margin-bottom: 5px;">
+<span id="txt-day-progress">Πρόοδος Ημέρας</span>
+<span id="val-day-progress">--%</span>
+</div>
+<div style="width: 100%; height: 8px; background: rgba(255,255,255,0.08); border-radius: 4px; overflow: hidden; position: relative;">
+<div id="bar-day-progress" style="width: 0%; height: 100%; background: linear-gradient(90deg, #ffcc00, #ff6600, #ff3366); border-radius: 4px; transition: width 1.5s ease; position: relative;">
+<div style="position: absolute; right: 0; top: 0; bottom: 0; width: 3px; background: rgba(255,255,255,0.5); border-radius: 2px; box-shadow: 0 0 6px rgba(255,255,255,0.5);"></div>
+</div>
+</div>
+<div style="display: flex; justify-content: space-between; font-size: 0.6rem; opacity: 0.5; margin-top: 3px;">
+<span>00:00</span>
+<span>12:00</span>
+<span>24:00</span>
+</div>
+</div>
+<div style="display: flex; justify-content: space-between; font-size: 0.8rem; margin-bottom: 4px;">
+<span id="txt-daylength">Διάρκεια Ημέρας</span>
+<span id="val-daylength" style="font-weight: bold;">--</span>
+</div>
+<div style="display: flex; justify-content: space-between; font-size: 0.8rem; margin-bottom: 8px;">
+<span id="txt-to-sunset">Λείπα μέχρι Δύση</span>
+<span id="val-to-sunset" style="font-weight: bold; color: #ff6600;">--</span>
+</div>
+</div>
 </div>
 
 <h2 class="section-title" id="txt-fore-title">Πρόγνωση & Ραντάρ</h2>
@@ -368,7 +436,7 @@ footer { text-align: center; color: #ffffff; margin: 30px auto 10px auto; paddin
 </div>
 <a href="https://drive.google.com/file/d/1E8PRjEa4IIh1vI1sJjFTQ0ZU56ps1cSv/view?usp=drive_link" class="btn-download" style="display: inline-flex; align-items: center; justify-content: center; gap: 12px; background: #27272a; color: #d4d4d8; font-weight: bold; text-decoration: none; padding: 15px 25px; border-radius: 50px; font-size: 1.1rem; border: 1px solid #3f3f46; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); transition: all 0.2s ease-in-out; margin-top: 15px;" onmouseover="this.style.background='#00ff00'; this.style.color='#000000'; this.style.borderColor='#00ff00'; this.style.transform='scale(1.05)'; this.style.boxShadow='0 0 25px rgba(0, 255, 0, 0.7)';" onmouseout="this.style.background='#27272a'; this.style.color='#d4d4d8'; this.style.borderColor='#3f3f46'; this.style.transform='scale(1)'; this.style.boxShadow='0 4px 6px -1px rgba(0, 0, 0, 0.1)';">
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style="width: 22px; height: 22px; display: block; flex-shrink: 0;">
-<path d="M0 3.449L9.75 2.1v9.451H0V3.449zM0 12.55h9.75v9.451L0 20.651V12.55zm10.8-10.601L24 0v11.55H10.8V1.949zM10.8 12.55H24v11.55l-13.2-1.95V12.55z" fill="currentColor"/>
+<path d="M0 3.449L9.75 2.1v9.451H0V3.449zM0 12.55h9.75v9.451L0 20.651V12.55zM10.8-10.601L24 0v11.55H10.8V1.949zM10.8 12.55H24v11.55l-13.2-1.95V12.55z" fill="currentColor"/>
 </svg>
 <span id="txt-app-win-btn">Download Windows (exe)</span>
 </a>
@@ -401,7 +469,7 @@ statsTitle: "Μέγιστες/Ελάχιστες & Βροχόπτωση", tempEx
 rDay: "Σημερινός Υετός", rStorm: "Τρέ/Kακοκαιρία", rRate: "Ραγδαιότητα", rMonth: "Μηνιαίος Υετός", rYear: "Ετήσιος Yετός",
 alertsTitle: "Γεωργικές Προειδοποιήσεις", tendencyTitle: "Τάση Βαρομετρικής Πίεσης (3ωρο)", cropStats: "Στατιστικά Καλλιέργειας", chillLbl: "Ώρες Ψύχους Κάτω Από",
 curTitle: "Τρέχουσες Ενδείξεις", gTemp: "Θερμοκρασία", gHum: "Υγρασία", gPress: "Βαρομετρική πίεση", gRain: "Βροχόπτωση (Live)",
-gWindSpeed: "Ταχύτητα Ανέμου", gWindDir: "Κατεύθυνση Ανέμου", gDp: "Σημείο Δρόσου", gSolar: "Ηλιακή Ακτινοβολία",
+gWindSpeed: "Ταχύτητα Ανέμου", gWindDir: "Κατεύθυνση Ανέμου", gDp: "Σημείο Δρόσου", gSolar: "Ηλιακή Ακτινοβολία", gSun: "Ανατολή & Δύση Ηλίου", sunny: "Λιακάδα", dark: "Σκοτάδι", dayProgress: "Πρόοδος Ημέρας", dayLength: "Διάρκεια Ημέρας", toSunset: "Λείπα μέχρι Δύση",
 foreTitle: "Πρόγνωση & Ραντάρ", foreSub: "Πρόγνωση: Νέος Μυλότοπος", radarTitle: "Ζωντανό Ραντάρ Βροχής",
 adsTitle: "Συνεργαζόμενοι Γεωπόνοι & Διαφημίσεις", histTitle: "Ιστορικά Γραφήματα",
 cTemp: "Πορεία Θερμοκρασία", cHum: "Πορεία Υγρασία", cPress: "Πορεία Πίεσης", cRain: "Πορεία Βροχόπτωσης",
@@ -434,7 +502,7 @@ statsTitle: "Max/Min & Rainfall", tempExt: "Highest Temperature: ", humExt: "Hig
 rDay: "Daily Rain", rStorm: "Storm Rain", rRate: "Rain Rate", rMonth: "Monthly Rain", rYear: "Yearly Rain",
 alertsTitle: "Agricultural Alerts", tendencyTitle: "Barometric Pressure Tendency (3h)", cropStats: "Crop Statistics", chillLbl: "Chill Hours Below",
 curTitle: "Current Readings", gTemp: "Temperature", gHum: "Humidity", gPress: "Barometric Pressure", gRain: "Rainfall (Live)",
-gWindSpeed: "Wind Speed", gWindDir: "Wind Direction", gDp: "Dew Point", gSolar: "Solar Radiation",
+gWindSpeed: "Wind Speed", gWindDir: "Wind Direction", gDp: "Dew Point", gSolar: "Solar Radiation", gSun: "Sunrise & Sunset", sunny: "Sunny", dark: "Dark", dayProgress: "Day Progress", dayLength: "Day Length", toSunset: "Time until Sunset",
 foreTitle: "Forecast & Radar", foreSub: "Forecast: Neos Mylotopos", radarTitle: "Live Rain Radar",
 adsTitle: "Collaborating Agronomists & Ads", histTitle: "Historical Charts",
 cTemp: "Temperature Trend", cHum: "Humidity Trend", cPress: "Pressure Trend", cRain: "Rainfall Trend",
@@ -494,6 +562,10 @@ document.getElementById('txt-g-dp').innerText = t.gDp;
 document.getElementById('txt-g-wind-speed').innerText = t.gWindSpeed;
 document.getElementById('txt-g-wind-dir').innerText = t.gWindDir;
 document.getElementById('txt-g-solar').innerText = t.gSolar;
+if(document.getElementById('txt-g-sun')) document.getElementById('txt-g-sun').innerText = t.gSun;
+if(document.getElementById('txt-daylength')) document.getElementById('txt-daylength').innerText = t.dayLength || 'Διάρκεια Ημέρας';
+if(document.getElementById('txt-to-sunset')) document.getElementById('txt-to-sunset').innerText = t.toSunset || 'Λείπα μέχρι Δύση';
+if(document.getElementById('txt-day-progress')) document.getElementById('txt-day-progress').innerText = t.dayProgress || 'Πρόοδος Ημέρας';
 document.getElementById('txt-g-press').innerText = t.gPress;
 document.getElementById('txt-g-rain').innerText = t.gRain;
 document.getElementById('txt-fore-title').innerText = t.foreTitle;
@@ -644,6 +716,73 @@ document.getElementById('currentStage').innerText = t.stageCurrent + ": " + stag
 document.getElementById('stageDesc').innerText = stageDesc;
 }
 
+function getSunTimes(date) {
+const lat = 40.803;
+const lng = 22.348;
+const dayOfYear = Math.floor((date - new Date(date.getFullYear(), 0, 0)) / 1000 / 60 / 60 / 24);
+const gamma = (2 * Math.PI / 365) * (dayOfYear - 1 + (date.getHours() - 12) / 24);
+const eqTime = 229.18 * (0.000075 + 0.001868 * Math.cos(gamma) - 0.032077 * Math.sin(gamma) - 0.014615 * Math.cos(2 * gamma) - 0.040849 * Math.sin(2 * gamma));
+const solarDeclination = 0.006918 - 0.399912 * Math.cos(gamma) + 0.070257 * Math.sin(gamma) - 0.006758 * Math.cos(2 * gamma) + 0.000907 * Math.sin(2 * gamma) - 0.002697 * Math.cos(3 * gamma) + 0.00148 * Math.sin(3 * gamma);
+var latRad = lat * Math.PI / 180;
+var hourAngle = Math.acos(-Math.tan(latRad) * Math.tan(solarDeclination)) * 180 / Math.PI;
+var sunriseTime = 720 - 4 * (lng + hourAngle) - eqTime;
+var sunsetTime = 720 - 4 * (lng - hourAngle) - eqTime;
+var sunrise = new Date(date.getTime());
+sunrise.setHours(0, sunriseTime, 0, 0);
+var sunset = new Date(date.getTime());
+sunset.setHours(0, sunsetTime, 0, 0);
+return { rise: sunrise, set: sunset };
+}
+function formatHM(date) {
+if (!date) return '--:--';
+return date.getHours().toString().padStart(2, '0') + ':' + date.getMinutes().toString().padStart(2, '0');
+}
+function updateSunCard() {
+const now = new Date();
+const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+const times = getSunTimes(today);
+const rise = times.rise;
+const set = times.set;
+const lang = document.documentElement.lang || 'el';
+const t = translations[lang];
+document.getElementById('val-sunrise').innerText = formatHM(rise);
+document.getElementById('val-sunset').innerText = formatHM(set);
+const totalDayMs = set - rise;
+const elapsedMs = now - rise;
+let progress = 0;
+if (now < rise) { progress = 0; } else if (now > set) { progress = 100; } else { progress = (elapsedMs / totalDayMs) * 100; }
+progress = Math.max(0, Math.min(100, progress));
+document.getElementById('val-day-progress').innerText = Math.round(progress) + '%';
+document.getElementById('bar-day-progress').style.width = progress + '%';
+const dayH = Math.floor(totalDayMs / 3600000);
+const dayM = Math.floor((totalDayMs % 3600000) / 60000);
+document.getElementById('val-daylength').innerText = dayH + 'h ' + dayM + 'm';
+let toSunsetMs = set - now;
+if (toSunsetMs < 0) { toSunsetMs += 86400000; }
+const toH = Math.floor(toSunsetMs / 3600000);
+const toM = Math.floor((toSunsetMs % 3600000) / 60000);
+document.getElementById('val-to-sunset').innerText = toH + 'h ' + toM + 'm';
+const isDay = now >= rise && now < set;
+const badge = document.getElementById('day-night-badge');
+const status = document.getElementById('sun-moon-status');
+const sunSvg = document.getElementById('sun-svg');
+const moonSvg = document.getElementById('moon-svg');
+if (isDay) {
+badge.innerText = lang === 'el' ? 'ΗΜΕΡΑ' : 'DAY';
+badge.style.background = 'linear-gradient(135deg, #ffcc00, #ff6600)';
+status.innerText = t.sunny;
+status.style.color = '#ffcc00';
+sunSvg.style.display = 'block';
+moonSvg.style.display = 'none';
+} else {
+badge.innerText = lang === 'el' ? 'ΝΥΧΤΑ' : 'NIGHT';
+badge.style.background = 'linear-gradient(135deg, #3344aa, #111133)';
+status.innerText = t.dark;
+status.style.color = '#8888ff';
+sunSvg.style.display = 'none';
+moonSvg.style.display = 'block';
+}
+}
 function updateSprayAnalysis(windSpeed, windDir) {
 const statusBox = document.getElementById('spray-status-box');
 const arrow = document.getElementById('drift-arrow');
@@ -673,7 +812,7 @@ function update() {
 const d = new Date();
 const todayStr = d.toLocaleDateString('el-GR');
 document.getElementById('date').innerText = d.toLocaleDateString('el-GR', {weekday:'long', day:'numeric', month:'long'});
-syncVisitors();
+syncVisitors(); updateSunCard();
 const lang = document.documentElement.lang || 'el';
 const t = translations[lang];
 fetch("https://api.thingspeak.com/channels/3365350/feeds.json?results=80&status=true&metadata=true")
