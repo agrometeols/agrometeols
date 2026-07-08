@@ -32,6 +32,7 @@ body { margin: 0; padding: 0; background: #000; font-family: sans-serif; overflo
 @keyframes pulse-green { 0% { color: #00ff00; text-shadow: 0 0 5px #00ff00; } 50% { color: #004400; text-shadow: 0 0 0px #00ff00; } 100% { color: #00ff00; text-shadow: 0 0 5px #00ff00; } }
 .waving-flag { width: 32px; vertical-align: middle; margin-left: 10px; display: inline-block; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3)); animation: wave-motion 2.5s infinite ease-in-out; }
 @keyframes wave-motion { 0% { transform: translateZ(0) rotate(0deg); clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%); } 25% { transform: translateZ(0) rotate(2deg) skewY(2deg); } 50% { transform: translateZ(0) rotate(0deg) skewY(0deg); } 75% { transform: translateZ(0) rotate(-2deg) skewY(-2deg); } 100% { transform: translateZ(0) rotate(0deg); } }
+
 .nav-menu { display: flex; justify-content: center; gap: 10px; margin-top: 20px; width: 100%; flex-wrap: nowrap !important; }
 .nav-btn { background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.2); padding: 12px 25px; border-radius: 50px; color: white; font-weight: bold; text-transform: uppercase; cursor: pointer; transition: all 0.3s; font-size: 0.9rem; }
 @media (max-width: 480px) { .nav-menu { gap: 5px !important; } .nav-btn { padding: 6px 12px !important; font-size: 0.65rem !important; } .social-widget { padding: 2px 4px !important; font-size: 0.5rem !important; min-width: 70px !important; } #section-cams .card { min-height: 200px !important; padding: 10px !important; } #section-cams .card > div { height: 140px !important; } #section-cams .card h3 { font-size: 1rem !important; } #section-contact .card { padding: 10px 12px !important; } #section-contact .card p { font-size: 0.8rem !important; line-height: 1.4 !important; word-wrap: break-word !important; overflow-wrap: break-word !important; } #section-contact .card strong, #section-contact .card span { font-size: 0.85rem !important; word-wrap: break-word !important; overflow-wrap: break-word !important; } #section-contact #txt-contact-desc { margin-top: 8px !important; font-size: 0.75rem !important; } #section-contact .info-card { max-width: 100% !important; width: 100% !important; box-sizing: border-box !important; } #section-app .card { padding: 12px !important; } #section-app a { padding: 8px 14px !important; font-size: 0.8rem !important; } #section-app a svg { width: 18px !important; height: 18px !important; } #section-app h3 { font-size: 1rem !important; margin-bottom: 8px !important; } #section-app p { font-size: 0.8rem !important; margin: 8px 0 !important; } }
@@ -342,6 +343,11 @@ footer { text-align: center; color: #ffffff; margin: 30px auto 10px auto; paddin
 <div class="dashboard">
 <div class="card info-card" style="grid-column: 1 / -1; text-align: center; padding: 20px;">
 <p id="txt-app-ios" style="margin: 0; opacity: 0.9;">Για συσκευές iOS (Apple), μπορείτε να προσθέσετε το site στην οθόνη αφετηρίας σας ως συντόμευση, ώστε να λειτουργεί κανονικά σαν εφαρμογή (Web App).</p>
+<div style="margin-top: 18px; display: flex; justify-content: center; align-items: center; gap: 12px; flex-wrap: wrap;">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" style="width: 55px; height: 55px; display: inline-block; filter: drop-shadow(0 0 8px rgba(255,255,255,0.3));">
+<path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 34-18.1 63.3-18.1 28.5 0 36.7 18.1 63.6 17.6 26.2-.4 44-24.4 56.8-48.7 17.8-32.6 25.1-64.3 25.5-65.9-2.8-.7-49.5-18.9-50.1-75.2.5-23.3 19.8-44.2 50.1-58.9zM223.5 91.7c15.2-18.3 25.5-43.4 22.7-68.5-22.1 1-48.8 14.7-64.7 33.1-14.1 16.8-26.5 43.7-23.2 68.6 24.5 1.9 49.7-15.5 65.2-33.2z" fill="#ffffff"/>
+</svg>
+</div>
 </div>
 <div class="card info-card" style="text-align: center; display: flex; flex-direction: column; justify-content: space-between; padding: 25px;">
 <div>
@@ -349,10 +355,8 @@ footer { text-align: center; color: #ffffff; margin: 30px auto 10px auto; paddin
 <p id="txt-app-android-desc" style="margin: 20px 0; opacity: 0.9; font-size: 0.95rem;">Κατεβάστε την επίσημη εφαρμογή του σταθμού για συσκευές Android.</p>
 </div>
 <a href="https://drive.google.com/file/d/1_v3JsqBUv7Ov74rI8lUHXKINm0catnCk/view?usp=drive_link" class="btn-download" style="display: inline-flex; align-items: center; justify-content: center; gap: 12px; background: #27272a; color: #d4d4d8; font-weight: bold; text-decoration: none; padding: 15px 25px; border-radius: 50px; font-size: 1.1rem; border: 1px solid #3f3f46; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); transition: all 0.2s ease-in-out; margin-top: 15px;" onmouseover="this.style.background='#00ff00'; this.style.color='#000000'; this.style.borderColor='#00ff00'; this.style.transform='scale(1.05)'; this.style.boxShadow='0 0 25px rgba(0, 255, 0, 0.7)';" onmouseout="this.style.background='#27272a'; this.style.color='#d4d4d8'; this.style.borderColor='#3f3f46'; this.style.transform='scale(1)'; this.style.boxShadow='0 4px 6px -1px rgba(0, 0, 0, 0.1)';">
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1443.06 1249.7" style="width: 22px; height: 22px; display: block; flex-shrink: 0;">
-<path d="M481.12,0,0,833.27,240.56,1249.7,721.68,416.43Z" fill="#ffcc00"/>
-<path d="M240.56,1249.7h962l240.55-416.43H481.12Z" fill="#33a852"/>
-<path d="M962.19,0H481.12L721.68,416.43,1202.75,1249.7l240.31-416.43Z" fill="#167ee6"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style="width: 22px; height: 22px; display: block; flex-shrink: 0;">
+<path d="M6 18c0 .55.45 1 1 1h1v3.5c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5V19h2v3.5c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5V19h1c.55 0 1-.45 1-1V8H6v10zM3.5 8C2.67 8 2 8.67 2 9.5v7c0 .83.67 1.5 1.5 1.5S5 17.33 5 16.5v-7C5 8.67 4.33 8 3.5 8zm17 0c-.83 0-1.5.67-1.5 1.5v7c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5v-7c0-.83-.67-1.5-1.5-1.5zm-4.97-5.84l1.3-1.3c.2-.2.2-.51 0-.71-.2-.2-.51-.2-.71 0l-1.48 1.48C13.85 1.23 12.95 1 12 1c-.96 0-1.86.23-2.66.63L7.85.15c-.2-.2-.51-.2-.71 0-.2.2-.2.51 0 .71l1.31 1.31C6.97 3.26 6 5.01 6 7h12c0-1.99-.97-3.75-2.47-4.84zM10 5H9V4h1v1zm5 0h-1V4h1v1z" fill="#3ddc84"/>
 </svg>
 <span id="txt-app-android-btn">Download Android (Apk)</span>
 </a>
