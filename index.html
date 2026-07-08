@@ -34,7 +34,7 @@ body { margin: 0; padding: 0; background: #000; font-family: sans-serif; overflo
 @keyframes wave-motion { 0% { transform: translateZ(0) rotate(0deg); clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%); } 25% { transform: translateZ(0) rotate(2deg) skewY(2deg); } 50% { transform: translateZ(0) rotate(0deg) skewY(0deg); } 75% { transform: translateZ(0) rotate(-2deg) skewY(-2deg); } 100% { transform: translateZ(0) rotate(0deg); } }
 .nav-menu { display: flex; justify-content: center; gap: 10px; margin-top: 20px; width: 100%; flex-wrap: nowrap !important; }
 .nav-btn { background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.2); padding: 12px 25px; border-radius: 50px; color: white; font-weight: bold; text-transform: uppercase; cursor: pointer; transition: all 0.3s; font-size: 0.9rem; }
-@media (max-width: 480px) { .nav-menu { gap: 5px !important; } .nav-btn { padding: 6px 12px !important; font-size: 0.65rem !important; } }
+@media (max-width: 480px) { .nav-menu { gap: 5px !important; } .nav-btn { padding: 6px 12px !important; font-size: 0.65rem !important; } .social-widget { padding: 2px 4px !important; font-size: 0.5rem !important; min-width: 70px !important; } }
 .nav-btn:hover { background: rgba(0,255,0,0.3); border-color: #00ff00; }
 .nav-btn.active { background: rgba(0,255,0,0.5); border-color: #00ff00; box-shadow: 0 0 15px rgba(0,255,0,0.3); }
 .page-section { display: none; width: 100%; height: auto !important; min-height: auto !important; margin: 0 auto !important; }
@@ -186,7 +186,7 @@ footer { text-align: center; color: #ffffff; margin: 30px auto 10px auto; paddin
 <div class="time-widget-row">
 <div id="clock" class="digital-clock">--:--:--</div>
 <div class="social-widget">
-<div style="font-size: 0.75rem; padding: 2px;"><span id="txt-live" class="live-blink">Live</span> Επισκέπτες: <strong id="val-live">1</strong></div>
+<div style="font-size: 0.55rem; padding: 1px;"><span id="txt-live" class="live-blink">Live</span> Επισκέπτες: <strong id="val-live">1</strong></div>
 </div>
 </div>
 <div id="date">------</div>
