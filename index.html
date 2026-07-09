@@ -913,16 +913,15 @@ if (feeds.length >= 2) {
     let lastRainRaw = parseFloat(lastFeed.field4) || 0;
     let prevRainRaw = parseFloat(prevFeed.field4) || 0;
     
-    // 1. Υπολογισμός Live Ραγδαιότητας (mm/h) για το μεγάλο widget
+    // 1. Υπολογισμός Live πραγματικής βροχόπτωσης (mm) εκείνης της στιγμής
     if (lastRainRaw >= prevRainRaw) {
-        let diffRain = lastRainRaw - prevRainRaw;
-        currentRainValue = diffRain * 180; // Μετατροπή σε mm/h αν στέλνει ανά 20 δεύτερα
+        currentRainValue = lastRainRaw - prevRainRaw; // Δείχνει ακριβώς τη διαφορά (π.χ. 0.27 mm)
     } else {
         currentRainValue = 0;
     }
     
-    // Ενημέρωση του LIVE Widget στην οθόνη
-    document.getElementById('r-val').innerText = currentRainValue.toFixed(1);
+    // Ενημέρωση του LIVE Widget στην οθόνη με 2 δεκαδικά (για να φαίνεται σωστά το 0.27)
+    document.getElementById('r-val').innerText = currentRainValue.toFixed(2);
     
     // 2. Υπολογισμός Σημερινού Υετού (Ποτήρι) με βάση το resetVal
     let totalDailyRain = lastRainRaw - resetVal;
