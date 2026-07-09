@@ -717,71 +717,91 @@ document.getElementById('stageDesc').innerText = stageDesc;
 }
 
 function getSunTimes(date) {
-const lat = 40.803;
-const lng = 22.348;
-const dayOfYear = Math.floor((date - new Date(date.getFullYear(), 0, 0)) / 1000 / 60 / 60 / 24);
-const gamma = (2 * Math.PI / 365) * (dayOfYear - 1 + (date.getHours() - 12) / 24);
-const eqTime = 229.18 * (0.000075 + 0.001868 * Math.cos(gamma) - 0.032077 * Math.sin(gamma) - 0.014615 * Math.cos(2 * gamma) - 0.040849 * Math.sin(2 * gamma));
-const solarDeclination = 0.006918 - 0.399912 * Math.cos(gamma) + 0.070257 * Math.sin(gamma) - 0.006758 * Math.cos(2 * gamma) + 0.000907 * Math.sin(2 * gamma) - 0.002697 * Math.cos(3 * gamma) + 0.00148 * Math.sin(3 * gamma);
-var latRad = lat * Math.PI / 180;
-var hourAngle = Math.acos(-Math.tan(latRad) * Math.tan(solarDeclination)) * 180 / Math.PI;
-var sunriseTime = 720 - 4 * (lng + hourAngle) - eqTime;
-var sunsetTime = 720 - 4 * (lng - hourAngle) - eqTime;
-var sunrise = new Date(date.getTime());
-sunrise.setHours(0, sunriseTime, 0, 0);
-var sunset = new Date(date.getTime());
-sunset.setHours(0, sunsetTime, 0, 0);
-return { rise: sunrise, set: sunset };
+  const lat = 40.803;
+  const lng = 22.348;
+  const dayOfYear = Math.floor((date - new Date(date.getFullYear(), 0, 0)) / 1000 / 60 / 60 / 24);
+  const gamma = (2 * Math.PI / 365) * (dayOfYear - 1 + (date.getHours() - 12) / 24);
+  const eqTime = 229.18 * (0.000075 + 0.001868 * Math.cos(gamma) - 0.032077 * Math.sin(gamma) - 0.014615 * Math.cos(2 * gamma) - 0.040849 * Math.sin(2 * gamma));
+  const solarDeclination = 0.006918 - 0.399912 * Math.cos(gamma) + 0.070257 * Math.sin(gamma) - 0.006758 * Math.cos(2 * gamma) + 0.000907 * Math.sin(2 * gamma) - 0.002697 * Math.cos(3 * gamma) + 0.00148 * Math.sin(3 * gamma);
+  var latRad = lat * Math.PI / 180;
+  var hourAngle = Math.acos(-Math.tan(latRad) * Math.tan(solarDeclination)) * 180 / Math.PI;
+  var sunriseTime = 720 - 4 * (lng + hourAngle) - eqTime;
+  var sunsetTime = 720 - 4 * (lng - hourAngle) - eqTime;
+
+  // 🔧 ΔΙΟΡΘΩΣΗ: Δημιουργούμε τα Date objects σε UTC και τα διαβάζουμε σε local time
+  var sunrise = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0));
+  sunrise.setUTCMinutes(sunriseTime);
+  
+  var sunset = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0));
+  sunset.setUTCMinutes(sunsetTime);
+
+  return { rise: sunrise, set: sunset };
 }
+
 function formatHM(date) {
-if (!date) return '--:--';
-return date.getHours().toString().padStart(2, '0') + ':' + date.getMinutes().toString().padStart(2, '0');
+  if (!date) return '--:--';
+  return date.getHours().toString().padStart(2, '0') + ':' + date.getMinutes().toString().padStart(2, '0');
 }
+
 function updateSunCard() {
-const now = new Date();
-const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-const times = getSunTimes(today);
-const rise = times.rise;
-const set = times.set;
-const lang = document.documentElement.lang || 'el';
-const t = translations[lang];
-document.getElementById('val-sunrise').innerText = formatHM(rise);
-document.getElementById('val-sunset').innerText = formatHM(set);
-const totalDayMs = set - rise;
-const elapsedMs = now - rise;
-let progress = 0;
-if (now < rise) { progress = 0; } else if (now > set) { progress = 100; } else { progress = (elapsedMs / totalDayMs) * 100; }
-progress = Math.max(0, Math.min(100, progress));
-document.getElementById('val-day-progress').innerText = Math.round(progress) + '%';
-document.getElementById('bar-day-progress').style.width = progress + '%';
-const dayH = Math.floor(totalDayMs / 3600000);
-const dayM = Math.floor((totalDayMs % 3600000) / 60000);
-document.getElementById('val-daylength').innerText = dayH + 'h ' + dayM + 'm';
-let toSunsetMs = set - now;
-if (toSunsetMs < 0) { toSunsetMs += 86400000; }
-const toH = Math.floor(toSunsetMs / 3600000);
-const toM = Math.floor((toSunsetMs % 3600000) / 60000);
-document.getElementById('val-to-sunset').innerText = toH + 'h ' + toM + 'm';
-const isDay = now >= rise && now < set;
-const badge = document.getElementById('day-night-badge');
-const status = document.getElementById('sun-moon-status');
-const sunSvg = document.getElementById('sun-svg');
-const moonSvg = document.getElementById('moon-svg');
-if (isDay) {
-badge.innerText = lang === 'el' ? 'ΗΜΕΡΑ' : 'DAY';
-badge.style.background = 'linear-gradient(135deg, #ffcc00, #ff6600)';
-status.innerText = t.sunny;
-status.style.color = '#ffcc00';
-sunSvg.style.display = 'block';
-moonSvg.style.display = 'none';
-} else {
-badge.innerText = lang === 'el' ? 'ΝΥΧΤΑ' : 'NIGHT';
-badge.style.background = 'linear-gradient(135deg, #3344aa, #111133)';
-status.innerText = t.dark;
-status.style.color = '#8888ff';
-sunSvg.style.display = 'none';
-moonSvg.style.display = 'block';
-}
+  const now = new Date();
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const times = getSunTimes(today);
+  const rise = times.rise;
+  const set = times.set;
+  const lang = document.documentElement.lang || 'el';
+  const t = translations[lang];
+
+  document.getElementById('val-sunrise').innerText = formatHM(rise);
+  document.getElementById('val-sunset').innerText = formatHM(set);
+
+  const totalDayMs = set - rise;
+  const elapsedMs = now - rise;
+  let progress = 0;
+  if (now < rise) { 
+    progress = 0; 
+  } else if (now > set) { 
+    progress = 100; 
+  } else { 
+    progress = (elapsedMs / totalDayMs) * 100; 
+  }
+  progress = Math.max(0, Math.min(100, progress));
+  document.getElementById('val-day-progress').innerText = Math.round(progress) + '%';
+  document.getElementById('bar-day-progress').style.width = progress + '%';
+
+  const dayH = Math.floor(totalDayMs / 3600000);
+  const dayM = Math.floor((totalDayMs % 3600000) / 60000);
+  document.getElementById('val-daylength').innerText = dayH + 'h ' + dayM + 'm';
+
+  let toSunsetMs = set - now;
+  if (toSunsetMs < 0) { 
+    toSunsetMs += 86400000; 
+  }
+  const toH = Math.floor(toSunsetMs / 3600000);
+  const toM = Math.floor((toSunsetMs % 3600000) / 60000);
+  document.getElementById('val-to-sunset').innerText = toH + 'h ' + toM + 'm';
+
+  const isDay = now >= rise && now < set;
+  const badge = document.getElementById('day-night-badge');
+  const status = document.getElementById('sun-moon-status');
+  const sunSvg = document.getElementById('sun-svg');
+  const moonSvg = document.getElementById('moon-svg');
+
+  if (isDay) {
+    badge.innerText = lang === 'el' ? 'ΗΜΕΡΑ' : 'DAY';
+    badge.style.background = 'linear-gradient(135deg, #ffcc00, #ff6600)';
+    status.innerText = t.sunny;
+    status.style.color = '#ffcc00';
+    sunSvg.style.display = 'block';
+    moonSvg.style.display = 'none';
+  } else {
+    badge.innerText = lang === 'el' ? 'ΝΥΧΤΑ' : 'NIGHT';
+    badge.style.background = 'linear-gradient(135deg, #3344aa, #111133)';
+    status.innerText = t.dark;
+    status.style.color = '#8888ff';
+    sunSvg.style.display = 'none';
+    moonSvg.style.display = 'block';
+  }
 }
 function updateSprayAnalysis(windSpeed, windDir) {
 const statusBox = document.getElementById('spray-status-box');
