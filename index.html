@@ -903,35 +903,8 @@ else if (diff < 1.5 && diff >= 0.5) { tendencyBox.innerText = t.tendRise + " (+"
 else { tendencyBox.innerText = t.tendStable + " (" + (diff >= 0 ? "+" : "") + diff.toFixed(1) + " hPa). " + (lang === 'el' ? "Ομαλές συνθήκες χωρίς μεταβολή." : "Stable conditions without change."); tendencyBox.className = "alert-normal"; }
 }
 prevPress = press;
-
-// --- ΣΩΣΤΟΣ ΥΠΟΛΟΓΙΣΜΟΣ LIVE & ΣΗΜΕΡΙΝΟΥ ΥΕΤΟΥ ---
 let currentRainValue = 0;
-if (feeds.length >= 2) {
-    const lastFeed = feeds[feeds.length - 1];
-    const prevFeed = feeds[feeds.length - 2];
-    
-    let lastRainRaw = parseFloat(lastFeed.field4) || 0;
-    let prevRainRaw = parseFloat(prevFeed.field4) || 0;
-    
-    // 1. Υπολογισμός Live πραγματικής βροχόπτωσης (mm) εκείνης της στιγμής
-    if (lastRainRaw >= prevRainRaw) {
-        currentRainValue = lastRainRaw - prevRainRaw; // Δείχνει ακριβώς τη διαφορά (π.χ. 0.27 mm)
-    } else {
-        currentRainValue = 0;
-    }
-    
-    // Ενημέρωση του LIVE Widget στην οθόνη με 2 δεκαδικά (για να φαίνεται σωστά το 0.27)
-    document.getElementById('r-val').innerText = currentRainValue.toFixed(2);
-    
-    // 2. Υπολογισμός Σημερινού Υετού (Ποτήρι) με βάση το resetVal
-    let totalDailyRain = lastRainRaw - resetVal;
-    if (totalDailyRain < 0) totalDailyRain = 0;
-    
-    document.getElementById('val-day').innerText = totalDailyRain.toFixed(1);
-    document.getElementById('bar-day').style.height = Math.min((totalDailyRain / 50) * 100, 100) + "%";
-}
-// --------------------------------------------------
-
+if(last.field4) { let liveRain = parseFloat(last.field4); currentRainValue = liveRain - resetVal; if (currentRainValue < 0) currentRainValue = 0; document.getElementById('r-val').innerText = currentRainValue.toFixed(2); document.getElementById('bar-day').style.height = Math.min((currentRainValue / 50) * 100, 100) + "%"; document.getElementById('val-day').innerText = currentRainValue.toFixed(1); }
 let b = parseFloat(last.field5);
 document.getElementById('b-val').innerText = b.toFixed(0);
 let lbl = document.getElementById('b-label');
