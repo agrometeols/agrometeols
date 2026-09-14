@@ -138,6 +138,221 @@ footer { text-align: center; color: #ffffff; margin: 30px auto 10px auto; paddin
 .const-modal { width: 90% !important; max-width: 450px !important; margin: 20px auto !important; padding: 20px !important; box-sizing: border-box !important; }
 .const-modal p { font-size: 0.95rem !important; line-height: 1.4 !important; }
 #txt-footer { display: block !important; width: 100% !important; text-align: center !important; padding: 20px 0 !important; margin-top: 40px !important; position: relative !important; left: 0 !important; bottom: 0 !important; background: rgba(39,39,42,0.6) !important; color: #a1a1aa !important; font-size: 0.85rem !important; border-top: 1px solid rgba(63,63,70,0.4) !important; box-sizing: border-box !important; z-index: 100 !important; }
+
+/* ===== Ο ΣΤΑΘΜΟΣ - PHOTO TIME-LAPSE ===== */
+.station-timelapse{
+  width:100%;
+  max-width:1200px;
+  margin:0 auto;
+  padding:18px;
+  box-sizing:border-box;
+  background:linear-gradient(145deg,rgba(24,24,27,.96),rgba(9,9,11,.98));
+  border:1px solid rgba(63,63,70,.9);
+  border-radius:22px;
+  box-shadow:0 18px 55px rgba(0,0,0,.35);
+}
+.station-timelapse-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+  padding:4px 4px 16px;
+}
+.station-kicker{
+  color:#34d399;
+  font-size:.72rem;
+  font-weight:800;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  margin-bottom:5px;
+}
+.station-timelapse-head h3{
+  margin:0;
+  color:#f4f4f5;
+  font-size:1.15rem;
+}
+.station-counter{
+  flex:0 0 auto;
+  color:#a1a1aa;
+  font-size:.85rem;
+  font-weight:700;
+  background:#18181b;
+  border:1px solid #3f3f46;
+  border-radius:999px;
+  padding:8px 13px;
+}
+.station-stage{
+  position:relative;
+}
+.station-image-wrap{
+  position:relative;
+  height:min(67vh,650px);
+  min-height:360px;
+  overflow:hidden;
+  border-radius:18px;
+  background:#050505;
+  border:1px solid #3f3f46;
+}
+.station-image-wrap img{
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  display:block;
+  opacity:1;
+  transform:scale(1);
+  transition:opacity .35s ease,transform 5s ease;
+}
+.station-image-wrap img.station-zoom{
+  transform:scale(1.035);
+}
+.station-image-shade{
+  position:absolute;
+  inset:35% 0 0;
+  background:linear-gradient(to bottom,transparent,rgba(0,0,0,.88));
+  pointer-events:none;
+}
+.station-caption{
+  position:absolute;
+  left:24px;
+  right:24px;
+  bottom:22px;
+  display:flex;
+  align-items:flex-end;
+  gap:13px;
+  z-index:2;
+}
+.station-step{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:43px;
+  height:43px;
+  flex:0 0 43px;
+  border-radius:12px;
+  background:#10b981;
+  color:#06140f;
+  font-weight:900;
+  box-shadow:0 8px 24px rgba(16,185,129,.28);
+}
+.station-caption-title{
+  color:#fff;
+  font-size:1.18rem;
+  font-weight:800;
+  line-height:1.15;
+}
+.station-caption-text{
+  color:#d4d4d8;
+  font-size:.86rem;
+  margin-top:4px;
+}
+.station-arrow{
+  position:absolute;
+  top:50%;
+  transform:translateY(-50%);
+  z-index:3;
+  width:44px;
+  height:44px;
+  border:1px solid rgba(255,255,255,.22);
+  border-radius:50%;
+  background:rgba(9,9,11,.72);
+  color:#fff;
+  font-size:31px;
+  line-height:38px;
+  cursor:pointer;
+  transition:.2s ease;
+}
+.station-arrow:hover{background:#10b981;color:#07130f;transform:translateY(-50%) scale(1.06)}
+.station-prev{left:14px}
+.station-next{right:14px}
+.station-controls{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:14px 2px 10px;
+}
+.station-play{
+  display:flex;
+  align-items:center;
+  gap:7px;
+  border:1px solid #3f3f46;
+  border-radius:999px;
+  background:#18181b;
+  color:#e4e4e7;
+  padding:8px 14px;
+  font-weight:700;
+  cursor:pointer;
+  white-space:nowrap;
+  transition:.2s ease;
+}
+.station-play:hover{border-color:#10b981;color:#34d399}
+.station-progress{
+  height:5px;
+  flex:1;
+  background:#27272a;
+  border-radius:999px;
+  overflow:hidden;
+}
+#station-progress-bar{
+  display:block;
+  width:0%;
+  height:100%;
+  background:#10b981;
+  border-radius:999px;
+  transition:width .15s linear;
+}
+.station-speed{color:#71717a;font-size:.72rem;font-weight:700}
+.station-timeline{
+  display:grid;
+  grid-template-columns:repeat(8,minmax(0,1fr));
+  gap:8px;
+  margin-top:3px;
+}
+.station-thumb{
+  position:relative;
+  height:70px;
+  padding:0;
+  border:1px solid #3f3f46;
+  border-radius:10px;
+  overflow:hidden;
+  background:#09090b;
+  cursor:pointer;
+  opacity:.58;
+  transition:.2s ease;
+}
+.station-thumb:hover{opacity:.9}
+.station-thumb.active{
+  opacity:1;
+  border-color:#10b981;
+  box-shadow:0 0 0 1px #10b981 inset;
+}
+.station-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.station-thumb span{
+  position:absolute;
+  left:5px;
+  bottom:4px;
+  font-size:.62rem;
+  font-weight:900;
+  color:#fff;
+  background:rgba(0,0,0,.7);
+  border-radius:5px;
+  padding:2px 5px;
+}
+@media (max-width:700px){
+  .station-timelapse{padding:11px;border-radius:16px}
+  .station-timelapse-head{padding-bottom:11px}
+  .station-timelapse-head h3{font-size:.92rem}
+  .station-kicker{font-size:.61rem}
+  .station-image-wrap{height:58vh;min-height:330px;border-radius:13px}
+  .station-caption{left:14px;right:14px;bottom:14px}
+  .station-caption-title{font-size:.98rem}
+  .station-caption-text{font-size:.74rem}
+  .station-step{width:36px;height:36px;flex-basis:36px}
+  .station-arrow{width:38px;height:38px;font-size:27px}
+  .station-timeline{grid-template-columns:repeat(5,minmax(0,1fr));gap:5px}
+  .station-thumb{height:55px}
+  .station-speed{display:none}
+}
+
 </style>
 </head>
 <body class="is-day">
@@ -414,14 +629,46 @@ footer { text-align: center; color: #ffffff; margin: 30px auto 10px auto; paddin
 
 <div id="section-station" class="page-section">
 <h2 class="section-title" id="txt-station-page-title">Ο ΣΤΑΘΜΟΣ</h2>
-<div class="dashboard">
-<div class="card" style="grid-column: 1 / -1;">
-<h3 id="txt-station-page-subtitle">Ο σταθμός μας</h3>
-</div>
+
+<div class="station-timelapse">
+  <div class="station-timelapse-head">
+    <div>
+      <div class="station-kicker" id="txt-station-kicker">Η ΙΣΤΟΡΙΑ ΤΟΥ ΣΤΑΘΜΟΥ</div>
+      <h3 id="txt-station-page-subtitle">Από την κατασκευή μέχρι τον ολοκληρωμένο σταθμό</h3>
+    </div>
+    <div class="station-counter"><span id="station-current">1</span> / <span id="station-total">21</span></div>
+  </div>
+
+  <div class="station-stage">
+    <div class="station-image-wrap">
+      <img id="station-main-image" src="station_photos/station_01.jpg" alt="Agro Meteo station" loading="eager">
+      <div class="station-image-shade"></div>
+      <div class="station-caption">
+        <span class="station-step" id="station-step">01</span>
+        <div>
+          <div class="station-caption-title" id="station-caption-title">Η αρχή της κατασκευής</div>
+          <div class="station-caption-text" id="station-caption-text">Τα πρώτα κομμάτια και η βάση του συστήματος.</div>
+        </div>
+      </div>
+      <button type="button" class="station-arrow station-prev" aria-label="Previous" onclick="stationPrev()">‹</button>
+      <button type="button" class="station-arrow station-next" aria-label="Next" onclick="stationNext()">›</button>
+    </div>
+
+    <div class="station-controls">
+      <button type="button" class="station-play" id="station-play" onclick="stationTogglePlay()">
+        <span id="station-play-icon">▶</span>
+        <span id="station-play-text">Παρουσίαση</span>
+      </button>
+      <div class="station-progress"><span id="station-progress-bar"></span></div>
+      <span class="station-speed">3s</span>
+    </div>
+  </div>
+
+  <div class="station-timeline" id="station-timeline"></div>
 </div>
 </div>
 
-<div id="section-contact" class="page-section">
+<div id="section-contact"<div id="section-contact" class="page-section">
 <h2 class="section-title" id="txt-contact-title">Επικοινωνία</h2>
 <div class="dashboard">
 <div class="card info-card" style="grid-column: 1 / -1; max-width: 1200px; width: 100%; margin: 0 auto;">
@@ -491,7 +738,7 @@ window.scrollTo(0,0);
 
 const translations = {
 el: {
-menuHome: "Αρχική", menuCams: "Live Κάμερες", menuContact: "Επικοινωνία", menuApp: "Download App", menuStation: "Ο ΣΤΑΘΜΟΣ",
+menuHome: "Αρχική", menuCams: "Live Κάμερες", menuContact: "Επικοινωνία", menuApp: "Download App", menuStation: "Ο ΣΤΑΘΜΟΣ", stationKicker: "Η ΙΣΤΟΡΙΑ ΤΟΥ ΣΤΑΘΜΟΥ", stationSubtitle: "Από την κατασκευή μέχρι τον ολοκληρωμένο σταθμό",
 logoSub: "Ls System", stationTitle: "Αγρο-Μετεωρολογικός σταθμός Νεος Μυλότοπος Πέλλας",
 lblStation: "Σταθμός:", lblOwner: "Ιδιοκτησία:", lblAlt: "Υψόμετρο:", lblSuper: "Επίβλεψη:", lblStatus: "Κατάσταση:", lblOp: "Λειτουργία:",
 statsTitle: "Μέγιστες/Ελάχιστες & Βροχόπτωση", tempExt: "Υψηλότερη Θερμοκρασία: ", humExt: "Υψηλότερη Υγρασία: ", presExt: "Υψηλότερη Πίεση: ",
@@ -524,7 +771,7 @@ cropPeach: "Ροδάκινα", cropNectarine: "Νεκταρίνια", cropAprico
 stageDormant: "Λήθαργος", stageDormantDesc: "Το φυτό βρίσκεται σε αναμονή για την άνοιξη.", stageBudSwelling: "Διόγκωση Οφθαλμών", stageBudSwellingDesc: "Οι οφθαλμοί αρχίζουν να μεγαλώνουν.", stagePinkTip: "Ροζ Κορυφή", stagePinkTipDesc: "Τα πρώτα πέταλα γίνονται ορατά.", stageFullBloom: "Πλήρης Άνθηση", stageFullBloomDesc: "Το 50-70% των ανθέων έχει ανοίξει.", stagePetalFall: "Πτώση Πετάλων", stagePetalFallDesc: "Έναρξη καρπόδεσης.", stageEmergence: "Έκπτυξη", stageEmergenceDesc: "Νέα φύλλα.", stageGrowth: "Ανάπτυξη", stageGrowthDesc: "Πλήρης βλάστηση.", stageWhiteBud: "Λευκό Μπουμπούκι", stageWhiteBudDesc: "Εμφάνιση ανθέων.", stageSprout: "Σπορά", stageSproutDesc: "Φύτευση.", stageGreenTip: "Πράσινη Κορυφή", stageGreenTipDesc: "Πρώτα φύλλα.", stageInflorescence: "Ανάπτυξη Ταξιανθιών", stageInflorescenceDesc: "Εμφάνιση 'μούρου'.", stageWhiteTip: "Λευκή Κορυφή", stageWhiteTipDesc: "Ορατά άνθη."
 },
 en: {
-menuHome: "Home", menuCams: "Live Cams", menuContact: "Contact", menuApp: "Download App", menuStation: "THE STATION",
+menuHome: "Home", menuCams: "Live Cams", menuContact: "Contact", menuApp: "Download App", menuStation: "THE STATION", stationKicker: "THE STATION STORY", stationSubtitle: "From construction to the completed station",
 logoSub: "Ls System", stationTitle: "Agro-Meteorological Station Neos Mylotopos Pella",
 lblStation: "Station:", lblOwner: "Ownership:", lblAlt: "Altitude:", lblSuper: "Supervision:", lblStatus: "Status:", lblOp: "Operation:",
 statsTitle: "Max/Min & Rainfall", tempExt: "Highest Temperature: ", humExt: "Highest Humidity: ", presExt: "Highest Pressure: ",
@@ -558,6 +805,93 @@ stageDormant: "Dormant", stageDormantDesc: "The plant is waiting for spring.", s
 }
 };
 
+
+/* ===== Ο ΣΤΑΘΜΟΣ - PHOTO TIME-LAPSE ===== */
+const stationSlides = [
+  {img:"station_photos/station_01.jpg", titleEl:"Η αρχή της κατασκευής", titleEn:"The beginning", textEl:"Τα πρώτα κομμάτια και η βάση του συστήματος.", textEn:"The first components and the system base."},
+  {img:"station_photos/station_02.png", titleEl:"Ηλιακή ενέργεια & κάμερα", titleEn:"Solar power & camera", textEl:"Εξοπλισμός που θα υποστηρίζει την παρακολούθηση του σταθμού.", textEn:"Equipment supporting station monitoring."},
+  {img:"station_photos/station_03.jpg", titleEl:"Ηλεκτρονικά & καλωδίωση", titleEn:"Electronics & wiring", textEl:"Η ηλεκτρονική καρδιά του συστήματος.", textEn:"The electronic heart of the system."},
+  {img:"station_photos/station_04.png", titleEl:"Ο σταθμός παίρνει μορφή", titleEn:"The station takes shape", textEl:"Τα βασικά εξαρτήματα συγκεντρώνονται στο σύστημα.", textEn:"The main components come together."},
+  {img:"station_photos/station_05.png", titleEl:"Ο κλώβος ακτινοβολίας", titleEn:"The radiation shield", textEl:"Ο σχεδιασμός του κλωβού για σωστή μέτρηση της θερμοκρασίας.", textEn:"The shield designed for accurate temperature measurement."},
+  {img:"station_photos/station_06.jpg", titleEl:"Κατασκευή του κλωβού", titleEn:"Building the shield", textEl:"Βήμα-βήμα η κατασκευή του κλωβού.", textEn:"The shield takes shape step by step."},
+  {img:"station_photos/station_07.png", titleEl:"Η σελίδα του σταθμού", titleEn:"The station website", textEl:"Τα δεδομένα του σταθμού αποκτούν τη δική τους σελίδα.", textEn:"The station data gets its own home."},
+  {img:"station_photos/station_08.jpg", titleEl:"Λεπτομέρεια του κλωβού", titleEn:"Shield detail", textEl:"Πολλά επίπεδα για καλύτερη προστασία από την ηλιακή ακτινοβολία.", textEn:"Multiple layers for better protection from solar radiation."},
+  {img:"station_photos/station_09.jpg", titleEl:"Έλεγχος & δοκιμές", titleEn:"Testing & setup", textEl:"Έλεγχος του συστήματος πριν την τελική εγκατάσταση.", textEn:"System checks before final installation."},
+  {img:"station_photos/station_10.png", titleEl:"Ο σταθμός στο πεδίο", titleEn:"The station in the field", textEl:"Η τελική μορφή του σταθμού στο φυσικό περιβάλλον.", textEn:"The completed station in its natural environment."},
+  {img:"station_photos/station_11.png", titleEl:"Ανεμόμετρο", titleEn:"Anemometer", textEl:"Μέτρηση της ταχύτητας και της συμπεριφοράς του ανέμου.", textEn:"Measuring wind speed and behavior."},
+  {img:"station_photos/station_12.jpg", titleEl:"Ο κλώβος έτοιμος", titleEn:"Shield completed", textEl:"Το προστατευτικό περίβλημα ολοκληρώνεται.", textEn:"The protective enclosure is completed."},
+  {img:"station_photos/station_13.jpg", titleEl:"Αισθητήρας", titleEn:"Sensor", textEl:"Λεπτομέρεια από τα εξαρτήματα μέτρησης.", textEn:"A close look at the measuring components."},
+  {img:"station_photos/station_14.png", titleEl:"Κουτί ελέγχου", titleEn:"Control enclosure", textEl:"Προστατευμένο περίβλημα για τα ηλεκτρονικά.", textEn:"Protected housing for the electronics."},
+  {img:"station_photos/station_15.jpg", titleEl:"Σύνδεση αισθητήρων", titleEn:"Sensor connections", textEl:"Οι συνδέσεις οργανώνονται πριν από την εγκατάσταση.", textEn:"Connections organized before installation."},
+  {img:"station_photos/station_16.jpg", titleEl:"Εσωτερική κατασκευή", titleEn:"Internal construction", textEl:"Μια ματιά στο εσωτερικό της κατασκευής.", textEn:"A look inside the construction."},
+  {img:"station_photos/station_17.png", titleEl:"Αισθητήρας ανέμου", titleEn:"Wind sensor", textEl:"Το σύστημα μέτρησης του ανέμου.", textEn:"The wind measurement system."},
+  {img:"station_photos/station_18.jpg", titleEl:"Τελικές λεπτομέρειες", titleEn:"Final details", textEl:"Οι τελευταίες λεπτομέρειες του κλωβού.", textEn:"The final details of the shield."},
+  {img:"station_photos/station_19.png", titleEl:"Agro Meteo Ls", titleEn:"Agro Meteo Ls", textEl:"Η ταυτότητα του σταθμού.", textEn:"The identity of the station."},
+  {img:"station_photos/station_20.jpg", titleEl:"Τελικές ηλεκτρονικές συνδέσεις", titleEn:"Final electronic connections", textEl:"Το ηλεκτρονικό μέρος ολοκληρώνεται.", textEn:"The electronics are completed."},
+  {img:"station_photos/station_21.jpg", titleEl:"Έτοιμος για το επόμενο βήμα", titleEn:"Ready for the next step", textEl:"Η κατασκευή προχωρά προς την τελική εγκατάσταση.", textEn:"The build moves toward final installation."}
+];
+let stationIndex=0, stationTimer=null, stationProgressTimer=null;
+function stationLang(){return document.documentElement.lang === 'en' ? 'en' : 'el';}
+function stationRenderThumbs(){
+  const box=document.getElementById('station-timeline'); if(!box) return;
+  box.innerHTML=stationSlides.map((s,i)=>`<button type="button" class="station-thumb${i===stationIndex?' active':''}" onclick="stationGo(${i})"><img src="${s.img}" alt=""><span>${String(i+1).padStart(2,'0')}</span></button>`).join('');
+}
+function stationRender(){
+  const s=stationSlides[stationIndex];
+  const img=document.getElementById('station-main-image');
+  if(!img) return;
+  img.classList.remove('station-zoom');
+  img.style.opacity='0';
+  setTimeout(()=>{
+    img.src=s.img;
+    img.alt=stationLang()==='en'?s.titleEn:s.titleEl;
+    img.style.opacity='1';
+    requestAnimationFrame(()=>img.classList.add('station-zoom'));
+  },120);
+  document.getElementById('station-current').textContent=stationIndex+1;
+  document.getElementById('station-step').textContent=String(stationIndex+1).padStart(2,'0');
+  document.getElementById('station-caption-title').textContent=stationLang()==='en'?s.titleEn:s.titleEl;
+  document.getElementById('station-caption-text').textContent=stationLang()==='en'?s.textEn:s.textEl;
+  document.querySelectorAll('.station-thumb').forEach((b,i)=>b.classList.toggle('active',i===stationIndex));
+  const active=document.querySelector('.station-thumb.active');
+  if(active) active.scrollIntoView({behavior:'smooth',block:'nearest',inline:'nearest'});
+}
+function stationGo(i){stationIndex=(i+stationSlides.length)%stationSlides.length;stationRender();stationResetProgress();}
+function stationNext(){stationGo(stationIndex+1)}
+function stationPrev(){stationGo(stationIndex-1)}
+function stationResetProgress(){
+  if(stationProgressTimer) clearInterval(stationProgressTimer);
+  const bar=document.getElementById('station-progress-bar'); if(!bar) return;
+  bar.style.width='0%';
+  if(stationTimer){
+    const start=Date.now();
+    stationProgressTimer=setInterval(()=>{
+      const pct=Math.min(100,(Date.now()-start)/3000*100);
+      bar.style.width=pct+'%';
+      if(pct>=100){clearInterval(stationProgressTimer);}
+    },50);
+  }
+}
+function stationTogglePlay(){
+  if(stationTimer){
+    clearInterval(stationTimer); stationTimer=null;
+    if(stationProgressTimer) clearInterval(stationProgressTimer);
+    document.getElementById('station-play-icon').textContent='▶';
+    document.getElementById('station-play-text').textContent=stationLang()==='en'?'Presentation':'Παρουσίαση';
+    document.getElementById('station-progress-bar').style.width='0%';
+  }else{
+    stationTimer=setInterval(()=>stationNext(),3000);
+    document.getElementById('station-play-icon').textContent='Ⅱ';
+    document.getElementById('station-play-text').textContent=stationLang()==='en'?'Pause':'Παύση';
+    stationResetProgress();
+  }
+}
+function stationInit(){
+  document.getElementById('station-total').textContent=stationSlides.length;
+  stationRenderThumbs(); stationRender();
+}
+document.addEventListener('DOMContentLoaded',stationInit);
+
 function changeLang(lang) {
 document.documentElement.lang = lang;
 const t = translations[lang];
@@ -567,7 +901,9 @@ document.getElementById('txt-menu-contact').innerText = t.menuContact;
 document.getElementById('txt-menu-app').innerText = t.menuApp;
 document.getElementById('txt-menu-station').innerText = t.menuStation;
 document.getElementById('txt-station-page-title').innerText = t.menuStation;
-document.getElementById('txt-station-page-subtitle').innerText = lang === 'el' ? "Ο σταθμός μας" : "Our Weather Station";
+document.getElementById('txt-station-page-subtitle').innerText = t.stationSubtitle;
+document.getElementById('txt-station-kicker').innerText = t.stationKicker;
+if (typeof stationRender === 'function') stationRender();
 document.getElementById('txt-logo-sub').innerText = t.logoSub;
 document.getElementById('txt-station-title').innerText = t.stationTitle;
 document.getElementById('txt-lbl-station').innerText = t.lblStation;
