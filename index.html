@@ -190,6 +190,7 @@ footer { text-align: center; color: #ffffff; margin: 30px auto 10px auto; paddin
     <button class="nav-btn bg-zinc-800 text-zinc-300 font-semibold px-6 py-2 rounded-full border border-zinc-700 hover:bg-emerald-500 hover:text-white hover:border-emerald-500 transform hover:scale-105 transition-all duration-200 uppercase text-sm shadow-md" id="btn-cams" onclick="showSection('cams')"><span id="txt-menu-cams">Live Κάμερες</span></button>
     <button class="nav-btn bg-zinc-800 text-zinc-300 font-semibold px-6 py-2 rounded-full border border-zinc-700 hover:bg-emerald-500 hover:text-white hover:border-emerald-500 transform hover:scale-105 transition-all duration-200 uppercase text-sm shadow-md" id="btn-contact" onclick="showSection('contact')"><span id="txt-menu-contact">Επικοινωνία</span></button>
     <button class="nav-btn bg-zinc-800 text-zinc-300 font-semibold px-6 py-2 rounded-full border border-zinc-700 hover:bg-emerald-500 hover:text-white hover:border-emerald-500 transform hover:scale-105 transition-all duration-200 uppercase text-sm shadow-md" id="btn-app" onclick="showSection('app')"><span id="txt-menu-app">Download App</span></button>
+    <button class="nav-btn bg-zinc-800 text-zinc-300 font-semibold px-6 py-2 rounded-full border border-zinc-700 hover:bg-emerald-500 hover:text-white hover:border-emerald-500 transform hover:scale-105 transition-all duration-200 uppercase text-sm shadow-md" id="btn-station" onclick="showSection('station')"><span id="txt-menu-station">Ο ΣΤΑΘΜΟΣ</span></button>
 </div>
 </header>
 
@@ -411,6 +412,15 @@ footer { text-align: center; color: #ffffff; margin: 30px auto 10px auto; paddin
 </div>
 </div>
 
+<div id="section-station" class="page-section">
+<h2 class="section-title" id="txt-station-page-title">Ο ΣΤΑΘΜΟΣ</h2>
+<div class="dashboard">
+<div class="card" style="grid-column: 1 / -1;">
+<h3 id="txt-station-page-subtitle">Ο σταθμός μας</h3>
+</div>
+</div>
+</div>
+
 <div id="section-contact" class="page-section">
 <h2 class="section-title" id="txt-contact-title">Επικοινωνία</h2>
 <div class="dashboard">
@@ -474,14 +484,14 @@ function showSection(sectionId) {
 document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
 document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
 document.getElementById('section-' + sectionId).classList.add('active');
-document.getElementById('btn-' + (sectionId === 'home' ? 'home' : sectionId === 'cams' ? 'cams' : sectionId === 'contact' ? 'contact' : 'app')).classList.add('active');
+document.getElementById('btn-' + (sectionId === 'home' ? 'home' : sectionId === 'cams' ? 'cams' : sectionId === 'contact' ? 'contact' : sectionId === 'station' ? 'station' : 'app')).classList.add('active');
 const footer = document.getElementById('txt-footer'); if (footer) { footer.style.display = 'block'; }
 window.scrollTo(0,0);
 }
 
 const translations = {
 el: {
-menuHome: "Αρχική", menuCams: "Live Κάμερες", menuContact: "Επικοινωνία", menuApp: "Download App",
+menuHome: "Αρχική", menuCams: "Live Κάμερες", menuContact: "Επικοινωνία", menuApp: "Download App", menuStation: "Ο ΣΤΑΘΜΟΣ",
 logoSub: "Ls System", stationTitle: "Αγρο-Μετεωρολογικός σταθμός Νεος Μυλότοπος Πέλλας",
 lblStation: "Σταθμός:", lblOwner: "Ιδιοκτησία:", lblAlt: "Υψόμετρο:", lblSuper: "Επίβλεψη:", lblStatus: "Κατάσταση:", lblOp: "Λειτουργία:",
 statsTitle: "Μέγιστες/Ελάχιστες & Βροχόπτωση", tempExt: "Υψηλότερη Θερμοκρασία: ", humExt: "Υψηλότερη Υγρασία: ", presExt: "Υψηλότερη Πίεση: ",
@@ -514,7 +524,7 @@ cropPeach: "Ροδάκινα", cropNectarine: "Νεκταρίνια", cropAprico
 stageDormant: "Λήθαργος", stageDormantDesc: "Το φυτό βρίσκεται σε αναμονή για την άνοιξη.", stageBudSwelling: "Διόγκωση Οφθαλμών", stageBudSwellingDesc: "Οι οφθαλμοί αρχίζουν να μεγαλώνουν.", stagePinkTip: "Ροζ Κορυφή", stagePinkTipDesc: "Τα πρώτα πέταλα γίνονται ορατά.", stageFullBloom: "Πλήρης Άνθηση", stageFullBloomDesc: "Το 50-70% των ανθέων έχει ανοίξει.", stagePetalFall: "Πτώση Πετάλων", stagePetalFallDesc: "Έναρξη καρπόδεσης.", stageEmergence: "Έκπτυξη", stageEmergenceDesc: "Νέα φύλλα.", stageGrowth: "Ανάπτυξη", stageGrowthDesc: "Πλήρης βλάστηση.", stageWhiteBud: "Λευκό Μπουμπούκι", stageWhiteBudDesc: "Εμφάνιση ανθέων.", stageSprout: "Σπορά", stageSproutDesc: "Φύτευση.", stageGreenTip: "Πράσινη Κορυφή", stageGreenTipDesc: "Πρώτα φύλλα.", stageInflorescence: "Ανάπτυξη Ταξιανθιών", stageInflorescenceDesc: "Εμφάνιση 'μούρου'.", stageWhiteTip: "Λευκή Κορυφή", stageWhiteTipDesc: "Ορατά άνθη."
 },
 en: {
-menuHome: "Home", menuCams: "Live Cams", menuContact: "Contact", menuApp: "Download App",
+menuHome: "Home", menuCams: "Live Cams", menuContact: "Contact", menuApp: "Download App", menuStation: "THE STATION",
 logoSub: "Ls System", stationTitle: "Agro-Meteorological Station Neos Mylotopos Pella",
 lblStation: "Station:", lblOwner: "Ownership:", lblAlt: "Altitude:", lblSuper: "Supervision:", lblStatus: "Status:", lblOp: "Operation:",
 statsTitle: "Max/Min & Rainfall", tempExt: "Highest Temperature: ", humExt: "Highest Humidity: ", presExt: "Highest Pressure: ",
@@ -555,6 +565,9 @@ document.getElementById('txt-menu-home').innerText = t.menuHome;
 document.getElementById('txt-menu-cams').innerText = t.menuCams;
 document.getElementById('txt-menu-contact').innerText = t.menuContact;
 document.getElementById('txt-menu-app').innerText = t.menuApp;
+document.getElementById('txt-menu-station').innerText = t.menuStation;
+document.getElementById('txt-station-page-title').innerText = t.menuStation;
+document.getElementById('txt-station-page-subtitle').innerText = lang === 'el' ? "Ο σταθμός μας" : "Our Weather Station";
 document.getElementById('txt-logo-sub').innerText = t.logoSub;
 document.getElementById('txt-station-title').innerText = t.stationTitle;
 document.getElementById('txt-lbl-station').innerText = t.lblStation;
