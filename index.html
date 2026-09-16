@@ -1366,11 +1366,15 @@ fetch("https://api.thingspeak.com/channels/3365350/feeds.json?days=1&status=true
     cRain.update();
 })
 .catch(err => console.error('Chart data error:', err));
-let todayFeeds = feeds.filter(f => new Date(f.created_at).toLocaleDateString('el-GR') === todayStr);
+fetch("https://api.thingspeak.com/channels/3365350/feeds.json?days=1&status=true&metadata=true")
+.then(res => res.json())
+.then(extremeData => {
+const extremeFeeds = extremeData.feeds || [];
+const todayFeeds = extremeFeeds.filter(f => new Date(f.created_at).toLocaleDateString('el-GR') === todayStr);
 if(todayFeeds.length > 0) {
-let tArrToday = todayFeeds.filter(f => f.field1 != null).map(f => ({v: parseFloat(f.field1), t: f.created_at}));
-let hArrToday = todayFeeds.filter(f => f.field2 != null).map(f => ({v: parseFloat(f.field2), t: f.created_at}));
-let pArrToday = todayFeeds.filter(f => f.field3 != null).map(f => ({v: parseFloat(f.field3), t: f.created_at}));
+let tArrToday = todayFeeds.filter(f => f.field1 != null).map(f => ({v: parseFloat(f.field1), t: f.created_at})).filter(f => !isNaN(f.v));
+let hArrToday = todayFeeds.filter(f => f.field2 != null).map(f => ({v: parseFloat(f.field2), t: f.created_at})).filter(f => !isNaN(f.v));
+let pArrToday = todayFeeds.filter(f => f.field3 != null).map(f => ({v: parseFloat(f.field3), t: f.created_at})).filter(f => !isNaN(f.v));
 if(tArrToday.length > 0) {
 let tMax = tArrToday.reduce((p, c) => (p.v > c.v) ? p : c); let tMin = tArrToday.reduce((p, c) => (p.v < c.v) ? p : c);
 document.getElementById('t-max').innerText = tMax.v.toFixed(1); document.getElementById('t-max-t').innerText = "(" + new Date(tMax.t).toLocaleTimeString('el-GR', {hour:'2-digit', minute:'2-digit', hour12: false}) + ")";
@@ -1388,6 +1392,8 @@ document.getElementById('p-max').innerText = pMax.v.toFixed(1); document.getElem
 document.getElementById('p-min').innerText = pMin.v.toFixed(1); document.getElementById('p-min-t').innerText = "(" + new Date(pMin.t).toLocaleTimeString('el-GR', {hour:'2-digit', minute:'2-digit', hour12: false}) + ")";
 }
 }
+})
+.catch(err => console.error("Extremes fetch error:", err));
 })
 .catch(err => {
 console.error("Fetch error:", err); document.getElementById('status-badge').innerText = "OFFLINE"; document.getElementById('status-badge').style.backgroundColor = "#ff0000";
