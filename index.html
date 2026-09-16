@@ -479,6 +479,7 @@ footer { text-align: center; color: #ffffff; margin: 30px auto 10px auto; paddin
 <div class="card"><h3 id="txt-g-wind-speed">Ταχύτητα Ανέμου</h3><canvas id="gauge-wind-speed"></canvas></div>
 <div class="card"><h3 id="txt-g-wind-dir">Κατεύθυνση Ανέμου</h3><canvas id="gauge-wind-dir"></canvas></div>
 <div class="card"><h3 id="txt-g-solar">Ηλιακή Ακτινοβολία</h3><canvas id="gauge-solar"></canvas></div>
+<div class="card"><h3 id="txt-g-et0">Εξατμισοδιαπνοή ET₀</h3><canvas id="gauge-et0"></canvas><div style="font-size:0.8rem; margin-top:6px;">mm/ημέρα</div></div>
 <div class="card" style="display: flex; flex-direction: column; justify-content: center; min-height: 270px;"><div id="live-rain-weather-icon" aria-hidden="true" style="display:none; font-size:2.8rem; line-height:1; margin-bottom:4px;">🌩️</div><h3 id="txt-g-rain">Βροχόπτωση (Live)</h3><div style="font-size: 4rem; font-weight: bold; margin: 20px 0;"><span id="r-val">--</span><span style="font-size: 1.5rem;">mm</span></div><small id="reset-msg">Μηδενίζει αυτόματα στις 00:00</small></div>
 <div class="card" style="display: flex; flex-direction: column; justify-content: flex-start; min-height: 270px; padding: 20px;">
 <h3 id="txt-g-sun" style="margin-bottom: 12px;">Ανατολή &amp; Δύση Ηλίου</h3>
@@ -630,6 +631,7 @@ footer { text-align: center; color: #ffffff; margin: 30px auto 10px auto; paddin
 <div class="card"><h3 id="txt-c-hum">Πορεία Υγρασία</h3><div class="chart-container"><canvas id="chart-hum"></canvas></div></div>
 <div class="card"><h3 id="txt-c-press">Πoρεία Πίεσης</h3><div class="chart-container"><canvas id="chart-press"></canvas></div></div>
 <div class="card"><h3 id="txt-c-rain">Πορεία Βροχόpτωσης</h3><div class="chart-container"><canvas id="chart-rain"></canvas></div></div>
+<div class="card"><h3 id="txt-c-et0">Πορεία Εξατμισοδιαπνοής ET₀</h3><div class="chart-container"><canvas id="chart-et0"></canvas></div></div>
 </div>
 <div class="bottom-dashboard">
 <div class="card">
@@ -767,10 +769,10 @@ statsTitle: "Μέγιστες/Ελάχιστες & Βροχόπτωση", tempEx
 rDay: "Σημερινός Υετός", rStorm: "Τρέ/Kακοκαιρία", rRate: "Ραγδαιότητα", rMonth: "Μηνιαίος Υετός", rYear: "Ετήσιος Yετός",
 alertsTitle: "Γεωργικές Προειδοποιήσεις", tendencyTitle: "Τάση Βαρομετρικής Πίεσης (3ωρο)", cropStats: "Στατιστικά Καλλιέργειας", chillLbl: "Ώρες Ψύχους Κάτω Από",
 curTitle: "Τρέχουσες Ενδείξεις", gTemp: "Θερμοκρασία", gHum: "Υγρασία", gPress: "Βαρομετρική πίεση", gRain: "Βροχόπτωση (Live)",
-gWindSpeed: "Ταχύτητα Ανέμου", gWindDir: "Κατεύθυνση Ανέμου", gDp: "Σημείο Δρόσου", gSolar: "Ηλιακή Ακτινοβολία", gSun: "Ανατολή & Δύση Ηλίου", sunny: "Λιακάδα", dark: "Σκοτάδι", dayProgress: "Πρόοδος Ημέρας", dayLength: "Διάρκεια Ημέρας", toSunset: "Λείπα μέχρι Δύση",
+gWindSpeed: "Ταχύτητα Ανέμου", gWindDir: "Κατεύθυνση Ανέμου", gEt0: "Εξατμισοδιαπνοή ET₀", gDp: "Σημείο Δρόσου", gSolar: "Ηλιακή Ακτινοβολία", gSun: "Ανατολή & Δύση Ηλίου", sunny: "Λιακάδα", dark: "Σκοτάδι", dayProgress: "Πρόοδος Ημέρας", dayLength: "Διάρκεια Ημέρας", toSunset: "Λείπα μέχρι Δύση",
 foreTitle: "Πρόγνωση & Ραντάρ", foreSub: "Πρόγνωση: Νέος Μυλότοπος", radarTitle: "Ζωντανό Ραντάρ Βροχής",
 adsTitle: "Συνεργαζόμενοι Γεωπόνοι & Διαφημίσεις", histTitle: "Ιστορικά Γραφήματα",
-cTemp: "Πορεία Θερμοκρασία", cHum: "Πορεία Υγρασία", cPress: "Πορεία Πίεσης", cRain: "Πορεία Βροχόπτωσης",
+cTemp: "Πορεία Θερμοκρασία", cHum: "Πορεία Υγρασία", cPress: "Πορεία Πίεσης", cRain: "Πορεία Βροχόπτωσης", cEt0: "Πορεία Εξατμισοδιαπνοής ET₀",
 battTitle: "Σταθμός Μπαταρία", footer: "© 2026 Agro Meteo Ls | Προγραμματισμός Χρήστος Τσαβαλάκογλου Iot System",
 resetMsg: "Μηδενίζει αυτόματα στις 00:00", low: "ΧΑΜΗΛΗ", med: "ΜΕΤΡΙΑ", high: "ΚΑΛΗ", checking: "ΕΛΕΓΧΟΣ...",
 name: "Χρήστος Τσαβαλάκογλου", liveTxt: "Live", dpNormal: "✅ Ασφαλές Σημείο", dpWarning: "⚠️ Κίνδυνος Παγετού!",
@@ -800,10 +802,10 @@ statsTitle: "Max/Min & Rainfall", tempExt: "Highest Temperature: ", humExt: "Hig
 rDay: "Daily Rain", rStorm: "Storm Rain", rRate: "Rain Rate", rMonth: "Monthly Rain", rYear: "Yearly Rain",
 alertsTitle: "Agricultural Alerts", tendencyTitle: "Barometric Pressure Tendency (3h)", cropStats: "Crop Statistics", chillLbl: "Chill Hours Below",
 curTitle: "Current Readings", gTemp: "Temperature", gHum: "Humidity", gPress: "Barometric Pressure", gRain: "Rainfall (Live)",
-gWindSpeed: "Wind Speed", gWindDir: "Wind Direction", gDp: "Dew Point", gSolar: "Solar Radiation", gSun: "Sunrise & Sunset", sunny: "Sunny", dark: "Dark", dayProgress: "Day Progress", dayLength: "Day Length", toSunset: "Time until Sunset",
+gWindSpeed: "Wind Speed", gWindDir: "Wind Direction", gEt0: "Evapotranspiration ET₀", gDp: "Dew Point", gSolar: "Solar Radiation", gSun: "Sunrise & Sunset", sunny: "Sunny", dark: "Dark", dayProgress: "Day Progress", dayLength: "Day Length", toSunset: "Time until Sunset",
 foreTitle: "Forecast & Radar", foreSub: "Forecast: Neos Mylotopos", radarTitle: "Live Rain Radar",
 adsTitle: "Collaborating Agronomists & Ads", histTitle: "Historical Charts",
-cTemp: "Temperature Trend", cHum: "Humidity Trend", cPress: "Pressure Trend", cRain: "Rainfall Trend",
+cTemp: "Temperature Trend", cHum: "Humidity Trend", cPress: "Pressure Trend", cRain: "Rainfall Trend", cEt0: "Evapotranspiration ET₀ Trend",
 battTitle: "Station Battery", footer: "© 2026 Agro Meteo Ls | Programming by Christos Tsavalakoglou Iot System",
 resetMsg: "Resets automatically at 00:00", low: "LOW", med: "MEDIUM", high: "GOOD", checking: "CHECKING...",
 name: "Christos Tsavalakoglou", liveTxt: "Live", dpNormal: "✅ Safe Point", dpWarning: "⚠️ Frost Risk!",
@@ -1048,6 +1050,7 @@ var gDp = new RadialGauge({ renderTo: 'gauge-dp', width: 240, height: 240, units
 var gWindSpeed = new RadialGauge({ renderTo: 'gauge-wind-speed', width: 240, height: 240, units: "km/h", minValue: 0, maxValue: 30, majorTicks: ["0","5","10","15","20","25","30"], minorTicks: 2, strokeTicks: true, highlights: [{ "from": 8, "to": 30, "color": "rgba(200, 50, 50, .75)" }], colorPlate: "#fff", borders: true, needleType: "arrow", needleWidth: 4, animationDuration: 1500 }).draw();
 var gWindDir = new RadialGauge({ renderTo: 'gauge-wind-dir', width: 240, height: 240, units: "Deg", minValue: 0, maxValue: 360, majorTicks: ["N","NE","E","SE","S","SW","W","NW","N"], minorTicks: 22.5, strokeTicks: true, highlights: [], colorPlate: "#fff", borders: true, needleType: "arrow", needleWidth: 4, needleCircleSize: 7, needleCircleOuter: true, needleCircleInner: false, needleStart: 75, needleEnd: 95, animationDuration: 1500, animationRule: "linear", valueBox: true, ticksAngle: 360, startAngle: 180, forceRedraw: true }).draw();
 var gSolar = new RadialGauge({ renderTo: 'gauge-solar', width: 240, height: 240, units: "W/m²", minValue: 0, maxValue: 1200, majorTicks: ["0","200","400","600","800","1000","1200"], minorTicks: 2, strokeTicks: true, highlights: [ { "from": 0, "to": 300, "color": "rgba(255,255,0,.2)" }, { "from": 300, "to": 600, "color": "rgba(255,220,0,.4)" }, { "from": 600, "to": 900, "color": "rgba(255,180,0,.6)" }, { "from": 900, "to": 1200, "color": "rgba(255,100,0,.7)" } ], colorPlate: "#fff", borders: true, needleType: "arrow", needleWidth: 4, animationDuration: 1500 }).draw();
+var gEt0 = new RadialGauge({ renderTo: 'gauge-et0', width: 240, height: 240, units: "mm/day", minValue: 0, maxValue: 12, majorTicks: ["0","2","4","6","8","10","12"], minorTicks: 2, strokeTicks: true, highlights: [ { "from": 0, "to": 3, "color": "rgba(0,255,0,.35)" }, { "from": 3, "to": 6, "color": "rgba(255,215,0,.45)" }, { "from": 6, "to": 12, "color": "rgba(255,100,0,.55)" } ], colorPlate: "#fff", borders: true, needleType: "arrow", needleWidth: 4, animationDuration: 1500 }).draw();
 var gPress = new RadialGauge({ renderTo: 'gauge-press', width: 240, height: 240, units: "hPa", minValue: 950, maxValue: 1050, majorTicks: ["950","960","970","980","990","1000","1010","1020","1030","1040","1050"], minorTicks: 2, strokeTicks: true, highlights: [ { "from": 950, "to": 1000, "color": "rgba(255,0,0,.5)" }, { "from": 1000, "to": 1020, "color": "rgba(0,255,0,.5)" }, { "from": 1020, "to": 1050, "color": "rgba(0,0,255,.5)" } ], colorPlate: "#fff", borders: true, needleType: "arrow", needleWidth: 4, animationDuration: 1500 }).draw();
 
 function createChart(canvasId, label, color, minVal, maxVal, type) {
@@ -1057,6 +1060,7 @@ var cTemp = createChart('chart-temp', 'Θερμοκρασία (°C)', '#d53a35',
 var cHum = createChart('chart-hum', 'Υγρασία (%)', '#2f89fc', 0, 100, 'line');
 var cPress = createChart('chart-press', 'Πίεση (hPa)', '#ff9f43', 950, 1050, 'line');
 var cRain = createChart('chart-rain', 'Βροχόπτωση (mm)', '#00ccff', 0, 50, 'bar');
+var cEt0 = createChart('chart-et0', 'ET₀ (mm/ώρα)', '#00ff99', 0, 1, 'line');
 
 let prevPress = 0;
 let lastDirValueForAnimation = -1;
@@ -1242,6 +1246,17 @@ else { statusBox.innerText = t.sprayStatusDanger; statusBox.className = "spray-s
 }
 
 
+function estimateEt0(temp, hum, windKmh, solarWm2) {
+    if (![temp, hum, windKmh, solarWm2].every(Number.isFinite)) return 0;
+    const rh = Math.max(5, Math.min(100, hum));
+    const wind = Math.max(0, windKmh) / 3.6;
+    const radiation = Math.max(0, solarWm2);
+    const vaporPressureDeficit = Math.max(0, (1 - rh / 100) * 0.6108 * Math.exp((17.27 * temp) / (temp + 237.3)));
+    const radiationTerm = 0.0023 * (temp + 17.8) * Math.sqrt(Math.max(0, temp + 17.8)) * (radiation / 1000);
+    const aerodynamicTerm = 0.08 * (1 + 0.1 * wind) * vaporPressureDeficit;
+    return Math.max(0, Math.min(12, radiationTerm + aerodynamicTerm));
+}
+
 function updateLiveRainWeatherIcon(rainValue) {
     const icon = document.getElementById('live-rain-weather-icon');
     if (!icon) return;
@@ -1267,6 +1282,8 @@ const hum = parseFloat(last.field2);
 const press = parseFloat(last.field3);
 const windSpeed = parseFloat(last.field6) || 0;
 const solarRad = parseFloat(last.field8) || 0;
+const currentEt0 = estimateEt0(temp, hum, windSpeed, solarRad);
+if (Number.isFinite(currentEt0)) gEt0.value = currentEt0;
 if(!isNaN(temp)) {
 let dailyAvg = feeds.slice(-20).reduce((a, b) => a + (parseFloat(b.field1) || 0), 0) / 20;
 let base = cropData[document.getElementById('cropSelector').value].base;
@@ -1370,6 +1387,23 @@ fetch("https://api.thingspeak.com/channels/3365350/feeds.json?days=1&status=true
     cPress.data.datasets[0].data = getHourlyData(chartFeeds, 'field3');
     cPress.data.datasets[0].spanGaps = true;
     cPress.update();
+    function getHourlyEt0Data(feeds) {
+        const hourly = new Array(24).fill(0);
+        const counts = new Array(24).fill(0);
+        feeds.forEach(f => {
+            const date = new Date(f.created_at);
+            if (date.toLocaleDateString('el-GR') !== todayStr) return;
+            const t = parseFloat(f.field1), h = parseFloat(f.field2), w = parseFloat(f.field6), r = parseFloat(f.field8);
+            if (![t,h,w,r].every(Number.isFinite)) return;
+            const hour = date.getHours();
+            hourly[hour] += estimateEt0(t,h,w,r);
+            counts[hour]++;
+        });
+        return hourly.map((v,i) => counts[i] ? +(v / counts[i]).toFixed(3) : null);
+    }
+    cEt0.data.labels = hourlyLabels;
+    cEt0.data.datasets[0].data = getHourlyEt0Data(chartFeeds);
+    cEt0.update();
     // Βροχόπτωση ανά ώρα: το field4 είναι αθροιστικό, επομένως
     // υπολογίζουμε μόνο τη διαφορά από την προηγούμενη μέτρηση.
     function getHourlyRainData(feeds) {
