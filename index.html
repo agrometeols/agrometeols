@@ -479,7 +479,7 @@ footer { text-align: center; color: #ffffff; margin: 30px auto 10px auto; paddin
 <div class="card"><h3 id="txt-g-wind-speed">Ταχύτητα Ανέμου</h3><canvas id="gauge-wind-speed"></canvas></div>
 <div class="card"><h3 id="txt-g-wind-dir">Κατεύθυνση Ανέμου</h3><canvas id="gauge-wind-dir"></canvas></div>
 <div class="card"><h3 id="txt-g-solar">Ηλιακή Ακτινοβολία</h3><canvas id="gauge-solar"></canvas></div>
-<div class="card" style="display: flex; flex-direction: column; justify-content: center; min-height: 270px;"><h3 id="txt-g-rain">Βροχόπτωση (Live)</h3><div style="font-size: 4rem; font-weight: bold; margin: 20px 0;"><span id="r-val">--</span><span style="font-size: 1.5rem;">mm</span></div><small id="reset-msg">Μηδενίζει αυτόματα στις 00:00</small></div>
+<div class="card" style="display: flex; flex-direction: column; justify-content: center; min-height: 270px;"><div id="live-rain-weather-icon" aria-hidden="true" style="display:none; font-size:2.8rem; line-height:1; margin-bottom:4px;">🌩️</div><h3 id="txt-g-rain">Βροχόπτωση (Live)</h3><div style="font-size: 4rem; font-weight: bold; margin: 20px 0;"><span id="r-val">--</span><span style="font-size: 1.5rem;">mm</span></div><small id="reset-msg">Μηδενίζει αυτόματα στις 00:00</small></div>
 <div class="card" style="display: flex; flex-direction: column; justify-content: flex-start; min-height: 270px; padding: 20px;">
 <h3 id="txt-g-sun" style="margin-bottom: 12px;">Ανατολή &amp; Δύση Ηλίου</h3>
 <div style="display: flex; justify-content: center; align-items: center; gap: 8px; margin-bottom: 12px;">
@@ -1218,6 +1218,14 @@ else if(windSpeed > 12 && windSpeed <= 19) { statusBox.innerText = t.sprayStatus
 else { statusBox.innerText = t.sprayStatusDanger; statusBox.className = "spray-status status-danger"; riskText.innerText = t.sprayRiskDanger; }
 }
 
+
+function updateLiveRainWeatherIcon(rainValue) {
+    const icon = document.getElementById('live-rain-weather-icon');
+    if (!icon) return;
+    const amount = parseFloat(rainValue);
+    icon.style.display = (!isNaN(amount) && amount > 0) ? 'block' : 'none';
+}
+
 function update() {
 const d = new Date();
 const todayStr = d.toLocaleDateString('el-GR');
@@ -1294,7 +1302,8 @@ else { tendencyBox.innerText = t.tendStable + " (" + (diff >= 0 ? "+" : "") + di
 }
 prevPress = press;
 let currentRainValue = 0;
-if(last.field4) { let liveRain = parseFloat(last.field4); currentRainValue = liveRain - resetVal; if (currentRainValue < 0) currentRainValue = 0; document.getElementById('r-val').innerText = currentRainValue.toFixed(2); document.getElementById('bar-day').style.height = Math.min((currentRainValue / 50) * 100, 100) + "%"; document.getElementById('val-day').innerText = currentRainValue.toFixed(1); }
+if(last.field4) { let liveRain = parseFloat(last.field4); currentRainValue = liveRain - resetVal; if (currentRainValue < 0) currentRainValue = 0; document.getElementById('r-val').innerText = currentRainValue.toFixed(2);
+updateLiveRainWeatherIcon(currentRainValue.toFixed(2)); document.getElementById('bar-day').style.height = Math.min((currentRainValue / 50) * 100, 100) + "%"; document.getElementById('val-day').innerText = currentRainValue.toFixed(1); }
 let b = parseFloat(last.field5);
 document.getElementById('b-val').innerText = b.toFixed(0);
 let lbl = document.getElementById('b-label');
