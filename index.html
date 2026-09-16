@@ -1297,9 +1297,9 @@ function updateLocalThreeDayForecast(feeds) {
         press: parseFloat(f.field3),
         rain: parseFloat(f.field4) || 0,
         wind: parseFloat(f.field6) || 0
-    })).filter(x => !isNaN(x.temp) && !isNaN(x.date.getTime()));
+    })).filter(x => Number.isFinite(x.temp) && !isNaN(x.date.getTime()));
     if (!valid.length) return;
-    const recent = valid.slice(-12);
+    const recent = valid.slice(-24);
     const avg = key => recent.reduce((sum, x) => sum + (Number.isFinite(x[key]) ? x[key] : 0), 0) / recent.length;
     const last = valid[valid.length - 1];
     const older = valid[Math.max(0, valid.length - Math.min(12, valid.length))];
@@ -1314,26 +1314,31 @@ function updateLocalThreeDayForecast(feeds) {
     const days = [];
     for (let i = 1; i <= 3; i++) {
         const d = new Date(); d.setDate(d.getDate() + i);
-        let t = baseTemp + tempTrend * (i * 0.18);
-        let h = Math.max(20, Math.min(100, baseHum - tempTrend * 0.5));
-        let w = Math.max(0, baseWind + (pressTrend < -1 ? 2 : 0));
+        const center = baseTemp + tempTrend * (i * 0.12);
+        const spread = Math.max(2.5, Math.min(7, Math.abs(tempTrend) * 0.7 + 4));
+        const minT = center - spread / 2;
+        const maxT = center + spread / 2;
+        const h = Math.max(20, Math.min(100, baseHum - tempTrend * 0.5));
+        const windLow = Math.max(0, baseWind - 3);
+        const windHigh = Math.max(windLow, baseWind + (pressTrend < -1 ? 5 : 3));
+        const rainChance = Math.max(5, Math.min(80, Math.round((rainRecent > 0.5 ? 35 : 10) + (pressTrend < -2 ? 25 : 0))));
         let icon = '🌤️';
         let desc = isEn ? 'Partly cloudy' : 'Μερικές νεφώσεις';
-        if (rainRecent > 0.5 || pressTrend < -2) { icon = '🌦️'; desc = isEn ? 'Chance of rain' : 'Πιθανότητα βροχής'; }
-        if (w >= 20) { icon = '🌬️'; desc = isEn ? 'Windy' : 'Ενισχυμένοι άνεμοι'; }
-        if (t >= 32) { icon = '☀️'; desc = isEn ? 'Hot conditions' : 'Ζεστές συνθήκες'; }
-        if (t <= 5) { icon = '❄️'; desc = isEn ? 'Cold conditions' : 'Ψυχρές συνθήκες'; }
+        if (rainChance >= 45) { icon = '🌦️'; desc = isEn ? 'Possible rain' : 'Πιθανότητα βροχής'; }
+        if (windHigh >= 25) { icon = '🌬️'; desc = isEn ? 'Windy' : 'Ενισχυμένοι άνεμοι'; }
+        if (maxT >= 32) { icon = '☀️'; desc = isEn ? 'Hot conditions' : 'Ζεστές συνθήκες'; }
+        if (minT <= 5) { icon = '❄️'; desc = isEn ? 'Cold conditions' : 'Ψυχρές συνθήκες'; }
         days.push(`<div style="background:rgba(255,255,255,0.05); border:1px solid rgba(0,255,0,0.22); border-radius:10px; padding:12px; text-align:center;">
             <div style="font-weight:bold; color:#00ff00;">${d.toLocaleDateString(isEn ? 'en-GB' : 'el-GR', {weekday:'long', day:'numeric', month:'short'})}</div>
             <div style="font-size:2rem; margin:8px 0;">${icon}</div>
-            <div style="font-size:1.2rem; font-weight:bold;">${t.toFixed(1)}°C</div>
+            <div style="font-size:1.2rem; font-weight:bold;">${minT.toFixed(1)}°C – ${maxT.toFixed(1)}°C</div>
             <div style="font-size:0.85rem; opacity:0.85; margin-top:5px;">${desc}</div>
-            <div style="font-size:0.8rem; margin-top:8px;">💧 ${h.toFixed(0)}% &nbsp; 🌬️ ${w.toFixed(1)} km/h</div>
+            <div style="font-size:0.8rem; margin-top:8px;">💧 ${h.toFixed(0)}% &nbsp; 🌬️ ${windLow.toFixed(0)}–${windHigh.toFixed(0)} km/h</div>
+            <div style="font-size:0.8rem; margin-top:5px;">🌧️ ${isEn ? 'Rain chance' : 'Πιθανότητα βροχής'}: ${rainChance}%</div>
         </div>`);
     }
     grid.innerHTML = days.join('');
 }
-
 function update() {
 const d = new Date();
 const todayStr = d.toLocaleDateString('el-GR');
