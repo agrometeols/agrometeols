@@ -1333,8 +1333,36 @@ fetch("https://api.thingspeak.com/channels/3365350/feeds.json?days=1&status=true
     cPress.data.datasets[0].data = getHourlyData(chartFeeds, 'field3');
     cPress.data.datasets[0].spanGaps = true;
     cPress.update();
+    // Βροχόπτωση ανά ώρα: το field4 είναι αθροιστικό, επομένως
+    // υπολογίζουμε μόνο τη διαφορά από την προηγούμενη μέτρηση.
+    function getHourlyRainData(feeds) {
+        const hourlyRain = new Array(24).fill(0);
+        const sortedFeeds = [...feeds].sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
+        let previousCumulative = null;
+
+        sortedFeeds.forEach(f => {
+            const date = new Date(f.created_at);
+            if (date.toLocaleDateString('el-GR') !== todayStr) return;
+
+            const cumulative = parseFloat(f.field4);
+            if (isNaN(cumulative)) return;
+
+            let increment = 0;
+            if (previousCumulative !== null) {
+                increment = cumulative - previousCumulative;
+                if (increment < 0) increment = 0;
+            }
+            previousCumulative = cumulative;
+
+            const hour = date.getHours();
+            if (hour >= 0 && hour < 24) hourlyRain[hour] += increment;
+        });
+
+        return hourlyRain.map(value => +value.toFixed(2));
+    }
+
     cRain.data.labels = hourlyLabels;
-    cRain.data.datasets[0].data = getHourlyData(chartFeeds, 'field4', resetVal);
+    cRain.data.datasets[0].data = getHourlyRainData(chartFeeds);
     cRain.update();
 })
 .catch(err => console.error('Chart data error:', err));
