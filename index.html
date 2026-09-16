@@ -99,8 +99,16 @@ header { text-align: center; color: white; margin-bottom: 30px; display: flex; f
 .chart-container { position: relative; height: 280px; width: 100%; margin-top: 10px; }
 @media (max-width: 900px) { .charts-dashboard { grid-template-columns: 1fr; } }
 @media (max-width: 600px) {
-  .chart-container { overflow-x: auto; overflow-y: hidden; -webkit-overflow-scrolling: touch; }
-  .chart-container canvas { min-width: 900px !important; }
+  .chart-container {
+    overflow: hidden !important;
+    width: 100% !important;
+    height: 300px !important;
+  }
+  .chart-container canvas {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+  }
 }
 canvas { max-width: 100%; height: auto; }
 #status-badge { font-weight: bold; padding: 5px 15px; border-radius: 4px; color: white !important; text-transform: uppercase; display: inline-block; margin-left: 5px; }
