@@ -28,6 +28,7 @@
     "addressCountry": "GR"
   }
 }
+</script>
 <script src="https://cdn.rawgit.com/Mikhus/canvas-gauges/gh-pages/download/2.1.7/all/gauge.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
@@ -565,15 +566,6 @@ footer { text-align: center; color: #ffffff; margin: 30px auto 10px auto; paddin
 </div>
 </div>
 
-<h2 class="section-title" id="txt-satellite-title">Δορυφορική Εικόνα</h2>
-<div class="dashboard">
-<div class="card widget-card" style="grid-column: 1 / -1;">
-<h3 class="widget-title" id="txt-satellite-sub">Δορυφορική Εικόνα — Σταθμός Νέος Μυλότοπος</h3>
-<p id="satellite-note" style="font-size:0.85rem; opacity:0.75; margin-top:4px;">Ανανέωση περίπου ανά 10 λεπτά • 📍 Θέση σταθμού: 40.814725, 22.342101</p>
-<iframe id="satellite-frame" class="forecast-frame" src="https://embed.windy.com/embed2.html?lat=40.814725&lon=22.342101&zoom=7&level=surface&overlay=satellite&menu=&message=true&marker=40.814725%2C22.342101&calendar=now&pressure=&type=map&location=coordinates&detail=&metricWind=km%2Fh&metricTemp=%C2%B0C" frameborder="0" scrolling="YES" allowtransparency="true"></iframe>
-</div>
-</div>
-
 <h2 class="section-title" id="txt-year-comparison-title">Σύγκριση με Πέρυσι</h2>
 <div class="dashboard">
 <div class="card" style="grid-column: 1 / -1;">
@@ -810,7 +802,7 @@ rDay: "Σημερινός Υετός", rStorm: "Τρέ/Kακοκαιρία", rRa
 alertsTitle: "Γεωργικές Προειδοποιήσεις", tendencyTitle: "Τάση Βαρομετρικής Πίεσης (3ωρο)", cropStats: "Στατιστικά Καλλιέργειας", chillLbl: "Ώρες Ψύχους Κάτω Από",
 curTitle: "Τρέχουσες Ενδείξεις", gTemp: "Θερμοκρασία", gHum: "Υγρασία", gPress: "Βαρομετρική πίεση", gRain: "Βροχόπτωση (Live)",
 gWindSpeed: "Ταχύτητα Ανέμου", gWindDir: "Κατεύθυνση Ανέμου", gEt0: "Εξατμισοδιαπνοή ET₀", gDp: "Σημείο Δρόσου", gSolar: "Ηλιακή Ακτινοβολία", gSun: "Ανατολή & Δύση Ηλίου", sunny: "Λιακάδα", dark: "Σκοτάδι", dayProgress: "Πρόοδος Ημέρας", dayLength: "Διάρκεια Ημέρας", toSunset: "Λείπα μέχρι Δύση",
-foreTitle: "Πρόγνωση & Ραντάρ", foreSub: "Πρόγνωση: Νέος Μυλότοπος", radarTitle: "Ζωντανό Ραντάρ Βροχής", satelliteTitle: "Δορυφορική Εικόνα", satelliteSub: "Δορυφορική Εικόνα — Σταθμός Νέος Μυλότοπος", satelliteNote: "Ανανέωση περίπου ανά 10 λεπτά • 📍 Θέση σταθμού: 40.814725, 22.342101",
+foreTitle: "Πρόγνωση & Ραντάρ", foreSub: "Πρόγνωση: Νέος Μυλότοπος", radarTitle: "Ζωντανό Ραντάρ Βροχής",
 adsTitle: "Συνεργαζόμενοι Γεωπόνοι & Διαφημίσεις", histTitle: "Ιστορικά Γραφήματα",
 cTemp: "Πορεία Θερμοκρασία", cHum: "Πορεία Υγρασία", cPress: "Πορεία Πίεσης", cRain: "Πορεία Βροχόπτωσης", cEt0: "Πορεία Εξατμισοδιαπνοής ET₀",
 battTitle: "Σταθμός Μπαταρία", onlineTitle: "Χρόνος Online Σταθμού", footer: "© 2026 Agro Meteo Ls | Προγραμματισμός Χρήστος Τσαβαλάκογλου Iot System",
@@ -843,7 +835,7 @@ rDay: "Daily Rain", rStorm: "Storm Rain", rRate: "Rain Rate", rMonth: "Monthly R
 alertsTitle: "Agricultural Alerts", tendencyTitle: "Barometric Pressure Tendency (3h)", cropStats: "Crop Statistics", chillLbl: "Chill Hours Below",
 curTitle: "Current Readings", gTemp: "Temperature", gHum: "Humidity", gPress: "Barometric Pressure", gRain: "Rainfall (Live)",
 gWindSpeed: "Wind Speed", gWindDir: "Wind Direction", gEt0: "Evapotranspiration ET₀", gDp: "Dew Point", gSolar: "Solar Radiation", gSun: "Sunrise & Sunset", sunny: "Sunny", dark: "Dark", dayProgress: "Day Progress", dayLength: "Day Length", toSunset: "Time until Sunset",
-foreTitle: "Forecast & Radar", foreSub: "Forecast: Neos Mylotopos", radarTitle: "Live Rain Radar", satelliteTitle: "Satellite Image", satelliteSub: "Satellite Image — Neos Mylotopos Station", satelliteNote: "Refresh approximately every 10 minutes • 📍 Station location: 40.814725, 22.342101",
+foreTitle: "Forecast & Radar", foreSub: "Forecast: Neos Mylotopos", radarTitle: "Live Rain Radar",
 adsTitle: "Collaborating Agronomists & Ads", histTitle: "Historical Charts",
 cTemp: "Temperature Trend", cHum: "Humidity Trend", cPress: "Pressure Trend", cRain: "Rainfall Trend", cEt0: "Evapotranspiration ET₀ Trend",
 battTitle: "Station Battery", onlineTitle: "Station Online Time", footer: "© 2026 Agro Meteo Ls | Programming by Christos Tsavalakoglou Iot System",
@@ -1039,9 +1031,6 @@ document.getElementById('txt-stage-title').innerText = t.stageTitle;
 document.getElementById('txt-stage-track').innerText = t.stageTrackTitle;
 document.getElementById('txt-stage-select').innerText = t.stageSelectText;
 if(document.getElementById('txt-local-forecast-title')) document.getElementById('txt-local-forecast-title').innerText = lang === 'en' ? 'Our 3-Day Forecast' : 'Η δική μας πρόγνωση 3 ημερών';
-if(document.getElementById('txt-satellite-title')) document.getElementById('txt-satellite-title').innerText = lang === 'en' ? translations.en.satelliteTitle : translations.el.satelliteTitle;
-if(document.getElementById('txt-satellite-sub')) document.getElementById('txt-satellite-sub').innerText = lang === 'en' ? translations.en.satelliteSub : translations.el.satelliteSub;
-if(document.getElementById('satellite-note')) document.getElementById('satellite-note').innerText = lang === 'en' ? translations.en.satelliteNote : translations.el.satelliteNote;
 if(document.getElementById('txt-local-forecast-sub')) document.getElementById('txt-local-forecast-sub').innerText = lang === 'en' ? 'Our forecast — next 3 days' : 'Η δική μας πρόγνωση — επόμενες 3 ημέρες';
 if(document.getElementById('local-forecast-note')) document.getElementById('local-forecast-note').innerText = lang === 'en' ? 'Estimated forecast based on recent station trends.' : 'Εκτιμητική πρόγνωση βάσει των πρόσφατων τάσεων του σταθμού.';
 if(document.getElementById('txt-year-comparison-title')) document.getElementById('txt-year-comparison-title').innerText = lang === 'en' ? 'Comparison with Last Year' : 'Σύγκριση με Πέρυσι';
