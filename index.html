@@ -639,6 +639,11 @@ footer { text-align: center; color: #ffffff; margin: 30px auto 10px auto; paddin
 <div id="data-quality-status" class="alert-normal">Έλεγχος δεδομένων...</div>
 <div id="data-quality-details" style="font-size:0.82rem; margin-top:8px; line-height:1.6;">--</div>
 </div>
+<div class="card" id="station-online-card">
+<h3 id="txt-online-title">Χρόνος Online Σταθμού</h3>
+<div id="station-online-duration" style="font-size:1.35rem; font-weight:bold; line-height:1.5;">--</div>
+<div id="station-online-since" style="font-size:0.82rem; margin-top:6px; line-height:1.5;">--</div>
+</div>
 <div class="card">
 <h3 id="txt-batt-title">Μπαταρία Σταθμού</h3>
 <div style="font-size: 3rem; font-weight: bold;"><span id="b-val">--</span><span style="font-size: 1.2rem;">%</span></div>
@@ -778,7 +783,7 @@ gWindSpeed: "Ταχύτητα Ανέμου", gWindDir: "Κατεύθυνση Α�
 foreTitle: "Πρόγνωση & Ραντάρ", foreSub: "Πρόγνωση: Νέος Μυλότοπος", radarTitle: "Ζωντανό Ραντάρ Βροχής",
 adsTitle: "Συνεργαζόμενοι Γεωπόνοι & Διαφημίσεις", histTitle: "Ιστορικά Γραφήματα",
 cTemp: "Πορεία Θερμοκρασία", cHum: "Πορεία Υγρασία", cPress: "Πορεία Πίεσης", cRain: "Πορεία Βροχόπτωσης", cEt0: "Πορεία Εξατμισοδιαπνοής ET₀",
-battTitle: "Σταθμός Μπαταρία", footer: "© 2026 Agro Meteo Ls | Προγραμματισμός Χρήστος Τσαβαλάκογλου Iot System",
+battTitle: "Σταθμός Μπαταρία", onlineTitle: "Χρόνος Online Σταθμού", footer: "© 2026 Agro Meteo Ls | Προγραμματισμός Χρήστος Τσαβαλάκογλου Iot System",
 resetMsg: "Μηδενίζει αυτόματα στις 00:00", low: "ΧΑΜΗΛΗ", med: "ΜΕΤΡΙΑ", high: "ΚΑΛΗ", checking: "ΕΛΕΓΧΟΣ...",
 name: "Χρήστος Τσαβαλάκογλου", liveTxt: "Live", dpNormal: "✅ Ασφαλές Σημείο", dpWarning: "⚠️ Κίνδυνος Παγετού!",
 camsTitle: "Ζωντανή Μετάδοση", cam1: "Κάμερα 1", cam2: "Κάμερα 2", camSoon: "Η υπηρεσία θα είναι σύντομα διαθέσιμη...",
@@ -811,7 +816,7 @@ gWindSpeed: "Wind Speed", gWindDir: "Wind Direction", gEt0: "Evapotranspiration 
 foreTitle: "Forecast & Radar", foreSub: "Forecast: Neos Mylotopos", radarTitle: "Live Rain Radar",
 adsTitle: "Collaborating Agronomists & Ads", histTitle: "Historical Charts",
 cTemp: "Temperature Trend", cHum: "Humidity Trend", cPress: "Pressure Trend", cRain: "Rainfall Trend", cEt0: "Evapotranspiration ET₀ Trend",
-battTitle: "Station Battery", footer: "© 2026 Agro Meteo Ls | Programming by Christos Tsavalakoglou Iot System",
+battTitle: "Station Battery", onlineTitle: "Station Online Time", footer: "© 2026 Agro Meteo Ls | Programming by Christos Tsavalakoglou Iot System",
 resetMsg: "Resets automatically at 00:00", low: "LOW", med: "MEDIUM", high: "GOOD", checking: "CHECKING...",
 name: "Christos Tsavalakoglou", liveTxt: "Live", dpNormal: "✅ Safe Point", dpWarning: "⚠️ Frost Risk!",
 camsTitle: "Live Stream", cam1: "Camera 1", cam2: "Camera 2", camSoon: "Service will be available soon...",
@@ -974,6 +979,7 @@ document.getElementById('txt-c-temp').innerText = t.cTemp;
 document.getElementById('txt-c-hum').innerText = t.cHum;
 document.getElementById('txt-c-press').innerText = t.cPress;
 document.getElementById('txt-c-rain').innerText = t.cRain;
+document.getElementById('txt-online-title').innerText = t.onlineTitle;
 document.getElementById('txt-batt-title').innerText = t.battTitle;
 document.getElementById('txt-footer').innerText = t.footer;
 document.getElementById('reset-msg').innerText = t.resetMsg;
@@ -1325,6 +1331,30 @@ const lastSeen = new Date(last.created_at); const now = new Date(); const diffMi
 const statusBadge = document.getElementById('status-badge');
 if (diffMinutes < 20) { statusBadge.innerText = "ONLINE"; statusBadge.style.backgroundColor = "#00ff00"; }
 else { statusBadge.innerText = "OFFLINE"; statusBadge.style.backgroundColor = "#ff0000"; }
+
+function updateStationOnlineDuration() {
+  const start = new Date('2026-06-16T08:00:00');
+  const now = new Date();
+  let totalSeconds = Math.max(0, Math.floor((now - start) / 1000));
+  const days = Math.floor(totalSeconds / 86400);
+  totalSeconds %= 86400;
+  const hours = Math.floor(totalSeconds / 3600);
+  totalSeconds %= 3600;
+  const minutes = Math.floor(totalSeconds / 60);
+  const seconds = totalSeconds % 60;
+  const durationEl = document.getElementById('station-online-duration');
+  const sinceEl = document.getElementById('station-online-since');
+  if (!durationEl || !sinceEl) return;
+  const langNow = document.documentElement.lang || 'el';
+  durationEl.innerText = langNow === 'en'
+    ? `${days} days, ${hours} h, ${minutes} min, ${seconds} sec`
+    : `${days} ημέρες, ${hours} ώρες, ${minutes} λεπτά, ${seconds} δευτ.`;
+  sinceEl.innerText = langNow === 'en'
+    ? 'Online since: 16/06/2026, 08:00'
+    : 'Online από: 16/06/2026, 08:00';
+}
+setInterval(updateStationOnlineDuration, 1000);
+updateStationOnlineDuration();
 
 function updateDataQualityStatus(feeds, last, diffMinutes) {
   const statusEl = document.getElementById('data-quality-status');
