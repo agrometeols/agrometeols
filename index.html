@@ -1046,7 +1046,7 @@ var gSolar = new RadialGauge({ renderTo: 'gauge-solar', width: 240, height: 240,
 var gPress = new RadialGauge({ renderTo: 'gauge-press', width: 240, height: 240, units: "hPa", minValue: 950, maxValue: 1050, majorTicks: ["950","960","970","980","990","1000","1010","1020","1030","1040","1050"], minorTicks: 2, strokeTicks: true, highlights: [ { "from": 950, "to": 1000, "color": "rgba(255,0,0,.5)" }, { "from": 1000, "to": 1020, "color": "rgba(0,255,0,.5)" }, { "from": 1020, "to": 1050, "color": "rgba(0,0,255,.5)" } ], colorPlate: "#fff", borders: true, needleType: "arrow", needleWidth: 4, animationDuration: 1500 }).draw();
 
 function createChart(canvasId, label, color, minVal, maxVal, type) {
-return new Chart(document.getElementById(canvasId), { type: type, data: { labels: [], datasets: [{ label: label, data: [], borderColor: color, backgroundColor: (type === 'bar' ? color : color + '22'), borderWidth: (type === 'bar' ? 1 : 4), tension: 0.4, fill: false, pointRadius: 1, pointHoverRadius: 6 }] }, options: { responsive: true, maintainAspectRatio: false, scales: { x: { grid: { display: false }, ticks: { color: '#ffffff', autoSkip: true, maxTicksLimit: 12, maxRotation: 0, minRotation: 0, font: { size: 11 }, callback: function(value, index) { return index % 2 === 0 ? this.getLabelForValue(value) : ''; } } }, y: { min: minVal, max: maxVal, grid: { color: 'rgba(255,255,255,0.1)' }, ticks: { color: '#ffffff' } } }, plugins: { legend: { labels: { color: '#fff' } } } } });
+return new Chart(document.getElementById(canvasId), { type: type, data: { labels: [], datasets: [{ label: label, data: [], borderColor: color, backgroundColor: (type === 'bar' ? color : color + '22'), borderWidth: (type === 'bar' ? 1 : 4), tension: 0.4, fill: false, pointRadius: 1, pointHoverRadius: 6 }] }, options: { responsive: true, maintainAspectRatio: false, scales: { x: { grid: { display: false }, ticks: { color: '#ffffff', autoSkip: false, maxRotation: 0, minRotation: 0, font: { size: 11 }, callback: function(value, index) { return index % 2 === 0 ? this.getLabelForValue(value) : ''; } } }, y: { min: minVal, max: maxVal, grid: { color: 'rgba(255,255,255,0.1)' }, ticks: { color: '#ffffff' } } }, plugins: { legend: { labels: { color: '#fff' } } } } });
 }
 var cTemp = createChart('chart-temp', 'Θερμοκρασία (°C)', '#d53a35', -20, 50, 'line');
 var cHum = createChart('chart-hum', 'Υγρασία (%)', '#2f89fc', 0, 100, 'line');
@@ -1220,7 +1220,7 @@ document.getElementById('date').innerText = d.toLocaleDateString('el-GR', {weekd
 syncVisitors(); updateSunCard();
 const lang = document.documentElement.lang || 'el';
 const t = translations[lang];
-fetch("https://api.thingspeak.com/channels/3365350/feeds.json?results=800&status=true&metadata=true")
+fetch("https://api.thingspeak.com/channels/3365350/feeds.json?results=80&status=true&metadata=true")
 .then(res => res.json())
 .then(data => {
 const feeds = data.feeds;
@@ -1294,52 +1294,50 @@ let b = parseFloat(last.field5);
 document.getElementById('b-val').innerText = b.toFixed(0);
 let lbl = document.getElementById('b-label');
 if(b > 75) { lbl.innerText=t.high; lbl.style.color="green"; } else if(b > 30) { lbl.innerText=t.med; lbl.style.color="orange"; } else { lbl.innerText=t.low; lbl.style.color="red"; }
-let hourlyLabels = [];
-for (let h = 0; h < 24; h++) {
-    hourlyLabels.push(h.toString().padStart(2, '0') + ":00");
-}
+fetch("https://api.thingspeak.com/channels/3365350/feeds.json?days=1&status=true&metadata=true")
+.then(res => res.json())
+.then(chartData => {
+    const chartFeeds = chartData.feeds || [];
+    let hourlyLabels = [];
+    for (let h = 0; h < 24; h++) {
+        hourlyLabels.push(h.toString().padStart(2, '0') + ":00");
+    }
 
-function getHourlyData(feeds, fieldName, resetVal) {
-    const hourlyData = Array.from({ length: 24 }, () => ({ sum: 0, count: 0 }));
+    function getHourlyData(feeds, fieldName, resetVal) {
+        const hourlyData = Array.from({ length: 24 }, () => ({ sum: 0, count: 0 }));
+        feeds.forEach(f => {
+            const date = new Date(f.created_at);
+            if (date.toLocaleDateString('el-GR') !== todayStr) return;
+            const hour = date.getHours();
+            let val = parseFloat(f[fieldName]);
+            if (isNaN(val) || hour < 0 || hour > 23) return;
+            if (fieldName === 'field4' && resetVal !== undefined) {
+                val = val - resetVal;
+                if (val < 0) val = 0;
+            }
+            hourlyData[hour].sum += val;
+            hourlyData[hour].count += 1;
+        });
+        return hourlyData.map(item => item.count ? +(item.sum / item.count).toFixed(2) : null);
+    }
 
-    feeds.forEach(f => {
-        const date = new Date(f.created_at);
-        if (date.toLocaleDateString('el-GR') !== todayStr) return;
-
-        const hour = date.getHours();
-        let val = parseFloat(f[fieldName]);
-        if (isNaN(val) || hour < 0 || hour > 23) return;
-
-        if (fieldName === 'field4' && resetVal !== undefined) {
-            val = val - resetVal;
-            if (val < 0) val = 0;
-        }
-
-        hourlyData[hour].sum += val;
-        hourlyData[hour].count += 1;
-    });
-
-    return hourlyData.map(item => item.count ? +(item.sum / item.count).toFixed(2) : null);
-}
-
-cTemp.data.labels = hourlyLabels;
-cTemp.data.datasets[0].data = getHourlyData(feeds, 'field1');
-cTemp.data.datasets[0].spanGaps = true;
-cTemp.update();
-
-cHum.data.labels = hourlyLabels;
-cHum.data.datasets[0].data = getHourlyData(feeds, 'field2');
-cHum.data.datasets[0].spanGaps = true;
-cHum.update();
-
-cPress.data.labels = hourlyLabels;
-cPress.data.datasets[0].data = getHourlyData(feeds, 'field3');
-cPress.data.datasets[0].spanGaps = true;
-cPress.update();
-
-cRain.data.labels = hourlyLabels;
-cRain.data.datasets[0].data = getHourlyData(feeds, 'field4', resetVal);
-cRain.update();
+    cTemp.data.labels = hourlyLabels;
+    cTemp.data.datasets[0].data = getHourlyData(chartFeeds, 'field1');
+    cTemp.data.datasets[0].spanGaps = true;
+    cTemp.update();
+    cHum.data.labels = hourlyLabels;
+    cHum.data.datasets[0].data = getHourlyData(chartFeeds, 'field2');
+    cHum.data.datasets[0].spanGaps = true;
+    cHum.update();
+    cPress.data.labels = hourlyLabels;
+    cPress.data.datasets[0].data = getHourlyData(chartFeeds, 'field3');
+    cPress.data.datasets[0].spanGaps = true;
+    cPress.update();
+    cRain.data.labels = hourlyLabels;
+    cRain.data.datasets[0].data = getHourlyData(chartFeeds, 'field4', resetVal);
+    cRain.update();
+})
+.catch(err => console.error('Chart data error:', err));
 let todayFeeds = feeds.filter(f => new Date(f.created_at).toLocaleDateString('el-GR') === todayStr);
 if(todayFeeds.length > 0) {
 let tArrToday = todayFeeds.filter(f => f.field1 != null).map(f => ({v: parseFloat(f.field1), t: f.created_at}));
