@@ -566,6 +566,19 @@ footer { text-align: center; color: #ffffff; margin: 30px auto 10px auto; paddin
 </div>
 </div>
 
+<h2 class="section-title" id="txt-year-comparison-title">Σύγκριση με Πέρυσι</h2>
+<div class="dashboard">
+<div class="card" style="grid-column: 1 / -1;">
+<h3 id="txt-year-comparison-sub">Ο καιρός φέτος σε σχέση με πέρυσι</h3>
+<p id="year-comparison-note" style="font-size:0.85rem; opacity:0.75; margin-top:4px;">Η σύγκριση θα ενεργοποιηθεί όταν υπάρχουν αποθηκευμένα δεδομένα από την αντίστοιχη περσινή περίοδο.</p>
+<div id="year-comparison-grid" style="display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:12px; margin-top:12px;">
+<div style="background:rgba(255,255,255,0.05); border:1px solid rgba(0,255,0,0.22); border-radius:10px; padding:12px; text-align:center;"><div style="font-weight:bold; color:#00ff00;">🌡️ Θερμοκρασία</div><div id="year-temp-comparison" style="margin-top:8px;">--</div></div>
+<div style="background:rgba(255,255,255,0.05); border:1px solid rgba(0,255,0,0.22); border-radius:10px; padding:12px; text-align:center;"><div style="font-weight:bold; color:#00ff00;">🌧️ Βροχόπτωση</div><div id="year-rain-comparison" style="margin-top:8px;">--</div></div>
+<div style="background:rgba(255,255,255,0.05); border:1px solid rgba(0,255,0,0.22); border-radius:10px; padding:12px; text-align:center;"><div style="font-weight:bold; color:#00ff00;">💧 Υγρασία</div><div id="year-hum-comparison" style="margin-top:8px;">--</div></div>
+</div>
+</div>
+</div>
+
 <h2 class="section-title" id="txt-stage-title">Φαινολογικό Στάδιο &amp; Ανάπτυξη Καλλιέργειας</h2>
 <div class="dashboard">
 <div class="card" style="grid-column: 1 / -1;">
@@ -1020,6 +1033,9 @@ document.getElementById('txt-stage-select').innerText = t.stageSelectText;
 if(document.getElementById('txt-local-forecast-title')) document.getElementById('txt-local-forecast-title').innerText = lang === 'en' ? 'Our 3-Day Forecast' : 'Η δική μας πρόγνωση 3 ημερών';
 if(document.getElementById('txt-local-forecast-sub')) document.getElementById('txt-local-forecast-sub').innerText = lang === 'en' ? 'Our forecast — next 3 days' : 'Η δική μας πρόγνωση — επόμενες 3 ημέρες';
 if(document.getElementById('local-forecast-note')) document.getElementById('local-forecast-note').innerText = lang === 'en' ? 'Estimated forecast based on recent station trends.' : 'Εκτιμητική πρόγνωση βάσει των πρόσφατων τάσεων του σταθμού.';
+if(document.getElementById('txt-year-comparison-title')) document.getElementById('txt-year-comparison-title').innerText = lang === 'en' ? 'Comparison with Last Year' : 'Σύγκριση με Πέρυσι';
+if(document.getElementById('txt-year-comparison-sub')) document.getElementById('txt-year-comparison-sub').innerText = lang === 'en' ? 'This year compared with last year' : 'Ο καιρός φέτος σε σχέση με πέρυσι';
+if(document.getElementById('year-comparison-note')) document.getElementById('year-comparison-note').innerText = lang === 'en' ? 'The comparison will be available when archived data from the same period last year exists.' : 'Η σύγκριση θα ενεργοποιηθεί όταν υπάρχουν αποθηκευμένα δεδομένα από την αντίστοιχη περσινή περίοδο.';
 document.getElementById('txt-spray-title').innerText = t.sprayTitle;
 document.getElementById('txt-spray-compass').innerText = t.sprayCompass;
 document.getElementById('txt-spray-arrow-hint').innerHTML = t.sprayArrowHint;
