@@ -98,6 +98,10 @@ header { text-align: center; color: white; margin-bottom: 30px; display: flex; f
 .slideshow-container img.active { opacity: 1; transform: scale(1); z-index: 1; }
 .chart-container { position: relative; height: 280px; width: 100%; margin-top: 10px; }
 @media (max-width: 900px) { .charts-dashboard { grid-template-columns: 1fr; } }
+@media (max-width: 600px) {
+  .chart-container { overflow-x: auto; overflow-y: hidden; -webkit-overflow-scrolling: touch; }
+  .chart-container canvas { min-width: 900px !important; }
+}
 canvas { max-width: 100%; height: auto; }
 #status-badge { font-weight: bold; padding: 5px 15px; border-radius: 4px; color: white !important; text-transform: uppercase; display: inline-block; margin-left: 5px; }
 .section-title { width: 100%; max-width: 1200px; margin: 20px auto 10px auto; color: white; border-left: 5px solid #fff; padding-left: 10px; }
