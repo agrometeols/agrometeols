@@ -634,6 +634,11 @@ footer { text-align: center; color: #ffffff; margin: 30px auto 10px auto; paddin
 <div class="card"><h3 id="txt-c-et0">Πορεία Εξατμισοδιαπνοής ET₀</h3><div class="chart-container"><canvas id="chart-et0"></canvas></div></div>
 </div>
 <div class="bottom-dashboard">
+<div class="card" id="data-quality-card">
+<h3 id="txt-data-quality-title">Ποιότητα Μετρήσεων</h3>
+<div id="data-quality-status" class="alert-normal">Έλεγχος δεδομένων...</div>
+<div id="data-quality-details" style="font-size:0.82rem; margin-top:8px; line-height:1.6;">--</div>
+</div>
 <div class="card">
 <h3 id="txt-batt-title">Μπαταρία Σταθμού</h3>
 <div style="font-size: 3rem; font-weight: bold;"><span id="b-val">--</span><span style="font-size: 1.2rem;">%</span></div>
@@ -1320,6 +1325,30 @@ const lastSeen = new Date(last.created_at); const now = new Date(); const diffMi
 const statusBadge = document.getElementById('status-badge');
 if (diffMinutes < 20) { statusBadge.innerText = "ONLINE"; statusBadge.style.backgroundColor = "#00ff00"; }
 else { statusBadge.innerText = "OFFLINE"; statusBadge.style.backgroundColor = "#ff0000"; }
+
+function updateDataQualityStatus(feeds, last, diffMinutes) {
+  const statusEl = document.getElementById('data-quality-status');
+  const detailsEl = document.getElementById('data-quality-details');
+  if (!statusEl || !detailsEl) return;
+  const langNow = document.documentElement.lang || 'el';
+  const requiredFields = ['field1','field2','field3','field4','field5','field6','field8'];
+  const missing = requiredFields.filter(f => last[f] === null || last[f] === undefined || last[f] === '' || !Number.isFinite(parseFloat(last[f])));
+  const ageText = langNow === 'en' ? `Last update: ${Math.max(0, Math.round(diffMinutes))} min ago` : `Τελευταία ενημέρωση: ${Math.max(0, Math.round(diffMinutes))} λεπτά πριν`;
+  const feedText = langNow === 'en' ? `Recent records: ${feeds.length}` : `Πρόσφατες καταγραφές: ${feeds.length}`;
+  if (diffMinutes >= 20) {
+    statusEl.innerText = langNow === 'en' ? '🔴 Communication problem' : '🔴 Πρόβλημα επικοινωνίας';
+    statusEl.className = 'alert-danger';
+  } else if (missing.length > 0) {
+    statusEl.innerText = langNow === 'en' ? '🟡 Incomplete sensor data' : '🟡 Ελλιπή δεδομένα αισθητήρων';
+    statusEl.className = 'alert-warning';
+  } else {
+    statusEl.innerText = langNow === 'en' ? '🟢 Station operating normally' : '🟢 Ο σταθμός λειτουργεί κανονικά';
+    statusEl.className = 'alert-normal';
+  }
+  const missingText = missing.length ? (langNow === 'en' ? `Missing/invalid: ${missing.join(', ')}` : `Ελλιπείς/μη έγκυρες μετρήσεις: ${missing.join(', ')}`) : (langNow === 'en' ? 'All main measurements are available' : 'Όλες οι βασικές μετρήσεις είναι διαθέσιμες');
+  detailsEl.innerText = `${ageText} • ${feedText}\n${missingText}`;
+}
+updateDataQualityStatus(feeds, last, diffMinutes);
 if(last.field1) gTemp.value = last.field1; if(last.field2) gHum.value = last.field2; if(last.field3) gPress.value = last.field3; if(last.field6) gWindSpeed.value = last.field6; if(last.field8) gSolar.value = solarRad;
 const alertBox = document.getElementById('alert-box'); const month = d.getMonth() + 1;
 if (temp <= 2) { alertBox.innerText = t.alertFrost; alertBox.className = "alert-danger"; }
