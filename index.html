@@ -557,6 +557,15 @@ footer { text-align: center; color: #ffffff; margin: 30px auto 10px auto; paddin
 <div class="card widget-card"><h3 class="widget-title" id="txt-radar-title">Ζωντανό Ραντάρ Βροχής</h3><iframe class="radar-frame" src="https://embed.windy.com/embed2.html?lat=40.803&amp;lon=22.348&amp;zoom=8&amp;level=surface&amp;overlay=radar&amp;product=radar&amp;menu=&amp;message=true&amp;marker=&amp;calendar=now&amp;pressure=&amp;type=map&amp;location=coordinates&amp;detail=&amp;metricWind=km%2Fh&amp;metricTemp=%C2%B0C&amp;radarRange=-1" frameborder="0"></iframe></div>
 </div>
 
+<h2 class="section-title" id="txt-local-forecast-title">Πρόγνωση 3 Ημερών</h2>
+<div class="dashboard">
+<div class="card" style="grid-column: 1 / -1;">
+<h3 id="txt-local-forecast-sub">Η δική μας πρόγνωση — επόμενες 3 ημέρες</h3>
+<p id="local-forecast-note" style="font-size:0.85rem; opacity:0.75; margin-top:4px;">Εκτιμητική πρόγνωση βάσει των πρόσφατων τάσεων του σταθμού.</p>
+<div id="local-forecast-grid" style="display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:12px; margin-top:12px;"></div>
+</div>
+</div>
+
 <h2 class="section-title" id="txt-stage-title">Φαινολογικό Στάδιο &amp; Ανάπτυξη Καλλιέργειας</h2>
 <div class="dashboard">
 <div class="card" style="grid-column: 1 / -1;">
@@ -1008,6 +1017,9 @@ document.getElementById('txt-app-win-btn').innerText = t.appWinBtn;
 document.getElementById('txt-stage-title').innerText = t.stageTitle;
 document.getElementById('txt-stage-track').innerText = t.stageTrackTitle;
 document.getElementById('txt-stage-select').innerText = t.stageSelectText;
+if(document.getElementById('txt-local-forecast-title')) document.getElementById('txt-local-forecast-title').innerText = lang === 'en' ? 'Our 3-Day Forecast' : 'Η δική μας πρόγνωση 3 ημερών';
+if(document.getElementById('txt-local-forecast-sub')) document.getElementById('txt-local-forecast-sub').innerText = lang === 'en' ? 'Our forecast — next 3 days' : 'Η δική μας πρόγνωση — επόμενες 3 ημέρες';
+if(document.getElementById('local-forecast-note')) document.getElementById('local-forecast-note').innerText = lang === 'en' ? 'Estimated forecast based on recent station trends.' : 'Εκτιμητική πρόγνωση βάσει των πρόσφατων τάσεων του σταθμού.';
 document.getElementById('txt-spray-title').innerText = t.sprayTitle;
 document.getElementById('txt-spray-compass').innerText = t.sprayCompass;
 document.getElementById('txt-spray-arrow-hint').innerHTML = t.sprayArrowHint;
@@ -1275,6 +1287,53 @@ function updateLiveRainWeatherIcon(rainValue) {
     icon.style.display = (!isNaN(amount) && amount > 0) ? 'block' : 'none';
 }
 
+function updateLocalThreeDayForecast(feeds) {
+    const grid = document.getElementById('local-forecast-grid');
+    if (!grid || !feeds || !feeds.length) return;
+    const valid = feeds.map(f => ({
+        date: new Date(f.created_at),
+        temp: parseFloat(f.field1),
+        hum: parseFloat(f.field2),
+        press: parseFloat(f.field3),
+        rain: parseFloat(f.field4) || 0,
+        wind: parseFloat(f.field6) || 0
+    })).filter(x => !isNaN(x.temp) && !isNaN(x.date.getTime()));
+    if (!valid.length) return;
+    const recent = valid.slice(-12);
+    const avg = key => recent.reduce((sum, x) => sum + (Number.isFinite(x[key]) ? x[key] : 0), 0) / recent.length;
+    const last = valid[valid.length - 1];
+    const older = valid[Math.max(0, valid.length - Math.min(12, valid.length))];
+    const tempTrend = last.temp - older.temp;
+    const pressTrend = Number.isFinite(last.press) && Number.isFinite(older.press) ? last.press - older.press : 0;
+    const baseTemp = avg('temp');
+    const baseHum = avg('hum');
+    const baseWind = avg('wind');
+    const rainRecent = recent.reduce((sum, x) => sum + x.rain, 0);
+    const langNow = document.documentElement.lang || 'el';
+    const isEn = langNow === 'en';
+    const days = [];
+    for (let i = 1; i <= 3; i++) {
+        const d = new Date(); d.setDate(d.getDate() + i);
+        let t = baseTemp + tempTrend * (i * 0.18);
+        let h = Math.max(20, Math.min(100, baseHum - tempTrend * 0.5));
+        let w = Math.max(0, baseWind + (pressTrend < -1 ? 2 : 0));
+        let icon = '🌤️';
+        let desc = isEn ? 'Partly cloudy' : 'Μερικές νεφώσεις';
+        if (rainRecent > 0.5 || pressTrend < -2) { icon = '🌦️'; desc = isEn ? 'Chance of rain' : 'Πιθανότητα βροχής'; }
+        if (w >= 20) { icon = '🌬️'; desc = isEn ? 'Windy' : 'Ενισχυμένοι άνεμοι'; }
+        if (t >= 32) { icon = '☀️'; desc = isEn ? 'Hot conditions' : 'Ζεστές συνθήκες'; }
+        if (t <= 5) { icon = '❄️'; desc = isEn ? 'Cold conditions' : 'Ψυχρές συνθήκες'; }
+        days.push(`<div style="background:rgba(255,255,255,0.05); border:1px solid rgba(0,255,0,0.22); border-radius:10px; padding:12px; text-align:center;">
+            <div style="font-weight:bold; color:#00ff00;">${d.toLocaleDateString(isEn ? 'en-GB' : 'el-GR', {weekday:'long', day:'numeric', month:'short'})}</div>
+            <div style="font-size:2rem; margin:8px 0;">${icon}</div>
+            <div style="font-size:1.2rem; font-weight:bold;">${t.toFixed(1)}°C</div>
+            <div style="font-size:0.85rem; opacity:0.85; margin-top:5px;">${desc}</div>
+            <div style="font-size:0.8rem; margin-top:8px;">💧 ${h.toFixed(0)}% &nbsp; 🌬️ ${w.toFixed(1)} km/h</div>
+        </div>`);
+    }
+    grid.innerHTML = days.join('');
+}
+
 function update() {
 const d = new Date();
 const todayStr = d.toLocaleDateString('el-GR');
@@ -1288,6 +1347,7 @@ fetch("https://api.thingspeak.com/channels/3365350/feeds.json?results=80&status=
 const feeds = data.feeds;
 if (!feeds || feeds.length === 0) return;
 const last = feeds[feeds.length - 1];
+updateLocalThreeDayForecast(feeds);
 const temp = parseFloat(last.field1);
 const hum = parseFloat(last.field2);
 const press = parseFloat(last.field3);
