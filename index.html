@@ -2052,85 +2052,88 @@ const showConstructionAlert = true;
 
 
 
+
+
+
 <!-- AGRO METEO REALISTIC LIGHTNING BOLT START -->
 <style>
-  #agro-real-lightning-bolt {
-    position: fixed; inset: 0; z-index: 10004; pointer-events: none;
-    opacity: 0; overflow: hidden;
-  }
-  #agro-real-lightning-bolt svg { width:100%; height:100%; overflow:visible; }
-  #agro-real-lightning-bolt path {
-    fill:none; stroke:#f4fbff; stroke-linecap:round; stroke-linejoin:round;
-    filter:drop-shadow(0 0 3px #fff) drop-shadow(0 0 12px #a8d9ff)
-           drop-shadow(0 0 28px #6ebaff);
-  }
-  #agro-real-lightning-bolt .main { stroke-width:5.5; }
-  #agro-real-lightning-bolt .branch { stroke-width:3.2; }
-  #agro-real-lightning-bolt .sub { stroke-width:1.8; }
-  #agro-real-lightning-bolt.show { animation: agroBigBolt .72s ease-out both; }
-  @keyframes agroBigBolt {
-    0%{opacity:0} 5%{opacity:1} 13%{opacity:.18} 20%{opacity:1}
-    31%{opacity:.35} 43%{opacity:.95} 58%{opacity:.12} 100%{opacity:0}
-  }
+#agro-real-lightning-bolt{
+ position:fixed;inset:0;z-index:10004;pointer-events:none;opacity:0;
+ overflow:hidden;background:transparent;
+}
+#agro-real-lightning-bolt svg{width:100%;height:100%;overflow:visible}
+#agro-real-lightning-bolt path{
+ fill:none;stroke:#ffffff;stroke-linecap:round;stroke-linejoin:round;
+ filter:drop-shadow(0 0 2px #fff) drop-shadow(0 0 9px #d9f2ff)
+        drop-shadow(0 0 22px #79c8ff);
+}
+#agro-real-lightning-bolt .main{stroke-width:8}
+#agro-real-lightning-bolt .branch{stroke-width:5}
+#agro-real-lightning-bolt .small{stroke-width:3}
+#agro-real-lightning-bolt.show{animation:agroSlowClearBolt 1.65s ease-out both}
+@keyframes agroSlowClearBolt{
+ 0%{opacity:0}
+ 5%{opacity:1}
+ 18%{opacity:1}
+ 31%{opacity:.25}
+ 43%{opacity:1}
+ 66%{opacity:.82}
+ 100%{opacity:0}
+}
 </style>
 <script>
 (function(){
-  let active=false, ready=false, timer=null, node=null;
-  function path(points){return points.map((p,i)=>(i?'L':'M')+p[0].toFixed(1)+' '+p[1].toFixed(1)).join(' ');}
-  function setup(){
-    if(ready)return; ready=true;
-    node=document.createElement('div');
-    node.id='agro-real-lightning-bolt';
-    node.innerHTML='<svg viewBox="0 0 1000 700" preserveAspectRatio="none" aria-hidden="true">'
-      +'<path class="main"></path>'
-      +'<path class="branch"></path><path class="branch"></path><path class="branch"></path>'
-      +'<path class="branch"></path><path class="branch"></path>'
-      +'<path class="sub"></path><path class="sub"></path><path class="sub"></path></svg>';
-    document.body.appendChild(node);
+ let active=false,ready=false,timer=null,node=null;
+ const makePath=p=>p.map((v,i)=>(i?'L':'M')+v[0].toFixed(1)+' '+v[1].toFixed(1)).join(' ');
+ function setup(){
+  if(ready)return; ready=true;
+  node=document.createElement('div');
+  node.id='agro-real-lightning-bolt';
+  node.innerHTML='<svg viewBox="0 0 1000 700" preserveAspectRatio="none" aria-hidden="true">'
+   +'<path class="main"></path>'
+   +'<path class="branch"></path>'.repeat(6)
+   +'<path class="small"></path>'.repeat(8)+'</svg>';
+  document.body.appendChild(node);
+ }
+ function strike(){
+  if(!active)return;
+  const paths=node.querySelectorAll('path'),main=[];
+  let x=120+Math.random()*760,y=-20;
+  main.push([x,y]);
+  for(let i=0;i<12;i++){
+   x+=(Math.random()-.5)*170;y+=45+Math.random()*34;
+   main.push([x,y]);
   }
-  function strike(){
+  paths[0].setAttribute('d',makePath(main));
+  for(let i=1;i<paths.length;i++){
+   const origin=main[2+Math.floor(Math.random()*8)];
+   let bx=origin[0],by=origin[1],branch=[[bx,by]];
+   const n=i<7?4:3;
+   for(let k=0;k<n;k++){
+    bx+=(Math.random()-.5)*230;by+=22+Math.random()*42;
+    branch.push([bx,by]);
+   }
+   paths[i].setAttribute('d',makePath(branch));
+  }
+  node.classList.remove('show');void node.offsetWidth;node.classList.add('show');
+  const flash=document.getElementById('agro-lightning-flash');
+  if(flash){flash.classList.remove('agro-flash');void flash.offsetWidth;flash.classList.add('agro-flash');}
+ }
+ const previous=window.agroMeteoLightning;
+ window.agroMeteoLightning=function(enabled){
+  active=!!enabled;setup();
+  if(typeof previous==='function')previous(enabled);
+  clearTimeout(timer);
+  if(active){
+   setTimeout(()=>{if(active)strike();},2200);
+   function next(){
     if(!active)return;
-    const ps=node.querySelectorAll('path');
-    const main=[], startX=220+Math.random()*560;
-    let x=startX,y=-15;
-    main.push([x,y]);
-    for(let i=0;i<11;i++){
-      x+= (Math.random()-.5)*150;
-      y+=48+Math.random()*35;
-      main.push([x,y]);
-    }
-    ps[0].setAttribute('d',path(main));
-    for(let i=1;i<ps.length;i++){
-      const origin=main[2+Math.floor(Math.random()*7)];
-      let bx=origin[0],by=origin[1], branch=[[bx,by]];
-      const length=i<6?3:2;
-      for(let k=0;k<length;k++){
-        bx+=(Math.random()-.5)*190;
-        by+=25+Math.random()*40;
-        branch.push([bx,by]);
-      }
-      ps[i].setAttribute('d',path(branch));
-    }
-    node.classList.remove('show'); void node.offsetWidth; node.classList.add('show');
-    const flash=document.getElementById('agro-lightning-flash');
-    if(flash){flash.classList.remove('agro-flash');void flash.offsetWidth;flash.classList.add('agro-flash');}
-  }
-  const previous=window.agroMeteoLightning;
-  window.agroMeteoLightning=function(enabled){
-    active=!!enabled; setup();
-    if(typeof previous==='function')previous(enabled);
-    clearTimeout(timer);
-    if(active){
-      // A clearly visible first strike shortly after rain starts.
-      setTimeout(()=>{if(active)strike();},2200);
-      function again(){
-        if(!active)return;
-        strike();
-        timer=setTimeout(again,55000+Math.random()*45000);
-      }
-      timer=setTimeout(again,25000+Math.random()*20000);
-    }else node.classList.remove('show');
-  };
+    strike();
+    timer=setTimeout(next,65000+Math.random()*40000);
+   }
+   timer=setTimeout(next,30000+Math.random()*18000);
+  }else node.classList.remove('show');
+ };
 })();
 </script>
 <!-- AGRO METEO REALISTIC LIGHTNING BOLT END -->
