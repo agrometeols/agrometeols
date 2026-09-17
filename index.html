@@ -2017,9 +2017,17 @@ const showConstructionAlert = true;
       }, 35000 + Math.random() * 50000);
     }
 
+    let agroHadRain = false;
     window.agroMeteoLightning = function (enabled) {
+      const wasActive = agroRainIsActive;
       agroRainIsActive = !!enabled;
       if (agroRainIsActive) {
+        // First visible test flash when rain begins, so the effect can be verified.
+        if (!wasActive) {
+          setTimeout(() => {
+            if (agroRainIsActive) strike();
+          }, 1800);
+        }
         scheduleNext();
       } else {
         clearTimeout(agroLightningTimer);
