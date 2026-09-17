@@ -179,8 +179,8 @@ footer { text-align: center; color: #ffffff; margin: 30px auto 10px auto; paddin
 .stage-box { background: rgba(0,255,0,0.1); border: 1px dashed #00ff00; border-radius: 8px; padding: 10px; margin-top: 10px; }
 .spray-map-container { display: flex; flex-direction: column; align-items: center; gap: 15px; }
 .drift-compass { width: 150px; height: 150px; position: relative; border-radius: 50%; background: rgba(255,255,255,0.1); border: 2px solid #fff; margin: 10px 0; }
-.drift-arrow { position: absolute; top: 50%; left: 50%; width: 4px; height: 60px; background: #00ff00; transform-origin: top center; transform: translate(-50%, -100%) rotate(0deg); border-radius: 2px; box-shadow: 0 0 10px #00ff00; }
-.drift-arrow::after { content: ''; position: absolute; bottom: -5px; left: -5px; border-left: 7px solid transparent; border-right: 7px solid transparent; border-top: 10px solid #00ff00; }
+.drift-arrow { position: absolute; top: 50%; left: 50%; width: 4px; height: 58px; background: #00ff00; transform-origin: 50% 100%; transform: translate(-50%, -100%) rotate(0deg); border-radius: 2px; box-shadow: 0 0 10px #00ff00; }
+.drift-arrow::after { content: ''; position: absolute; top: -10px; left: 50%; transform: translateX(-50%); border-left: 7px solid transparent; border-right: 7px solid transparent; border-bottom: 10px solid #00ff00; }
 .compass-label { position: absolute; font-size: 0.7rem; font-weight: bold; }
 .spray-status { font-size: 1.2rem; font-weight: bold; padding: 10px 20px; border-radius: 8px; width: 80%; }
 .status-safe { background: rgba(0,255,0,0.3); color: #00ff00; border: 1px solid #00ff00; }
@@ -1302,17 +1302,20 @@ const dirText = document.getElementById('drift-dir');
 const riskText = document.getElementById('drift-risk');
 const lang = document.documentElement.lang || 'el';
 const t = translations[lang];
-arrow.style.transform = `translate(-50%, -100%) rotate(${windDir}deg)`;
+// Ο αισθητήρας δίνει την κατεύθυνση ΑΠΟ όπου έρχεται ο άνεμος.
+// Η διασπορά δείχνει την αντίθετη κατεύθυνση, δηλαδή ΠΡΟΣ όπου πηγαίνει.
+const driftDir = (Number(windDir) + 180) % 360;
+arrow.style.transform = `translate(-50%, -100%) rotate(${driftDir}deg)`;
 speedText.innerText = windSpeed.toFixed(1);
 let dirName = t.dirN;
-if(windDir >= 337.5 || windDir < 22.5) dirName = t.dirN;
-else if(windDir >= 22.5 && windDir < 67.5) dirName = t.dirNE;
-else if(windDir >= 67.5 && windDir < 112.5) dirName = t.dirE;
-else if(windDir >= 112.5 && windDir < 157.5) dirName = t.dirSE;
-else if(windDir >= 157.5 && windDir < 202.5) dirName = t.dirS;
-else if(windDir >= 202.5 && windDir < 247.5) dirName = t.dirSW;
-else if(windDir >= 247.5 && windDir < 292.5) dirName = t.dirW;
-else if(windDir >= 292.5 && windDir < 337.5) dirName = t.dirNW;
+if(driftDir >= 337.5 || driftDir < 22.5) dirName = t.dirN;
+else if(driftDir >= 22.5 && driftDir < 67.5) dirName = t.dirNE;
+else if(driftDir >= 67.5 && driftDir < 112.5) dirName = t.dirE;
+else if(driftDir >= 112.5 && driftDir < 157.5) dirName = t.dirSE;
+else if(driftDir >= 157.5 && driftDir < 202.5) dirName = t.dirS;
+else if(driftDir >= 202.5 && driftDir < 247.5) dirName = t.dirSW;
+else if(driftDir >= 247.5 && driftDir < 292.5) dirName = t.dirW;
+else if(driftDir >= 292.5 && driftDir < 337.5) dirName = t.dirNW;
 dirText.innerText = dirName;
 if(windSpeed <= 12) { statusBox.innerText = t.sprayStatusSafe; statusBox.className = "spray-status status-safe"; riskText.innerText = t.sprayRiskLow; }
 else if(windSpeed > 12 && windSpeed <= 19) { statusBox.innerText = t.sprayStatusCaution; statusBox.className = "spray-status status-caution"; riskText.innerText = t.sprayRiskHigh; }
