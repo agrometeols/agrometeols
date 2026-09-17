@@ -1927,5 +1927,118 @@ const showConstructionAlert = true;
 </script>
 <!-- AGRO METEO REALISTIC RAIN EFFECT END -->
 
+
+<!-- AGRO METEO LIGHTNING EFFECT START -->
+<style>
+  #agro-lightning-flash {
+    position: fixed;
+    inset: 0;
+    z-index: 10002;
+    pointer-events: none;
+    opacity: 0;
+    background:
+      radial-gradient(ellipse at 52% 22%, rgba(235,245,255,.28), transparent 58%),
+      rgba(205,225,255,.06);
+    mix-blend-mode: screen;
+  }
+  #agro-lightning-flash.agro-flash {
+    animation: agroLightningFlash .34s ease-out both;
+  }
+  @keyframes agroLightningFlash {
+    0%   { opacity: 0; }
+    9%   { opacity: .82; }
+    15%  { opacity: .08; }
+    25%  { opacity: .56; }
+    34%  { opacity: .02; }
+    100% { opacity: 0; }
+  }
+  #agro-lightning-cloud {
+    position: fixed;
+    inset: 0;
+    z-index: 10001;
+    pointer-events: none;
+    opacity: 0;
+    background: linear-gradient(to bottom, rgba(185,205,230,.08), transparent 48%);
+  }
+  #agro-lightning-cloud.agro-flash {
+    animation: agroCloudGlow .34s ease-out both;
+  }
+  @keyframes agroCloudGlow {
+    0%,100% { opacity: 0; }
+    12% { opacity: .45; }
+    27% { opacity: .12; }
+  }
+</style>
+<script>
+(function () {
+  let agroRainIsActive = false;
+  let agroLightningTimer = null;
+  let agroLightningReady = false;
+
+  function setupAgroLightning() {
+    if (agroLightningReady) return;
+    agroLightningReady = true;
+
+    const flash = document.createElement('div');
+    flash.id = 'agro-lightning-flash';
+    const cloud = document.createElement('div');
+    cloud.id = 'agro-lightning-cloud';
+    document.body.appendChild(cloud);
+    document.body.appendChild(flash);
+
+    function strike() {
+      if (!agroRainIsActive) return;
+      flash.classList.remove('agro-flash');
+      cloud.classList.remove('agro-flash');
+      void flash.offsetWidth;
+      flash.classList.add('agro-flash');
+      cloud.classList.add('agro-flash');
+
+      // Occasional second, weaker flicker for a natural distant lightning look.
+      if (Math.random() < 0.32) {
+        setTimeout(() => {
+          if (!agroRainIsActive) return;
+          flash.classList.remove('agro-flash');
+          cloud.classList.remove('agro-flash');
+          void flash.offsetWidth;
+          flash.classList.add('agro-flash');
+          cloud.classList.add('agro-flash');
+        }, 105 + Math.random() * 90);
+      }
+    }
+
+    function scheduleNext() {
+      clearTimeout(agroLightningTimer);
+      if (!agroRainIsActive) return;
+      // One strike roughly every 35–85 seconds, not continuously.
+      agroLightningTimer = setTimeout(() => {
+        strike();
+        scheduleNext();
+      }, 35000 + Math.random() * 50000);
+    }
+
+    window.agroMeteoLightning = function (enabled) {
+      agroRainIsActive = !!enabled;
+      if (agroRainIsActive) {
+        scheduleNext();
+      } else {
+        clearTimeout(agroLightningTimer);
+        flash.classList.remove('agro-flash');
+        cloud.classList.remove('agro-flash');
+      }
+    };
+  }
+
+  // Extend the existing rain callback without replacing it.
+  const previousRainHook = window.agroMeteoRain;
+  window.agroMeteoRain = function (enabled) {
+    if (typeof previousRainHook === 'function') previousRainHook(enabled);
+    setupAgroLightning();
+    window.agroMeteoLightning(enabled);
+  };
+})();
+</script>
+<!-- AGRO METEO LIGHTNING EFFECT END -->
+
 </body>
 </html>
