@@ -413,6 +413,10 @@ footer { text-align: center; color: #ffffff; margin: 30px auto 10px auto; paddin
 </style>
 </head>
 <body class="is-day">
+
+<!-- Christmas decorations: visual layer only -->
+<div id="christmas-snow-layer" aria-hidden="true"></div>
+
 <div id="constructionAlert" class="const-overlay">
 <div class="const-modal">
 <h2 id="txt-const-title">⚠️ Προσοχή!</h2>
@@ -442,7 +446,110 @@ footer { text-align: center; color: #ffffff; margin: 30px auto 10px auto; paddin
     .cube-pulse { animation: cubeBreathe 3s ease-in-out infinite; transform-origin: center; }
     @keyframes cubeBreathe { 0% { transform: scale(1); filter: drop-shadow(0 0 5px rgba(0,255,0,0.4)); } 50% { transform: scale(1.15); filter: drop-shadow(0 0 20px rgba(0,255,0,0.8)); } 100% { transform: scale(1); filter: drop-shadow(0 0 5px rgba(0,255,0,0.4)); } }
     @media (max-width: 640px) { .logo-container { transform: scale(0.85); gap: 12px; padding: 10px 20px; margin: 20px auto; width: 95%; } .logo-svg.cube-pulse { width: 50px !important; height: 50px !important; } .logo-text-wrapper h1 { font-size: 24px !important; } .logo-text-wrapper span { font-size: 12px !important; letter-spacing: 2px !important; } }
-  </style>
+  
+/* =========================================================
+   AGRO METEO LS — CHRISTMAS DECORATION LAYER
+   Decorative only: does not alter live station calculations.
+   ========================================================= */
+
+#christmas-snow-layer {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9998;
+  overflow: hidden;
+}
+
+.christmas-snowflake {
+  position: absolute;
+  top: -10vh;
+  color: #fff;
+  font-size: var(--snow-size, 14px);
+  opacity: var(--snow-opacity, .85);
+  text-shadow: 0 0 7px rgba(255,255,255,.9), 0 0 14px rgba(180,220,255,.55);
+  animation: christmasSnowFall var(--snow-duration, 12s) linear infinite;
+  animation-delay: var(--snow-delay, 0s);
+  will-change: transform;
+}
+
+@keyframes christmasSnowFall {
+  0% {
+    transform: translate3d(0, -12vh, 0) rotate(0deg);
+    opacity: 0;
+  }
+  10% { opacity: var(--snow-opacity, .85); }
+  50% { transform: translate3d(55px, 52vh, 0) rotate(180deg); }
+  100% {
+    transform: translate3d(-45px, 115vh, 0) rotate(360deg);
+    opacity: .08;
+  }
+}
+
+/* Decorations sit above selected cards without changing card layout. */
+.christmas-decorated-card::before {
+  content: "⛄";
+  position: absolute;
+  top: -27px;
+  right: 16px;
+  z-index: 12;
+  font-size: 42px;
+  line-height: 1;
+  filter: drop-shadow(0 3px 4px rgba(0,0,0,.45));
+  transform: rotate(7deg);
+  pointer-events: none;
+}
+
+.christmas-decorated-card::after {
+  content: "🎩";
+  position: absolute;
+  top: -28px;
+  right: 20px;
+  z-index: 13;
+  font-size: 28px;
+  line-height: 1;
+  transform: rotate(-8deg);
+  pointer-events: none;
+}
+
+/* A small winter garland on selected card headings. */
+.christmas-garland-card h3 {
+  position: relative;
+}
+
+.christmas-garland-card h3::before {
+  content: "❄️  ✦  ❄️  ✦  ❄️";
+  display: block;
+  margin-bottom: 5px;
+  font-size: .78rem;
+  letter-spacing: 3px;
+  opacity: .95;
+  text-shadow: 0 0 8px rgba(180,225,255,.8);
+}
+
+@media (max-width: 600px) {
+  .christmas-decorated-card::before {
+    top: -21px;
+    right: 9px;
+    font-size: 32px;
+  }
+  .christmas-decorated-card::after {
+    top: -22px;
+    right: 12px;
+    font-size: 22px;
+  }
+  .christmas-garland-card h3::before {
+    font-size: .62rem;
+    letter-spacing: 1px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .christmas-snowflake {
+    animation-duration: 30s;
+  }
+}
+
+</style>
   <div class="logo-svg cube-pulse" style="width: 80px; height: 80px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; position: relative;">
     <svg viewBox="0 0 100 100" style="width: 100%; height: 100%;">
       <path d="M50 5 L95 50 L50 95 L5 50 Z" fill="none" stroke="#ffffff" stroke-width="3"></path>
@@ -1660,6 +1767,59 @@ document.getElementById('clock').innerHTML = h + ':' + m + '<span class="seconds
 window.onload = () => { checkTime(); changeLang('el'); updateClock(); update(); setInterval(update, 20000); setInterval(updateClock, 1000); if (showConstructionAlert) { document.getElementById('constructionAlert').style.display = 'flex'; } }
 function closeConstModal() { document.getElementById('constructionAlert').style.display = 'none'; }
 const showConstructionAlert = true;
+
+
+/* =========================================================
+   CHRISTMAS VISUAL EFFECTS — decorative only
+   ========================================================= */
+(function initChristmasDecorations() {
+  const snowLayer = document.getElementById('christmas-snow-layer');
+  if (!snowLayer) return;
+
+  // Soft, lightweight snowfall. No sensor, chart or live-rain code is touched.
+  const snowSymbols = ['❄', '❅', '❆', '•'];
+  const snowCount = window.innerWidth <= 600 ? 34 : 58;
+
+  for (let i = 0; i < snowCount; i++) {
+    const flake = document.createElement('span');
+    flake.className = 'christmas-snowflake';
+    flake.textContent = snowSymbols[Math.floor(Math.random() * snowSymbols.length)];
+    flake.style.left = (Math.random() * 100) + 'vw';
+    flake.style.setProperty('--snow-size', (8 + Math.random() * 15) + 'px');
+    flake.style.setProperty('--snow-opacity', (0.35 + Math.random() * 0.6).toFixed(2));
+    flake.style.setProperty('--snow-duration', (9 + Math.random() * 13) + 's');
+    flake.style.setProperty('--snow-delay', (-Math.random() * 20) + 's');
+    snowLayer.appendChild(flake);
+  }
+
+  // Decorative snowmen on selected cards only.
+  const decoratedCards = [
+    '#section-home .top-dashboard .card:nth-child(1)',
+    '#section-home .dashboard .card:nth-child(1)',
+    '#section-home .dashboard .card:nth-child(3)',
+    '#section-home .dashboard .card:nth-child(5)'
+  ];
+
+  decoratedCards.forEach(selector => {
+    document.querySelectorAll(selector).forEach(card => {
+      card.classList.add('christmas-decorated-card');
+    });
+  });
+
+  // Small winter garlands on a few headings.
+  const garlandCards = [
+    '#section-home .top-dashboard .card:nth-child(2)',
+    '#section-home .dashboard .card:nth-child(4)',
+    '#section-home .dashboard .card:nth-child(8)'
+  ];
+
+  garlandCards.forEach(selector => {
+    document.querySelectorAll(selector).forEach(card => {
+      card.classList.add('christmas-garland-card');
+    });
+  });
+})();
+
 </script>
 
 
