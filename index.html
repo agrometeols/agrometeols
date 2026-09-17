@@ -2058,92 +2058,145 @@ const showConstructionAlert = true;
 
 
 
+
+
+
 <!-- AGRO METEO REALISTIC LIGHTNING BOLT START -->
 <style>
-#agro-real-lightning-bolt{
- position:fixed;inset:0;z-index:10004;pointer-events:none;opacity:0;
- display:flex;align-items:center;justify-content:center;overflow:hidden;
+#agro-real-lightning-canvas{
+  position:fixed;inset:0;width:100%;height:100%;z-index:10005;
+  pointer-events:none;opacity:0;
 }
-#agro-real-lightning-bolt svg{width:100%;height:100%;overflow:visible}
-#agro-real-lightning-bolt path{
- fill:none;stroke:#fff;stroke-linecap:round;stroke-linejoin:round;
- filter:drop-shadow(0 0 2px #fff) drop-shadow(0 0 8px #dff6ff)
-        drop-shadow(0 0 24px #7ecbff);
+#agro-real-lightning-canvas.show{
+  animation:agroCanvasBoltFade 3.4s ease-in-out both;
 }
-#agro-real-lightning-bolt .core{stroke-width:7}
-#agro-real-lightning-bolt .wide{stroke-width:4.2}
-#agro-real-lightning-bolt .fine{stroke-width:2.3}
-#agro-real-lightning-bolt.show{animation:agroNaturalLightning 2.2s ease-out both}
-@keyframes agroNaturalLightning{
- 0%{opacity:0}
- 7%{opacity:1}
- 19%{opacity:1}
- 28%{opacity:.06}
- 37%{opacity:.95}
- 53%{opacity:.82}
- 76%{opacity:.35}
- 100%{opacity:0}
+@keyframes agroCanvasBoltFade{
+  0%{opacity:0} 8%{opacity:1} 34%{opacity:1}
+  55%{opacity:.8} 78%{opacity:.35} 100%{opacity:0}
 }
 </style>
 <script>
 (function(){
- let active=false,ready=false,timer=null,node=null;
- function setup(){
-  if(ready)return;ready=true;
-  node=document.createElement('div');
-  node.id='agro-real-lightning-bolt';
-  node.innerHTML='<svg viewBox="0 0 1000 700" preserveAspectRatio="none" aria-hidden="true">'
-   +'<path class="core"></path>'
-   +'<path class="wide"></path><path class="wide"></path><path class="wide"></path>'
-   +'<path class="wide"></path><path class="fine"></path><path class="fine"></path>'
-   +'<path class="fine"></path><path class="fine"></path></svg>';
-  document.body.appendChild(node);
- }
- const d=p=>p.map((v,i)=>(i?'L':'M')+v[0].toFixed(1)+' '+v[1].toFixed(1)).join(' ');
- function makeBolt(){
-  const ps=node.querySelectorAll('path');
-  // One large, recognizable lightning strike with a continuous central trunk.
-  const main=[
-   [515,-35],[493,42],[525,92],[468,151],[492,198],
-   [418,255],[452,302],[377,367],[405,415],
-   [335,478],[362,530],[298,610],[320,735]
-  ];
-  ps[0].setAttribute('d',d(main));
+  let active=false,ready=false,timer=null,canvas=null,ctx=null,raf=0;
 
-  const branches=[
-   [[493,42],[430,70],[392,119],[325,132]],
-   [[525,92],[588,122],[630,171],[704,184]],
-   [[468,151],[410,178],[365,221],[300,232]],
-   [[492,198],[555,226],[598,271],[678,292]],
-   [[418,255],[365,285],[315,330],[258,345]],
-   [[452,302],[515,336],[570,380],[645,398]],
-   [[377,367],[320,408],[278,455],[215,474]],
-   [[405,415],[466,450],[520,493],[600,520]]
-  ];
-  branches.forEach((p,i)=>ps[i+1].setAttribute('d',d(p)));
- }
- function strike(){
-  if(!active)return;
-  makeBolt();
-  node.classList.remove('show');void node.offsetWidth;node.classList.add('show');
-  const flash=document.getElementById('agro-lightning-flash');
-  if(flash){flash.classList.remove('agro-flash');void flash.offsetWidth;flash.classList.add('agro-flash');}
- }
- const previous=window.agroMeteoLightning;
- window.agroMeteoLightning=function(enabled){
-  active=!!enabled;setup();
-  if(typeof previous==='function')previous(enabled);
-  clearTimeout(timer);
-  if(active){
-   setTimeout(()=>{if(active)strike();},2200);
-   function next(){
+  function setup(){
+    if(ready)return; ready=true;
+    canvas=document.createElement('canvas');
+    canvas.id='agro-real-lightning-canvas';
+    document.body.appendChild(canvas);
+    ctx=canvas.getContext('2d');
+    function resize(){
+      const dpr=Math.min(window.devicePixelRatio||1,2);
+      canvas.width=innerWidth*dpr; canvas.height=innerHeight*dpr;
+      canvas.style.width=innerWidth+'px';canvas.style.height=innerHeight+'px';
+      ctx.setTransform(dpr,0,0,dpr,0,0);
+    }
+    resize(); addEventListener('resize',resize,{passive:true});
+  }
+
+  function drawBolt(){
     if(!active)return;
-    strike();
-    timer=setTimeout(next,70000+Math.random()*35000);
-   }
-   timer=setTimeout(next,35000+Math.random()*20000);
-  }else node.classList.remove('show');
- };
+    cancelAnimationFrame(raf);
+    const w=innerWidth,h=innerHeight;
+    ctx.clearRect(0,0,w,h);
+
+    // Large, visible, slow-forming central lightning bolt.
+    const points=[];
+    let x=w*(.34+Math.random()*.32),y=-20;
+    points.push([x,y]);
+    for(let i=0;i<13;i++){
+      x+=(Math.random()-.5)*w*.12;
+      y+=h*.075+Math.random()*h*.035;
+      points.push([x,y]);
+    }
+
+    const branches=[];
+    for(let i=1;i<points.length-2;i+=2){
+      const p=points[i];
+      let bx=p[0],by=p[1],arr=[[bx,by]];
+      const direction=i%4===1?-1:1;
+      for(let j=0;j<3;j++){
+        bx+=direction*(w*.07+Math.random()*w*.08)*(j%2?-.35:1);
+        by+=h*.035+Math.random()*h*.045;
+        arr.push([bx,by]);
+      }
+      branches.push(arr);
+    }
+
+    const all=[points,...branches];
+    const lengths=all.map(line=>line.reduce((s,p,i)=>i?s+Math.hypot(p[0]-line[i-1][0],p[1]-line[i-1][1]):0,0));
+    const total=lengths.reduce((a,b)=>a+b,0);
+    let progress=0,last=performance.now();
+
+    function frame(now){
+      if(!active)return;
+      const dt=Math.min(now-last,40);last=now;
+      progress=Math.min(progress+dt/1500,1);
+      ctx.clearRect(0,0,w,h);
+
+      // Broad blue-white atmospheric glow.
+      ctx.save();
+      ctx.globalCompositeOperation='lighter';
+      ctx.strokeStyle='rgba(110,190,255,.32)';
+      ctx.shadowColor='rgba(100,190,255,.9)';
+      ctx.shadowBlur=38;ctx.lineWidth=18;
+      drawPartial(all,progress,total);
+      ctx.restore();
+
+      // Strong, clearly visible electric core.
+      ctx.save();
+      ctx.globalCompositeOperation='lighter';
+      ctx.strokeStyle='rgba(235,250,255,.98)';
+      ctx.shadowColor='rgba(170,225,255,1)';
+      ctx.shadowBlur=14;ctx.lineWidth=6;
+      drawPartial(all,progress,total);
+      ctx.strokeStyle='#ffffff';ctx.shadowBlur=3;ctx.lineWidth=2.4;
+      drawPartial(all,progress,total);
+      ctx.restore();
+
+      if(progress<1)raf=requestAnimationFrame(frame);
+    }
+    function drawPartial(lines,p,totalLength){
+      let remaining=p*totalLength;
+      for(const line of lines){
+        if(remaining<=0)break;
+        ctx.beginPath();ctx.moveTo(line[0][0],line[0][1]);
+        for(let i=1;i<line.length;i++){
+          const len=Math.hypot(line[i][0]-line[i-1][0],line[i][1]-line[i-1][1]);
+          if(remaining>=len){ctx.lineTo(line[i][0],line[i][1]);remaining-=len;}
+          else{
+            const q=remaining/len;
+            ctx.lineTo(line[i-1][0]+(line[i][0]-line[i-1][0])*q,
+                       line[i-1][1]+(line[i][1]-line[i-1][1])*q);
+            remaining=0;break;
+          }
+        }
+        ctx.stroke();
+      }
+    }
+    canvas.classList.remove('show');void canvas.offsetWidth;canvas.classList.add('show');
+    raf=requestAnimationFrame(frame);
+    const flash=document.getElementById('agro-lightning-flash');
+    if(flash){flash.classList.remove('agro-flash');void flash.offsetWidth;flash.classList.add('agro-flash');}
+  }
+
+  const previous=window.agroMeteoLightning;
+  window.agroMeteoLightning=function(enabled){
+    active=!!enabled;setup();
+    if(typeof previous==='function')previous(enabled);
+    clearTimeout(timer);cancelAnimationFrame(raf);
+    if(active){
+      setTimeout(()=>{if(active)drawBolt();},2200);
+      function next(){
+        if(!active)return;
+        drawBolt();
+        timer=setTimeout(next,70000+Math.random()*35000);
+      }
+      timer=setTimeout(next,35000+Math.random()*20000);
+    }else{
+      canvas.classList.remove('show');ctx.clearRect(0,0,innerWidth,innerHeight);
+    }
+  };
 })();
 </script>
 <!-- AGRO METEO REALISTIC LIGHTNING BOLT END -->
