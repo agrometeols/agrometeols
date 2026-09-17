@@ -424,6 +424,30 @@ body.night #star-field * {
 /* AGRO METEO SLOW NIGHT STARS END */
 </style>
 
+
+<!-- AGRO METEO PERFORMANCE OPTIMIZATION START -->
+<style id="agro-performance-optimizations">
+  /* Μειώνει τα ακριβά effects χωρίς να αλλάζει τη διάταξη του site. */
+  *, *::before, *::after {
+    -webkit-tap-highlight-color: transparent;
+  }
+  img, video, canvas {
+    max-width: 100%;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+  .agro-paused-animation {
+    animation-play-state: paused !important;
+  }
+</style>
+<!-- AGRO METEO PERFORMANCE OPTIMIZATION END -->
+
 </head>
 <body class="is-day">
 <div id="constructionAlert" class="const-overlay">
@@ -2138,6 +2162,39 @@ const showConstructionAlert = true;
 })();
 </script>
 <!-- AGRO METEO REALISTIC LIGHTNING BOLT END -->
+
+
+<!-- AGRO METEO PERFORMANCE RUNTIME START -->
+<script id="agro-performance-runtime">
+(function () {
+  'use strict';
+  var hiddenClass = 'agro-paused-animation';
+
+  function updateVisibility() {
+    document.documentElement.classList.toggle(hiddenClass, document.hidden);
+    var lightning = document.getElementById('agro-real-lightning');
+    if (lightning && document.hidden) {
+      lightning.style.display = 'none';
+    } else if (lightning) {
+      lightning.style.display = '';
+    }
+  }
+
+  document.addEventListener('visibilitychange', updateVisibility, {passive:true});
+  updateVisibility();
+
+  // Avoid expensive layout work during continuous scrolling on mobile.
+  var scrollTick = false;
+  window.addEventListener('scroll', function () {
+    if (scrollTick) return;
+    scrollTick = true;
+    requestAnimationFrame(function () {
+      scrollTick = false;
+    });
+  }, {passive:true});
+})();
+</script>
+<!-- AGRO METEO PERFORMANCE RUNTIME END -->
 
 </body>
 </html>
