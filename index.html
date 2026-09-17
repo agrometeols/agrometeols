@@ -445,108 +445,56 @@ footer { text-align: center; color: #ffffff; margin: 30px auto 10px auto; paddin
     @keyframes cubeBreathe { 0% { transform: scale(1); filter: drop-shadow(0 0 5px rgba(0,255,0,0.4)); } 50% { transform: scale(1.15); filter: drop-shadow(0 0 20px rgba(0,255,0,0.8)); } 100% { transform: scale(1); filter: drop-shadow(0 0 5px rgba(0,255,0,0.4)); } }
     @media (max-width: 640px) { .logo-container { transform: scale(0.85); gap: 12px; padding: 10px 20px; margin: 20px auto; width: 95%; } .logo-svg.cube-pulse { width: 50px !important; height: 50px !important; } .logo-text-wrapper h1 { font-size: 24px !important; } .logo-text-wrapper span { font-size: 12px !important; letter-spacing: 2px !important; } }
   
-/* Premium 3D corner Santa hat */
-.christmas-3d-card {
-  position: relative !important;
-  overflow: visible !important;
-}
-.christmas-3d-hat {
-  position: absolute;
-  top: -24px;
-  right: -8px;
-  width: 94px;
-  height: 88px;
-  z-index: 60;
+/* 3D snow landing and melting effect */
+#christmas-snow-layer {
+  position: fixed;
+  inset: 0;
   pointer-events: none;
-  transform: rotate(16deg);
-  filter: drop-shadow(0 8px 5px rgba(0,0,0,.32));
+  z-index: 9998;
+  overflow: hidden;
+  perspective: 700px;
 }
-.christmas-3d-hat .cone {
+.christmas-3d-flake {
   position: absolute;
-  left: 25px;
-  top: 5px;
-  width: 55px;
-  height: 65px;
-  background:
-    radial-gradient(ellipse at 24% 18%, rgba(255,255,255,.42) 0 7%, transparent 24%),
-    radial-gradient(ellipse at 65% 52%, rgba(255,100,100,.2), transparent 42%),
-    linear-gradient(115deg, #ff7771 0%, #e52a32 32%, #b50f1b 68%, #690914 100%);
-  clip-path: polygon(8% 86%, 46% 0%, 100% 87%);
-  border-radius: 48% 48% 20% 20%;
-  box-shadow: inset -9px -3px 12px rgba(70,0,0,.28), inset 7px 2px 8px rgba(255,255,255,.12);
+  top: -35px;
+  color: #fff;
+  font-size: 13px;
+  text-shadow: 0 0 7px rgba(190,225,255,.95), 0 1px 2px rgba(80,120,150,.35);
+  will-change: transform, opacity;
+  animation: snow3DFall linear forwards;
 }
-.christmas-3d-hat .cone-fold {
-  position: absolute;
-  left: 42px;
-  top: 12px;
-  width: 11px;
-  height: 51px;
-  background: linear-gradient(90deg, transparent, rgba(85,0,10,.28), transparent);
-  border-radius: 50%;
-  transform: rotate(19deg);
+@keyframes snow3DFall {
+  0% {
+    transform: translate3d(0,-40px,0) rotateX(0deg) rotateY(0deg) rotateZ(0deg) scale(.7);
+    opacity: 0;
+  }
+  8% { opacity: .95; }
+  72% {
+    transform: translate3d(25px,78vh,80px) rotateX(240deg) rotateY(180deg) rotateZ(220deg) scale(1.15);
+    opacity: .95;
+  }
+  88% {
+    transform: translate3d(30px,91vh,35px) rotateX(300deg) rotateY(240deg) rotateZ(300deg) scale(1);
+    opacity: .9;
+  }
+  100% {
+    transform: translate3d(32px,103vh,0) rotateX(360deg) rotateY(360deg) rotateZ(360deg) scale(.8);
+    opacity: 0;
+  }
 }
-.christmas-3d-hat .snow-cap {
+.christmas-melt-patch {
   position: absolute;
-  left: 25px;
-  top: 4px;
-  width: 30px;
-  height: 13px;
-  background: linear-gradient(145deg, #fff 0%, #f1f7fa 55%, #b8cbd5 100%);
-  border-radius: 75% 25% 65% 35%;
-  transform: rotate(-9deg);
-  box-shadow: 0 2px 3px rgba(80,110,130,.28);
-}
-.christmas-3d-hat .pom {
-  position: absolute;
-  left: 63px;
-  top: -1px;
-  width: 25px;
-  height: 25px;
-  background:
-    radial-gradient(circle at 28% 22%, #fff 0 11%, transparent 13%),
-    radial-gradient(circle at 48% 42%, #fff 0%, #e5f0f5 55%, #a8bdc8 100%);
-  border-radius: 48% 52% 45% 55%;
-  box-shadow: inset -3px -3px 5px rgba(100,125,140,.28);
-}
-.christmas-3d-hat .brim {
-  position: absolute;
-  left: 7px;
-  top: 56px;
-  width: 79px;
-  height: 23px;
-  background:
-    radial-gradient(ellipse at 18% 28%, #fff 0 10%, transparent 12%),
-    radial-gradient(ellipse at 67% 65%, #fff 0 9%, transparent 11%),
-    linear-gradient(180deg, #fff 0%, #edf5f9 52%, #c0d2dc 100%);
-  border-radius: 48% 52% 44% 46%;
-  box-shadow: inset 0 -5px 7px rgba(110,140,155,.28), 0 2px 2px rgba(70,95,110,.2);
-}
-.christmas-3d-hat .snow-lump {
-  position: absolute;
-  left: 37px;
-  top: 18px;
-  width: 17px;
-  height: 10px;
-  background: linear-gradient(135deg, #fff, #dcebf2);
-  border-radius: 70% 30% 65% 35%;
-  transform: rotate(-12deg);
-}
-.christmas-3d-hat .snow-speck {
-  position: absolute;
-  left: 57px;
-  top: 40px;
-  width: 7px;
+  width: 24px;
   height: 7px;
   border-radius: 50%;
-  background: #fff;
-  box-shadow: 11px 7px 0 #eaf4f8, -10px 10px 0 #fff;
+  background: radial-gradient(ellipse, rgba(255,255,255,.92), rgba(210,235,248,.7) 55%, transparent 75%);
+  box-shadow: 0 1px 4px rgba(130,180,210,.3);
+  animation: snowMelt 7s ease-in forwards;
 }
-@media (max-width: 600px) {
-  .christmas-3d-hat {
-    transform: scale(.68) rotate(16deg);
-    transform-origin: top right;
-    right: -4px;
-  }
+@keyframes snowMelt {
+  0% { opacity: .95; transform: scale(1); filter: blur(0); }
+  55% { opacity: .7; transform: scale(1.35,.7); filter: blur(.3px); }
+  100% { opacity: 0; transform: scale(2.2,.15); filter: blur(2px); }
 }
 
 </style>
@@ -1768,35 +1716,41 @@ window.onload = () => { checkTime(); changeLang('el'); updateClock(); update(); 
 function closeConstModal() { document.getElementById('constructionAlert').style.display = 'none'; }
 const showConstructionAlert = true;
 
-/* 3D Santa hats resting on card corners */
-(function add3DCornerHats() {
-  const selectors = [
-    '#section-home .top-dashboard .card:nth-child(1)',
-    '#section-home .top-dashboard .card:nth-child(2)',
-    '#section-home .dashboard .card:nth-child(1)',
-    '#section-home .dashboard .card:nth-child(3)',
-    '#section-home .dashboard .card:nth-child(5)',
-    '#section-home .dashboard .card:nth-child(7)'
-  ];
-  selectors.forEach(selector => {
-    document.querySelectorAll(selector).forEach(card => {
-      if (card.querySelector('.christmas-3d-hat')) return;
-      card.classList.add('christmas-3d-card');
-      const hat = document.createElement('span');
-      hat.className = 'christmas-3d-hat';
-      hat.setAttribute('aria-hidden', 'true');
-      hat.innerHTML = `
-        <span class="cone"></span>
-        <span class="cone-fold"></span>
-        <span class="snow-cap"></span>
-        <span class="pom"></span>
-        <span class="brim"></span>
-        <span class="snow-lump"></span>
-        <span class="snow-speck"></span>
-      `;
-      card.appendChild(hat);
-    });
-  });
+/* Snow falls in 3D, lands visually near the lower screen area and melts */
+(function init3DSnowAndMelt() {
+  const layer = document.getElementById('christmas-snow-layer');
+  if (!layer || layer.dataset.ready) return;
+  layer.dataset.ready = 'true';
+
+  const symbols = ['❄', '❅', '❆', '✼'];
+  function createFlake() {
+    const flake = document.createElement('span');
+    flake.className = 'christmas-3d-flake';
+    flake.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+    flake.style.left = (Math.random() * 100) + 'vw';
+    flake.style.fontSize = (8 + Math.random() * 15) + 'px';
+    flake.style.animationDuration = (8 + Math.random() * 9) + 's';
+    flake.style.animationDelay = (Math.random() * 2) + 's';
+    flake.style.opacity = (.55 + Math.random() * .45).toFixed(2);
+    layer.appendChild(flake);
+    flake.addEventListener('animationend', () => {
+      flake.remove();
+    }, { once: true });
+  }
+
+  function createMeltPatch() {
+    const patch = document.createElement('span');
+    patch.className = 'christmas-melt-patch';
+    patch.style.left = (Math.random() * 96) + 'vw';
+    patch.style.top = (Math.random() * 84 + 8) + 'vh';
+    patch.style.animationDuration = (5 + Math.random() * 5) + 's';
+    layer.appendChild(patch);
+    patch.addEventListener('animationend', () => patch.remove(), { once: true });
+  }
+
+  for (let i = 0; i < 28; i++) createFlake();
+  setInterval(createFlake, 420);
+  setInterval(createMeltPatch, 2600);
 })();
 
 </script>
