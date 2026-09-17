@@ -413,10 +413,6 @@ footer { text-align: center; color: #ffffff; margin: 30px auto 10px auto; paddin
 </style>
 </head>
 <body class="is-day">
-
-<!-- Christmas decorations: visual layer only -->
-<div id="christmas-snow-layer" aria-hidden="true"></div>
-
 <div id="constructionAlert" class="const-overlay">
 <div class="const-modal">
 <h2 id="txt-const-title">⚠️ Προσοχή!</h2>
@@ -447,106 +443,81 @@ footer { text-align: center; color: #ffffff; margin: 30px auto 10px auto; paddin
     @keyframes cubeBreathe { 0% { transform: scale(1); filter: drop-shadow(0 0 5px rgba(0,255,0,0.4)); } 50% { transform: scale(1.15); filter: drop-shadow(0 0 20px rgba(0,255,0,0.8)); } 100% { transform: scale(1); filter: drop-shadow(0 0 5px rgba(0,255,0,0.4)); } }
     @media (max-width: 640px) { .logo-container { transform: scale(0.85); gap: 12px; padding: 10px 20px; margin: 20px auto; width: 95%; } .logo-svg.cube-pulse { width: 50px !important; height: 50px !important; } .logo-text-wrapper h1 { font-size: 24px !important; } .logo-text-wrapper span { font-size: 12px !important; letter-spacing: 2px !important; } }
   
-/* =========================================================
-   AGRO METEO LS — CHRISTMAS DECORATION LAYER
-   Decorative only: does not alter live station calculations.
-   ========================================================= */
-
-#christmas-snow-layer {
-  position: fixed;
-  inset: 0;
+/* Christmas card decorations: small snowy winter hats */
+.christmas-decorated-card {
+  overflow: visible !important;
+  position: relative !important;
+  z-index: 2;
+}
+.christmas-hat-decoration {
+  position: absolute;
+  top: -25px;
+  right: 15px;
+  width: 44px;
+  height: 42px;
+  z-index: 20;
   pointer-events: none;
-  z-index: 9998;
-  overflow: hidden;
-}
-
-.christmas-snowflake {
-  position: absolute;
-  top: -10vh;
-  color: #fff;
-  font-size: var(--snow-size, 14px);
-  opacity: var(--snow-opacity, .85);
-  text-shadow: 0 0 7px rgba(255,255,255,.9), 0 0 14px rgba(180,220,255,.55);
-  animation: christmasSnowFall var(--snow-duration, 12s) linear infinite;
-  animation-delay: var(--snow-delay, 0s);
-  will-change: transform;
-}
-
-@keyframes christmasSnowFall {
-  0% {
-    transform: translate3d(0, -12vh, 0) rotate(0deg);
-    opacity: 0;
-  }
-  10% { opacity: var(--snow-opacity, .85); }
-  50% { transform: translate3d(55px, 52vh, 0) rotate(180deg); }
-  100% {
-    transform: translate3d(-45px, 115vh, 0) rotate(360deg);
-    opacity: .08;
-  }
-}
-
-/* Decorations sit above selected cards without changing card layout. */
-.christmas-decorated-card::before {
-  content: "⛄";
-  position: absolute;
-  top: -27px;
-  right: 16px;
-  z-index: 12;
-  font-size: 42px;
-  line-height: 1;
-  filter: drop-shadow(0 3px 4px rgba(0,0,0,.45));
   transform: rotate(7deg);
-  pointer-events: none;
+  filter: drop-shadow(0 2px 2px rgba(0,0,0,.22));
 }
-
-.christmas-decorated-card::after {
-  content: "🎩";
+.christmas-hat-decoration .hat-red {
   position: absolute;
-  top: -28px;
-  right: 20px;
-  z-index: 13;
-  font-size: 28px;
-  line-height: 1;
-  transform: rotate(-8deg);
-  pointer-events: none;
+  left: 10px;
+  top: 7px;
+  width: 25px;
+  height: 26px;
+  background: linear-gradient(135deg, #f44336, #b71c1c);
+  border-radius: 4px 20px 2px 2px;
+  transform: rotate(-13deg);
 }
-
-/* A small winter garland on selected card headings. */
-.christmas-garland-card h3 {
-  position: relative;
+.christmas-hat-decoration .hat-white {
+  position: absolute;
+  left: 3px;
+  top: 27px;
+  width: 38px;
+  height: 10px;
+  background: linear-gradient(#fff, #dfe8ee);
+  border-radius: 10px;
+  box-shadow: 0 1px 2px rgba(0,0,0,.15);
 }
-
-.christmas-garland-card h3::before {
-  content: "❄️  ✦  ❄️  ✦  ❄️";
-  display: block;
-  margin-bottom: 5px;
-  font-size: .78rem;
-  letter-spacing: 3px;
+.christmas-hat-decoration .hat-pom {
+  position: absolute;
+  left: 29px;
+  top: 1px;
+  width: 11px;
+  height: 11px;
+  background: radial-gradient(circle at 35% 30%, #fff, #dce7ed);
+  border-radius: 50%;
+}
+.christmas-hat-decoration .hat-snow {
+  position: absolute;
+  left: 13px;
+  top: 5px;
+  width: 18px;
+  height: 5px;
+  background: rgba(255,255,255,.9);
+  border-radius: 50%;
+  transform: rotate(-12deg);
+}
+.christmas-snow-cap {
+  position: absolute;
+  top: -8px;
+  left: 5px;
+  width: 32px;
+  height: 7px;
+  background: linear-gradient(#fff, #d9e5eb);
+  border-radius: 50%;
   opacity: .95;
-  text-shadow: 0 0 8px rgba(180,225,255,.8);
 }
-
 @media (max-width: 600px) {
-  .christmas-decorated-card::before {
-    top: -21px;
+  .christmas-hat-decoration {
     right: 9px;
-    font-size: 32px;
-  }
-  .christmas-decorated-card::after {
-    top: -22px;
-    right: 12px;
-    font-size: 22px;
-  }
-  .christmas-garland-card h3::before {
-    font-size: .62rem;
-    letter-spacing: 1px;
+    transform: scale(.82) rotate(7deg);
+    transform-origin: top right;
   }
 }
-
 @media (prefers-reduced-motion: reduce) {
-  .christmas-snowflake {
-    animation-duration: 30s;
-  }
+  .christmas-hat-decoration { animation: none !important; }
 }
 
 </style>
@@ -1768,54 +1739,32 @@ window.onload = () => { checkTime(); changeLang('el'); updateClock(); update(); 
 function closeConstModal() { document.getElementById('constructionAlert').style.display = 'none'; }
 const showConstructionAlert = true;
 
-
-/* =========================================================
-   CHRISTMAS VISUAL EFFECTS — decorative only
-   ========================================================= */
-(function initChristmasDecorations() {
-  const snowLayer = document.getElementById('christmas-snow-layer');
-  if (!snowLayer) return;
-
-  // Soft, lightweight snowfall. No sensor, chart or live-rain code is touched.
-  const snowSymbols = ['❄', '❅', '❆', '•'];
-  const snowCount = window.innerWidth <= 600 ? 34 : 58;
-
-  for (let i = 0; i < snowCount; i++) {
-    const flake = document.createElement('span');
-    flake.className = 'christmas-snowflake';
-    flake.textContent = snowSymbols[Math.floor(Math.random() * snowSymbols.length)];
-    flake.style.left = (Math.random() * 100) + 'vw';
-    flake.style.setProperty('--snow-size', (8 + Math.random() * 15) + 'px');
-    flake.style.setProperty('--snow-opacity', (0.35 + Math.random() * 0.6).toFixed(2));
-    flake.style.setProperty('--snow-duration', (9 + Math.random() * 13) + 's');
-    flake.style.setProperty('--snow-delay', (-Math.random() * 20) + 's');
-    snowLayer.appendChild(flake);
-  }
-
-  // Decorative snowmen on selected cards only.
-  const decoratedCards = [
+/* Small snowy Christmas hats on selected cards */
+(function addChristmasHats() {
+  const selectors = [
     '#section-home .top-dashboard .card:nth-child(1)',
+    '#section-home .top-dashboard .card:nth-child(2)',
     '#section-home .dashboard .card:nth-child(1)',
     '#section-home .dashboard .card:nth-child(3)',
-    '#section-home .dashboard .card:nth-child(5)'
+    '#section-home .dashboard .card:nth-child(5)',
+    '#section-home .dashboard .card:nth-child(7)'
   ];
 
-  decoratedCards.forEach(selector => {
+  selectors.forEach(selector => {
     document.querySelectorAll(selector).forEach(card => {
+      if (card.querySelector('.christmas-hat-decoration')) return;
       card.classList.add('christmas-decorated-card');
-    });
-  });
 
-  // Small winter garlands on a few headings.
-  const garlandCards = [
-    '#section-home .top-dashboard .card:nth-child(2)',
-    '#section-home .dashboard .card:nth-child(4)',
-    '#section-home .dashboard .card:nth-child(8)'
-  ];
-
-  garlandCards.forEach(selector => {
-    document.querySelectorAll(selector).forEach(card => {
-      card.classList.add('christmas-garland-card');
+      const hat = document.createElement('span');
+      hat.className = 'christmas-hat-decoration';
+      hat.setAttribute('aria-hidden', 'true');
+      hat.innerHTML = `
+        <span class="hat-red"></span>
+        <span class="hat-snow"></span>
+        <span class="hat-white"></span>
+        <span class="hat-pom"></span>
+      `;
+      card.appendChild(hat);
     });
   });
 })();
