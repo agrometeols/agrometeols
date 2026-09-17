@@ -2048,5 +2048,141 @@ const showConstructionAlert = true;
 </script>
 <!-- AGRO METEO LIGHTNING EFFECT END -->
 
+
+<!-- AGRO METEO REALISTIC LIGHTNING BOLT START -->
+<style>
+  #agro-real-lightning-bolt {
+    position: fixed;
+    inset: 0;
+    z-index: 10003;
+    pointer-events: none;
+    opacity: 0;
+    overflow: hidden;
+  }
+  #agro-real-lightning-bolt svg {
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+  #agro-real-lightning-bolt .bolt-main,
+  #agro-real-lightning-bolt .bolt-branch {
+    fill: none;
+    stroke: rgba(238,247,255,.98);
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    filter: drop-shadow(0 0 5px rgba(190,225,255,.95))
+            drop-shadow(0 0 14px rgba(150,200,255,.8));
+  }
+  #agro-real-lightning-bolt .bolt-main { stroke-width: 2.2; }
+  #agro-real-lightning-bolt .bolt-branch { stroke-width: 1.1; }
+  #agro-real-lightning-bolt.agro-bolt-show {
+    animation: agroBoltAppear .42s ease-out both;
+  }
+  @keyframes agroBoltAppear {
+    0% { opacity: 0; }
+    8% { opacity: .98; }
+    16% { opacity: .12; }
+    25% { opacity: .9; }
+    38% { opacity: .18; }
+    52% { opacity: .7; }
+    100% { opacity: 0; }
+  }
+</style>
+<script>
+(function () {
+  let active = false;
+  let ready = false;
+  let timer = null;
+  let flashNode = null;
+  let boltNode = null;
+
+  function makePath(points) {
+    return points.map((p, i) => (i ? 'L' : 'M') + p[0].toFixed(1) + ' ' + p[1].toFixed(1)).join(' ');
+  }
+
+  function createBolt() {
+    if (ready) return;
+    ready = true;
+
+    boltNode = document.createElement('div');
+    boltNode.id = 'agro-real-lightning-bolt';
+    boltNode.innerHTML = `
+      <svg viewBox="0 0 1000 700" preserveAspectRatio="none" aria-hidden="true">
+        <path class="bolt-main"></path>
+        <path class="bolt-branch"></path>
+        <path class="bolt-branch"></path>
+        <path class="bolt-branch"></path>
+        <path class="bolt-branch"></path>
+      </svg>`;
+    document.body.appendChild(boltNode);
+    flashNode = document.getElementById('agro-lightning-flash');
+
+    function strikeBolt() {
+      if (!active) return;
+      const svg = boltNode.querySelector('svg');
+      const paths = svg.querySelectorAll('path');
+      const x = 180 + Math.random() * 640;
+      let y = 35;
+      const main = [[x, y]];
+
+      // Irregular, naturally branching lightning path.
+      for (let i = 0; i < 8; i++) {
+        y += 42 + Math.random() * 48;
+        main.push([main[main.length - 1][0] + (Math.random() - .5) * 100, y]);
+      }
+      paths[0].setAttribute('d', makePath(main));
+
+      for (let j = 1; j < paths.length; j++) {
+        const sourceIndex = 1 + Math.floor(Math.random() * 5);
+        const origin = main[sourceIndex];
+        const branch = [[origin[0], origin[1]]];
+        for (let k = 0; k < 2 + Math.floor(Math.random() * 3); k++) {
+          branch.push([
+            branch[branch.length - 1][0] + (Math.random() - .5) * 130,
+            branch[branch.length - 1][1] + 18 + Math.random() * 38
+          ]);
+        }
+        paths[j].setAttribute('d', makePath(branch));
+      }
+
+      boltNode.classList.remove('agro-bolt-show');
+      void boltNode.offsetWidth;
+      boltNode.classList.add('agro-bolt-show');
+
+      // Synchronize the bolt with the existing screen flash.
+      if (flashNode) {
+        flashNode.classList.remove('agro-flash');
+        void flashNode.offsetWidth;
+        flashNode.classList.add('agro-flash');
+      }
+    }
+
+    window.agroMeteoBolt = function () {
+      strikeBolt();
+    };
+  }
+
+  const previousLightning = window.agroMeteoLightning;
+  window.agroMeteoLightning = function (enabled) {
+    active = !!enabled;
+    createBolt();
+    if (typeof previousLightning === 'function') previousLightning(enabled);
+
+    if (active) {
+      clearTimeout(timer);
+      timer = setTimeout(function repeat() {
+        if (!active) return;
+        if (Math.random() < .7) window.agroMeteoBolt();
+        timer = setTimeout(repeat, 40000 + Math.random() * 55000);
+      }, 7000 + Math.random() * 9000);
+    } else {
+      clearTimeout(timer);
+      boltNode.classList.remove('agro-bolt-show');
+    }
+  };
+})();
+</script>
+<!-- AGRO METEO REALISTIC LIGHTNING BOLT END -->
+
 </body>
 </html>
