@@ -2049,136 +2049,87 @@ const showConstructionAlert = true;
 <!-- AGRO METEO LIGHTNING EFFECT END -->
 
 
+
+
+
 <!-- AGRO METEO REALISTIC LIGHTNING BOLT START -->
 <style>
   #agro-real-lightning-bolt {
-    position: fixed;
-    inset: 0;
-    z-index: 10003;
-    pointer-events: none;
-    opacity: 0;
-    overflow: hidden;
+    position: fixed; inset: 0; z-index: 10004; pointer-events: none;
+    opacity: 0; overflow: hidden;
   }
-  #agro-real-lightning-bolt svg {
-    width: 100%;
-    height: 100%;
-    overflow: visible;
+  #agro-real-lightning-bolt svg { width:100%; height:100%; overflow:visible; }
+  #agro-real-lightning-bolt path {
+    fill:none; stroke:#f4fbff; stroke-linecap:round; stroke-linejoin:round;
+    filter:drop-shadow(0 0 3px #fff) drop-shadow(0 0 12px #a8d9ff)
+           drop-shadow(0 0 28px #6ebaff);
   }
-  #agro-real-lightning-bolt .bolt-main,
-  #agro-real-lightning-bolt .bolt-branch {
-    fill: none;
-    stroke: rgba(238,247,255,.98);
-    stroke-linecap: round;
-    stroke-linejoin: round;
-    filter: drop-shadow(0 0 5px rgba(190,225,255,.95))
-            drop-shadow(0 0 14px rgba(150,200,255,.8));
-  }
-  #agro-real-lightning-bolt .bolt-main { stroke-width: 2.2; }
-  #agro-real-lightning-bolt .bolt-branch { stroke-width: 1.1; }
-  #agro-real-lightning-bolt.agro-bolt-show {
-    animation: agroBoltAppear .42s ease-out both;
-  }
-  @keyframes agroBoltAppear {
-    0% { opacity: 0; }
-    8% { opacity: .98; }
-    16% { opacity: .12; }
-    25% { opacity: .9; }
-    38% { opacity: .18; }
-    52% { opacity: .7; }
-    100% { opacity: 0; }
+  #agro-real-lightning-bolt .main { stroke-width:5.5; }
+  #agro-real-lightning-bolt .branch { stroke-width:3.2; }
+  #agro-real-lightning-bolt .sub { stroke-width:1.8; }
+  #agro-real-lightning-bolt.show { animation: agroBigBolt .72s ease-out both; }
+  @keyframes agroBigBolt {
+    0%{opacity:0} 5%{opacity:1} 13%{opacity:.18} 20%{opacity:1}
+    31%{opacity:.35} 43%{opacity:.95} 58%{opacity:.12} 100%{opacity:0}
   }
 </style>
 <script>
-(function () {
-  let active = false;
-  let ready = false;
-  let timer = null;
-  let flashNode = null;
-  let boltNode = null;
-
-  function makePath(points) {
-    return points.map((p, i) => (i ? 'L' : 'M') + p[0].toFixed(1) + ' ' + p[1].toFixed(1)).join(' ');
+(function(){
+  let active=false, ready=false, timer=null, node=null;
+  function path(points){return points.map((p,i)=>(i?'L':'M')+p[0].toFixed(1)+' '+p[1].toFixed(1)).join(' ');}
+  function setup(){
+    if(ready)return; ready=true;
+    node=document.createElement('div');
+    node.id='agro-real-lightning-bolt';
+    node.innerHTML='<svg viewBox="0 0 1000 700" preserveAspectRatio="none" aria-hidden="true">'
+      +'<path class="main"></path>'
+      +'<path class="branch"></path><path class="branch"></path><path class="branch"></path>'
+      +'<path class="branch"></path><path class="branch"></path>'
+      +'<path class="sub"></path><path class="sub"></path><path class="sub"></path></svg>';
+    document.body.appendChild(node);
   }
-
-  function createBolt() {
-    if (ready) return;
-    ready = true;
-
-    boltNode = document.createElement('div');
-    boltNode.id = 'agro-real-lightning-bolt';
-    boltNode.innerHTML = `
-      <svg viewBox="0 0 1000 700" preserveAspectRatio="none" aria-hidden="true">
-        <path class="bolt-main"></path>
-        <path class="bolt-branch"></path>
-        <path class="bolt-branch"></path>
-        <path class="bolt-branch"></path>
-        <path class="bolt-branch"></path>
-      </svg>`;
-    document.body.appendChild(boltNode);
-    flashNode = document.getElementById('agro-lightning-flash');
-
-    function strikeBolt() {
-      if (!active) return;
-      const svg = boltNode.querySelector('svg');
-      const paths = svg.querySelectorAll('path');
-      const x = 180 + Math.random() * 640;
-      let y = 35;
-      const main = [[x, y]];
-
-      // Irregular, naturally branching lightning path.
-      for (let i = 0; i < 8; i++) {
-        y += 42 + Math.random() * 48;
-        main.push([main[main.length - 1][0] + (Math.random() - .5) * 100, y]);
-      }
-      paths[0].setAttribute('d', makePath(main));
-
-      for (let j = 1; j < paths.length; j++) {
-        const sourceIndex = 1 + Math.floor(Math.random() * 5);
-        const origin = main[sourceIndex];
-        const branch = [[origin[0], origin[1]]];
-        for (let k = 0; k < 2 + Math.floor(Math.random() * 3); k++) {
-          branch.push([
-            branch[branch.length - 1][0] + (Math.random() - .5) * 130,
-            branch[branch.length - 1][1] + 18 + Math.random() * 38
-          ]);
-        }
-        paths[j].setAttribute('d', makePath(branch));
-      }
-
-      boltNode.classList.remove('agro-bolt-show');
-      void boltNode.offsetWidth;
-      boltNode.classList.add('agro-bolt-show');
-
-      // Synchronize the bolt with the existing screen flash.
-      if (flashNode) {
-        flashNode.classList.remove('agro-flash');
-        void flashNode.offsetWidth;
-        flashNode.classList.add('agro-flash');
-      }
+  function strike(){
+    if(!active)return;
+    const ps=node.querySelectorAll('path');
+    const main=[], startX=220+Math.random()*560;
+    let x=startX,y=-15;
+    main.push([x,y]);
+    for(let i=0;i<11;i++){
+      x+= (Math.random()-.5)*150;
+      y+=48+Math.random()*35;
+      main.push([x,y]);
     }
-
-    window.agroMeteoBolt = function () {
-      strikeBolt();
-    };
+    ps[0].setAttribute('d',path(main));
+    for(let i=1;i<ps.length;i++){
+      const origin=main[2+Math.floor(Math.random()*7)];
+      let bx=origin[0],by=origin[1], branch=[[bx,by]];
+      const length=i<6?3:2;
+      for(let k=0;k<length;k++){
+        bx+=(Math.random()-.5)*190;
+        by+=25+Math.random()*40;
+        branch.push([bx,by]);
+      }
+      ps[i].setAttribute('d',path(branch));
+    }
+    node.classList.remove('show'); void node.offsetWidth; node.classList.add('show');
+    const flash=document.getElementById('agro-lightning-flash');
+    if(flash){flash.classList.remove('agro-flash');void flash.offsetWidth;flash.classList.add('agro-flash');}
   }
-
-  const previousLightning = window.agroMeteoLightning;
-  window.agroMeteoLightning = function (enabled) {
-    active = !!enabled;
-    createBolt();
-    if (typeof previousLightning === 'function') previousLightning(enabled);
-
-    if (active) {
-      clearTimeout(timer);
-      timer = setTimeout(function repeat() {
-        if (!active) return;
-        if (Math.random() < .7) window.agroMeteoBolt();
-        timer = setTimeout(repeat, 40000 + Math.random() * 55000);
-      }, 7000 + Math.random() * 9000);
-    } else {
-      clearTimeout(timer);
-      boltNode.classList.remove('agro-bolt-show');
-    }
+  const previous=window.agroMeteoLightning;
+  window.agroMeteoLightning=function(enabled){
+    active=!!enabled; setup();
+    if(typeof previous==='function')previous(enabled);
+    clearTimeout(timer);
+    if(active){
+      // A clearly visible first strike shortly after rain starts.
+      setTimeout(()=>{if(active)strike();},2200);
+      function again(){
+        if(!active)return;
+        strike();
+        timer=setTimeout(again,55000+Math.random()*45000);
+      }
+      timer=setTimeout(again,25000+Math.random()*20000);
+    }else node.classList.remove('show');
   };
 })();
 </script>
