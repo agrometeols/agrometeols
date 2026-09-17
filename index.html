@@ -413,6 +413,8 @@ footer { text-align: center; color: #ffffff; margin: 30px auto 10px auto; paddin
 </style>
 </head>
 <body class="is-day">
+<div id="christmas-snow-layer" aria-hidden="true"></div>
+
 <div id="constructionAlert" class="const-overlay">
 <div class="const-modal">
 <h2 id="txt-const-title">⚠️ Προσοχή!</h2>
@@ -443,81 +445,90 @@ footer { text-align: center; color: #ffffff; margin: 30px auto 10px auto; paddin
     @keyframes cubeBreathe { 0% { transform: scale(1); filter: drop-shadow(0 0 5px rgba(0,255,0,0.4)); } 50% { transform: scale(1.15); filter: drop-shadow(0 0 20px rgba(0,255,0,0.8)); } 100% { transform: scale(1); filter: drop-shadow(0 0 5px rgba(0,255,0,0.4)); } }
     @media (max-width: 640px) { .logo-container { transform: scale(0.85); gap: 12px; padding: 10px 20px; margin: 20px auto; width: 95%; } .logo-svg.cube-pulse { width: 50px !important; height: 50px !important; } .logo-text-wrapper h1 { font-size: 24px !important; } .logo-text-wrapper span { font-size: 12px !important; letter-spacing: 2px !important; } }
   
-/* Christmas card decorations: small snowy winter hats */
+/* Christmas snowfall and realistic snowy Santa hats */
+#christmas-snow-layer {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9998;
+  overflow: hidden;
+}
+.christmas-snowflake {
+  position: absolute;
+  top: -30px;
+  color: #fff;
+  text-shadow: 0 0 5px rgba(180,220,255,.9);
+  animation: christmasSnowFall linear infinite;
+  user-select: none;
+}
+@keyframes christmasSnowFall {
+  0% { transform: translate3d(0,-30px,0) rotate(0deg); }
+  100% { transform: translate3d(35px,110vh,0) rotate(360deg); }
+}
 .christmas-decorated-card {
-  overflow: visible !important;
   position: relative !important;
-  z-index: 2;
+  overflow: visible !important;
 }
 .christmas-hat-decoration {
   position: absolute;
-  top: -25px;
-  right: 15px;
-  width: 44px;
-  height: 42px;
-  z-index: 20;
+  top: -31px;
+  right: 13px;
+  width: 54px;
+  height: 50px;
+  z-index: 30;
   pointer-events: none;
   transform: rotate(7deg);
-  filter: drop-shadow(0 2px 2px rgba(0,0,0,.22));
+  filter: drop-shadow(0 3px 2px rgba(0,0,0,.3));
 }
-.christmas-hat-decoration .hat-red {
+.christmas-hat-decoration .hat-body {
   position: absolute;
-  left: 10px;
-  top: 7px;
-  width: 25px;
-  height: 26px;
-  background: linear-gradient(135deg, #f44336, #b71c1c);
-  border-radius: 4px 20px 2px 2px;
-  transform: rotate(-13deg);
+  left: 13px;
+  top: 5px;
+  width: 30px;
+  height: 32px;
+  background: linear-gradient(110deg,#ff5a55 0%,#d71920 55%,#8e1018 100%);
+  clip-path: polygon(0 100%, 88% 100%, 65% 0, 48% 5%);
+  border-radius: 5px;
 }
-.christmas-hat-decoration .hat-white {
+.christmas-hat-decoration .hat-fold {
   position: absolute;
-  left: 3px;
-  top: 27px;
-  width: 38px;
-  height: 10px;
-  background: linear-gradient(#fff, #dfe8ee);
-  border-radius: 10px;
-  box-shadow: 0 1px 2px rgba(0,0,0,.15);
+  left: 5px;
+  top: 30px;
+  width: 45px;
+  height: 13px;
+  background: linear-gradient(#ffffff,#dce8ef);
+  border-radius: 12px;
+  box-shadow: inset 0 -2px 3px rgba(120,150,170,.25);
 }
 .christmas-hat-decoration .hat-pom {
   position: absolute;
-  left: 29px;
-  top: 1px;
-  width: 11px;
-  height: 11px;
-  background: radial-gradient(circle at 35% 30%, #fff, #dce7ed);
+  left: 32px;
+  top: 0;
+  width: 15px;
+  height: 15px;
+  background: radial-gradient(circle at 30% 25%,#fff,#e2edf3 65%,#b8cbd6);
   border-radius: 50%;
 }
 .christmas-hat-decoration .hat-snow {
   position: absolute;
-  left: 13px;
-  top: 5px;
-  width: 18px;
-  height: 5px;
-  background: rgba(255,255,255,.9);
+  left: 12px;
+  top: 7px;
+  width: 29px;
+  height: 8px;
+  background: linear-gradient(#fff,#dbe8ef);
   border-radius: 50%;
-  transform: rotate(-12deg);
-}
-.christmas-snow-cap {
-  position: absolute;
-  top: -8px;
-  left: 5px;
-  width: 32px;
-  height: 7px;
-  background: linear-gradient(#fff, #d9e5eb);
-  border-radius: 50%;
-  opacity: .95;
+  transform: rotate(-10deg);
+  opacity: .98;
 }
 @media (max-width: 600px) {
   .christmas-hat-decoration {
-    right: 9px;
-    transform: scale(.82) rotate(7deg);
+    transform: scale(.8) rotate(7deg);
     transform-origin: top right;
+    right: 8px;
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .christmas-hat-decoration { animation: none !important; }
+  .christmas-snowflake { animation: none !important; display: none; }
 }
 
 </style>
@@ -1739,8 +1750,26 @@ window.onload = () => { checkTime(); changeLang('el'); updateClock(); update(); 
 function closeConstModal() { document.getElementById('constructionAlert').style.display = 'none'; }
 const showConstructionAlert = true;
 
-/* Small snowy Christmas hats on selected cards */
-(function addChristmasHats() {
+/* Christmas snowfall + snowy hats */
+(function initChristmasEffects() {
+  const snowLayer = document.getElementById('christmas-snow-layer');
+  if (snowLayer && !snowLayer.dataset.ready) {
+    snowLayer.dataset.ready = 'true';
+    const symbols = ['❄', '❅', '❆', '•'];
+    const amount = window.innerWidth < 700 ? 38 : 62;
+    for (let i = 0; i < amount; i++) {
+      const flake = document.createElement('span');
+      flake.className = 'christmas-snowflake';
+      flake.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+      flake.style.left = (Math.random() * 100) + 'vw';
+      flake.style.fontSize = (Math.random() * 11 + 7) + 'px';
+      flake.style.opacity = (Math.random() * .65 + .25).toFixed(2);
+      flake.style.animationDuration = (Math.random() * 10 + 9) + 's';
+      flake.style.animationDelay = (-Math.random() * 18) + 's';
+      snowLayer.appendChild(flake);
+    }
+  }
+
   const selectors = [
     '#section-home .top-dashboard .card:nth-child(1)',
     '#section-home .top-dashboard .card:nth-child(2)',
@@ -1754,14 +1783,13 @@ const showConstructionAlert = true;
     document.querySelectorAll(selector).forEach(card => {
       if (card.querySelector('.christmas-hat-decoration')) return;
       card.classList.add('christmas-decorated-card');
-
       const hat = document.createElement('span');
       hat.className = 'christmas-hat-decoration';
       hat.setAttribute('aria-hidden', 'true');
       hat.innerHTML = `
-        <span class="hat-red"></span>
+        <span class="hat-body"></span>
         <span class="hat-snow"></span>
-        <span class="hat-white"></span>
+        <span class="hat-fold"></span>
         <span class="hat-pom"></span>
       `;
       card.appendChild(hat);
