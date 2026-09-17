@@ -445,83 +445,105 @@ footer { text-align: center; color: #ffffff; margin: 30px auto 10px auto; paddin
     @keyframes cubeBreathe { 0% { transform: scale(1); filter: drop-shadow(0 0 5px rgba(0,255,0,0.4)); } 50% { transform: scale(1.15); filter: drop-shadow(0 0 20px rgba(0,255,0,0.8)); } 100% { transform: scale(1); filter: drop-shadow(0 0 5px rgba(0,255,0,0.4)); } }
     @media (max-width: 640px) { .logo-container { transform: scale(0.85); gap: 12px; padding: 10px 20px; margin: 20px auto; width: 95%; } .logo-svg.cube-pulse { width: 50px !important; height: 50px !important; } .logo-text-wrapper h1 { font-size: 24px !important; } .logo-text-wrapper span { font-size: 12px !important; letter-spacing: 2px !important; } }
   
-/* Corner Christmas hat decorations */
-.christmas-corner-card {
+/* Premium 3D corner Santa hat */
+.christmas-3d-card {
   position: relative !important;
   overflow: visible !important;
 }
-.christmas-corner-hat {
+.christmas-3d-hat {
   position: absolute;
-  top: -18px;
-  right: -7px;
-  width: 78px;
-  height: 72px;
-  z-index: 50;
+  top: -24px;
+  right: -8px;
+  width: 94px;
+  height: 88px;
+  z-index: 60;
   pointer-events: none;
-  transform: rotate(18deg);
-  filter: drop-shadow(0 4px 3px rgba(0,0,0,.28));
+  transform: rotate(16deg);
+  filter: drop-shadow(0 8px 5px rgba(0,0,0,.32));
 }
-.christmas-corner-hat .hat-main {
+.christmas-3d-hat .cone {
   position: absolute;
-  left: 18px;
+  left: 25px;
   top: 5px;
-  width: 43px;
-  height: 53px;
+  width: 55px;
+  height: 65px;
   background:
-    radial-gradient(ellipse at 28% 20%, rgba(255,255,255,.25), transparent 22%),
-    linear-gradient(135deg, #ef3d42 0%, #c81722 52%, #79111a 100%);
-  clip-path: polygon(8% 88%, 43% 0%, 100% 88%);
-  border-radius: 50% 50% 15% 15%;
-  transform: rotate(-8deg);
+    radial-gradient(ellipse at 24% 18%, rgba(255,255,255,.42) 0 7%, transparent 24%),
+    radial-gradient(ellipse at 65% 52%, rgba(255,100,100,.2), transparent 42%),
+    linear-gradient(115deg, #ff7771 0%, #e52a32 32%, #b50f1b 68%, #690914 100%);
+  clip-path: polygon(8% 86%, 46% 0%, 100% 87%);
+  border-radius: 48% 48% 20% 20%;
+  box-shadow: inset -9px -3px 12px rgba(70,0,0,.28), inset 7px 2px 8px rgba(255,255,255,.12);
 }
-.christmas-corner-hat .hat-fold {
+.christmas-3d-hat .cone-fold {
+  position: absolute;
+  left: 42px;
+  top: 12px;
+  width: 11px;
+  height: 51px;
+  background: linear-gradient(90deg, transparent, rgba(85,0,10,.28), transparent);
+  border-radius: 50%;
+  transform: rotate(19deg);
+}
+.christmas-3d-hat .snow-cap {
+  position: absolute;
+  left: 25px;
+  top: 4px;
+  width: 30px;
+  height: 13px;
+  background: linear-gradient(145deg, #fff 0%, #f1f7fa 55%, #b8cbd5 100%);
+  border-radius: 75% 25% 65% 35%;
+  transform: rotate(-9deg);
+  box-shadow: 0 2px 3px rgba(80,110,130,.28);
+}
+.christmas-3d-hat .pom {
+  position: absolute;
+  left: 63px;
+  top: -1px;
+  width: 25px;
+  height: 25px;
+  background:
+    radial-gradient(circle at 28% 22%, #fff 0 11%, transparent 13%),
+    radial-gradient(circle at 48% 42%, #fff 0%, #e5f0f5 55%, #a8bdc8 100%);
+  border-radius: 48% 52% 45% 55%;
+  box-shadow: inset -3px -3px 5px rgba(100,125,140,.28);
+}
+.christmas-3d-hat .brim {
   position: absolute;
   left: 7px;
-  top: 47px;
-  width: 65px;
-  height: 19px;
+  top: 56px;
+  width: 79px;
+  height: 23px;
   background:
-    radial-gradient(ellipse at 20% 30%, #fff 0 13%, transparent 15%),
-    radial-gradient(ellipse at 62% 65%, #f8fcff 0 12%, transparent 14%),
-    linear-gradient(180deg, #fff 0%, #edf4f8 60%, #c5d5df 100%);
-  border-radius: 48% 48% 42% 42%;
-  box-shadow: inset 0 -3px 4px rgba(100,125,145,.3);
+    radial-gradient(ellipse at 18% 28%, #fff 0 10%, transparent 12%),
+    radial-gradient(ellipse at 67% 65%, #fff 0 9%, transparent 11%),
+    linear-gradient(180deg, #fff 0%, #edf5f9 52%, #c0d2dc 100%);
+  border-radius: 48% 52% 44% 46%;
+  box-shadow: inset 0 -5px 7px rgba(110,140,155,.28), 0 2px 2px rgba(70,95,110,.2);
 }
-.christmas-corner-hat .hat-snow-ridge {
+.christmas-3d-hat .snow-lump {
   position: absolute;
-  left: 18px;
-  top: 9px;
-  width: 31px;
-  height: 12px;
-  background: linear-gradient(145deg, #fff, #dce9f0);
-  border-radius: 75% 25% 65% 35%;
+  left: 37px;
+  top: 18px;
+  width: 17px;
+  height: 10px;
+  background: linear-gradient(135deg, #fff, #dcebf2);
+  border-radius: 70% 30% 65% 35%;
   transform: rotate(-12deg);
 }
-.christmas-corner-hat .hat-pom {
+.christmas-3d-hat .snow-speck {
   position: absolute;
-  left: 48px;
-  top: 0;
-  width: 22px;
-  height: 22px;
-  background:
-    radial-gradient(circle at 28% 24%, #fff 0 12%, transparent 14%),
-    radial-gradient(circle at 45% 40%, #fff, #d7e5ed 68%, #a9beca 100%);
+  left: 57px;
+  top: 40px;
+  width: 7px;
+  height: 7px;
   border-radius: 50%;
-}
-.christmas-corner-hat .hat-snow-dots {
-  position: absolute;
-  left: 30px;
-  top: 22px;
-  width: 6px;
-  height: 6px;
   background: #fff;
-  border-radius: 50%;
-  box-shadow: 9px 8px 0 #eef6fa, -7px 13px 0 #fff;
-  opacity: .95;
+  box-shadow: 11px 7px 0 #eaf4f8, -10px 10px 0 #fff;
 }
 @media (max-width: 600px) {
-  .christmas-corner-hat {
-    transform: scale(.72) rotate(18deg);
+  .christmas-3d-hat {
+    transform: scale(.68) rotate(16deg);
     transform-origin: top right;
     right: -4px;
   }
@@ -1746,8 +1768,8 @@ window.onload = () => { checkTime(); changeLang('el'); updateClock(); update(); 
 function closeConstModal() { document.getElementById('constructionAlert').style.display = 'none'; }
 const showConstructionAlert = true;
 
-/* Corner hats with natural angle and snow details */
-(function addCornerChristmasHats() {
+/* 3D Santa hats resting on card corners */
+(function add3DCornerHats() {
   const selectors = [
     '#section-home .top-dashboard .card:nth-child(1)',
     '#section-home .top-dashboard .card:nth-child(2)',
@@ -1756,21 +1778,21 @@ const showConstructionAlert = true;
     '#section-home .dashboard .card:nth-child(5)',
     '#section-home .dashboard .card:nth-child(7)'
   ];
-
   selectors.forEach(selector => {
     document.querySelectorAll(selector).forEach(card => {
-      if (card.querySelector('.christmas-corner-hat')) return;
-      card.classList.add('christmas-corner-card');
-
+      if (card.querySelector('.christmas-3d-hat')) return;
+      card.classList.add('christmas-3d-card');
       const hat = document.createElement('span');
-      hat.className = 'christmas-corner-hat';
+      hat.className = 'christmas-3d-hat';
       hat.setAttribute('aria-hidden', 'true');
       hat.innerHTML = `
-        <span class="hat-main"></span>
-        <span class="hat-snow-ridge"></span>
-        <span class="hat-fold"></span>
-        <span class="hat-pom"></span>
-        <span class="hat-snow-dots"></span>
+        <span class="cone"></span>
+        <span class="cone-fold"></span>
+        <span class="snow-cap"></span>
+        <span class="pom"></span>
+        <span class="brim"></span>
+        <span class="snow-lump"></span>
+        <span class="snow-speck"></span>
       `;
       card.appendChild(hat);
     });
