@@ -1334,12 +1334,7 @@ function estimateEt0(temp, hum, windKmh, solarWm2) {
     return Math.max(0, Math.min(12, radiationTerm + aerodynamicTerm));
 }
 
-function updateLiveRainWeatherIcon(rainValue) {
-    const icon = document.getElementById('live-rain-weather-icon');
-    if (!icon) return;
-    const amount = parseFloat(rainValue);
-    icon.style.display = (!isNaN(amount) && amount > 0) ? 'block' : 'none';
-}
+function updateLiveRainWeatherIcon(rainValue) {     const icon = document.getElementById('live-rain-weather-icon');     const amount = parseFloat(rainValue);     const raining = !isNaN(amount) && amount > 0;     if (icon) icon.style.display = raining ? 'block' : 'none';     if (typeof window.agroMeteoRain === 'function') window.agroMeteoRain(raining); }
 
 function updateLocalThreeDayForecast(feeds) {
     const grid = document.getElementById('local-forecast-grid');
@@ -1729,6 +1724,158 @@ const showConstructionAlert = true;
   window.agroMeteoSnow=function(enabled){enabled?startSnow():stopSnow();};
 
   if(SNOW_ENABLED)startSnow();
+})();
+</script>
+
+
+<!-- =========================================================
+     🌧️ AGRO METEO LS — LIVE RAIN EFFECT
+     Ενεργοποιείται αυτόματα όταν το live βροχόμετρο δείχνει βροχή.
+     Περιλαμβάνει βροχή στο φόντο και σταγόνες που κυλούν στην οθόνη.
+     ========================================================= -->
+<style id="agro-meteo-rain-style">
+  #agro-rain-layer{
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    overflow:hidden;
+    z-index:9997;
+    display:none;
+    opacity:0;
+    transition:opacity 1.2s ease;
+  }
+  #agro-rain-layer.active{
+    display:block;
+    opacity:1;
+  }
+  #agro-rain-layer::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:
+      linear-gradient(to bottom,rgba(15,35,55,.08),rgba(10,25,45,.20)),
+      repeating-linear-gradient(
+        105deg,
+        transparent 0,
+        transparent 13px,
+        rgba(190,225,255,.20) 14px,
+        rgba(190,225,255,.20) 15px,
+        transparent 16px,
+        transparent 31px
+      );
+    animation:agroRainSheet .55s linear infinite;
+    mix-blend-mode:screen;
+  }
+  .agro-rain-drop{
+    position:absolute;
+    top:-70px;
+    width:1.5px;
+    height:22px;
+    border-radius:999px;
+    background:linear-gradient(to bottom,transparent,rgba(210,235,255,.85));
+    box-shadow:0 0 4px rgba(170,220,255,.28);
+    transform:rotate(12deg);
+    animation:agroRainFall linear forwards;
+  }
+  .agro-rain-drop.heavy{
+    height:34px;
+    width:2px;
+    opacity:.65;
+  }
+  .agro-rain-glass-drop{
+    position:absolute;
+    top:-30px;
+    width:5px;
+    height:13px;
+    border-radius:70% 30% 65% 35%;
+    background:linear-gradient(135deg,rgba(255,255,255,.48),rgba(120,190,235,.12));
+    box-shadow:0 0 7px rgba(190,225,255,.18);
+    filter:blur(.15px);
+    animation:agroGlassSlide linear forwards;
+  }
+  @keyframes agroRainFall{
+    0%{transform:translate3d(0,-70px,0) rotate(12deg);opacity:0}
+    8%{opacity:.55}
+    100%{transform:translate3d(-95px,115vh,0) rotate(12deg);opacity:.12}
+  }
+  @keyframes agroGlassSlide{
+    0%{transform:translate3d(0,-30px,0);opacity:0}
+    12%{opacity:.5}
+    100%{transform:translate3d(35px,110vh,0);opacity:0}
+  }
+  @keyframes agroRainSheet{
+    from{background-position:0 0}
+    to{background-position:-30px 90px}
+  }
+  @media (prefers-reduced-motion:reduce){
+    #agro-rain-layer::before,
+    .agro-rain-drop,
+    .agro-rain-glass-drop{animation-duration:3s}
+  }
+</style>
+<div id="agro-rain-layer" aria-hidden="true"></div>
+<script>
+(function(){
+  const layer=document.getElementById('agro-rain-layer');
+  if(!layer)return;
+  let rainTimer=null;
+  let glassTimer=null;
+  const drops=[];
+  const glassDrops=[];
+
+  function makeRainDrop(){
+    if(!layer.classList.contains('active'))return;
+    const d=document.createElement('span');
+    d.className='agro-rain-drop'+(Math.random()>.78?' heavy':'');
+    d.style.left=(Math.random()*105)+'vw';
+    d.style.animationDuration=(.65+Math.random()*.7)+'s';
+    d.style.opacity=(.22+Math.random()*.5).toFixed(2);
+    d.addEventListener('animationend',function(){
+      d.remove();
+      const i=drops.indexOf(d);
+      if(i>-1)drops.splice(i,1);
+    });
+    layer.appendChild(d);
+    drops.push(d);
+  }
+
+  function makeGlassDrop(){
+    if(!layer.classList.contains('active'))return;
+    const d=document.createElement('span');
+    d.className='agro-rain-glass-drop';
+    d.style.left=(Math.random()*100)+'vw';
+    d.style.animationDuration=(4+Math.random()*7)+'s';
+    d.style.animationDelay=(Math.random()*.5)+'s';
+    d.style.transform='scale('+(0.55+Math.random()*1.1).toFixed(2)+')';
+    d.addEventListener('animationend',function(){
+      d.remove();
+      const i=glassDrops.indexOf(d);
+      if(i>-1)glassDrops.splice(i,1);
+    });
+    layer.appendChild(d);
+    glassDrops.push(d);
+  }
+
+  function startRain(){
+    if(layer.classList.contains('active'))return;
+    layer.classList.add('active');
+    for(let i=0;i<115;i++)setTimeout(makeRainDrop,i*12);
+    for(let i=0;i<18;i++)setTimeout(makeGlassDrop,i*180);
+    rainTimer=setInterval(makeRainDrop,35);
+    glassTimer=setInterval(makeGlassDrop,650);
+  }
+
+  function stopRain(){
+    layer.classList.remove('active');
+    if(rainTimer){clearInterval(rainTimer);rainTimer=null;}
+    if(glassTimer){clearInterval(glassTimer);glassTimer=null;}
+    drops.splice(0).forEach(d=>d.remove());
+    glassDrops.splice(0).forEach(d=>d.remove());
+  }
+
+  window.agroMeteoRain=function(enabled){
+    enabled?startRain():stopRain();
+  };
 })();
 </script>
 
