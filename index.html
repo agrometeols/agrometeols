@@ -445,56 +445,60 @@ footer { text-align: center; color: #ffffff; margin: 30px auto 10px auto; paddin
     @keyframes cubeBreathe { 0% { transform: scale(1); filter: drop-shadow(0 0 5px rgba(0,255,0,0.4)); } 50% { transform: scale(1.15); filter: drop-shadow(0 0 20px rgba(0,255,0,0.8)); } 100% { transform: scale(1); filter: drop-shadow(0 0 5px rgba(0,255,0,0.4)); } }
     @media (max-width: 640px) { .logo-container { transform: scale(0.85); gap: 12px; padding: 10px 20px; margin: 20px auto; width: 95%; } .logo-svg.cube-pulse { width: 50px !important; height: 50px !important; } .logo-text-wrapper h1 { font-size: 24px !important; } .logo-text-wrapper span { font-size: 12px !important; letter-spacing: 2px !important; } }
   
-/* 3D snow landing and melting effect */
+/* Dense, more realistic 3D snowfall with depth and melting */
 #christmas-snow-layer {
   position: fixed;
   inset: 0;
   pointer-events: none;
   z-index: 9998;
   overflow: hidden;
-  perspective: 700px;
+  perspective: 900px;
 }
 .christmas-3d-flake {
   position: absolute;
-  top: -35px;
+  top: -45px;
+  left: 0;
   color: #fff;
-  font-size: 13px;
-  text-shadow: 0 0 7px rgba(190,225,255,.95), 0 1px 2px rgba(80,120,150,.35);
+  font-family: "Segoe UI Symbol", "Noto Sans Symbols", sans-serif;
+  line-height: 1;
+  text-shadow: 0 0 5px rgba(190,225,255,.9), 0 1px 2px rgba(90,125,155,.4);
   will-change: transform, opacity;
-  animation: snow3DFall linear forwards;
+  animation: realisticSnowFall linear forwards;
 }
-@keyframes snow3DFall {
+@keyframes realisticSnowFall {
   0% {
-    transform: translate3d(0,-40px,0) rotateX(0deg) rotateY(0deg) rotateZ(0deg) scale(.7);
+    transform: translate3d(0,-45px,-180px) rotate(0deg) scale(.55);
     opacity: 0;
   }
-  8% { opacity: .95; }
-  72% {
-    transform: translate3d(25px,78vh,80px) rotateX(240deg) rotateY(180deg) rotateZ(220deg) scale(1.15);
+  8% { opacity: .15; }
+  18% { opacity: .9; }
+  48% {
+    transform: translate3d(45px,48vh,60px) rotate(170deg) scale(1.05);
     opacity: .95;
   }
-  88% {
-    transform: translate3d(30px,91vh,35px) rotateX(300deg) rotateY(240deg) rotateZ(300deg) scale(1);
+  76% {
+    transform: translate3d(-35px,78vh,150px) rotate(290deg) scale(1.2);
     opacity: .9;
   }
   100% {
-    transform: translate3d(32px,103vh,0) rotateX(360deg) rotateY(360deg) rotateZ(360deg) scale(.8);
+    transform: translate3d(25px,108vh,40px) rotate(430deg) scale(.85);
     opacity: 0;
   }
 }
 .christmas-melt-patch {
   position: absolute;
-  width: 24px;
-  height: 7px;
+  width: 26px;
+  height: 8px;
   border-radius: 50%;
-  background: radial-gradient(ellipse, rgba(255,255,255,.92), rgba(210,235,248,.7) 55%, transparent 75%);
-  box-shadow: 0 1px 4px rgba(130,180,210,.3);
-  animation: snowMelt 7s ease-in forwards;
+  background: radial-gradient(ellipse, rgba(255,255,255,.95), rgba(215,238,249,.75) 52%, transparent 76%);
+  box-shadow: 0 1px 5px rgba(130,180,210,.35);
+  animation: snowMeltSlow 8s ease-in forwards;
 }
-@keyframes snowMelt {
-  0% { opacity: .95; transform: scale(1); filter: blur(0); }
-  55% { opacity: .7; transform: scale(1.35,.7); filter: blur(.3px); }
-  100% { opacity: 0; transform: scale(2.2,.15); filter: blur(2px); }
+@keyframes snowMeltSlow {
+  0% { opacity: .95; transform: scale(.8); filter: blur(0); }
+  45% { opacity: .9; transform: scale(1.15,.8); }
+  75% { opacity: .55; transform: scale(1.65,.45); filter: blur(.7px); }
+  100% { opacity: 0; transform: scale(2.5,.12); filter: blur(2.5px); }
 }
 
 </style>
@@ -1716,41 +1720,38 @@ window.onload = () => { checkTime(); changeLang('el'); updateClock(); update(); 
 function closeConstModal() { document.getElementById('constructionAlert').style.display = 'none'; }
 const showConstructionAlert = true;
 
-/* Snow falls in 3D, lands visually near the lower screen area and melts */
-(function init3DSnowAndMelt() {
+/* Dense realistic snowfall */
+(function initDenseRealisticSnow() {
   const layer = document.getElementById('christmas-snow-layer');
   if (!layer || layer.dataset.ready) return;
   layer.dataset.ready = 'true';
 
-  const symbols = ['❄', '❅', '❆', '✼'];
-  function createFlake() {
+  const symbols = ['❄', '❅', '❆', '✼', '·'];
+  function createFlake(initial = false) {
     const flake = document.createElement('span');
     flake.className = 'christmas-3d-flake';
+    const depth = Math.random();
     flake.textContent = symbols[Math.floor(Math.random() * symbols.length)];
-    flake.style.left = (Math.random() * 100) + 'vw';
-    flake.style.fontSize = (8 + Math.random() * 15) + 'px';
-    flake.style.animationDuration = (8 + Math.random() * 9) + 's';
-    flake.style.animationDelay = (Math.random() * 2) + 's';
-    flake.style.opacity = (.55 + Math.random() * .45).toFixed(2);
+    flake.style.left = (Math.random() * 105 - 2) + 'vw';
+    flake.style.fontSize = (depth < .3 ? 7 : depth < .7 ? 11 : 16) + Math.random() * 7 + 'px';
+    flake.style.opacity = (depth < .3 ? .35 : .65 + Math.random() * .35).toFixed(2);
+    flake.style.animationDuration = (initial ? 7 : 8 + Math.random() * 8) + 's';
+    flake.style.animationDelay = initial ? (-Math.random() * 14) + 's' : '0s';
     layer.appendChild(flake);
-    flake.addEventListener('animationend', () => {
-      flake.remove();
-    }, { once: true });
+    flake.addEventListener('animationend', () => flake.remove(), { once: true });
   }
 
-  function createMeltPatch() {
+  for (let i = 0; i < 105; i++) createFlake(true);
+  setInterval(() => createFlake(false), 170);
+  setInterval(() => {
     const patch = document.createElement('span');
     patch.className = 'christmas-melt-patch';
     patch.style.left = (Math.random() * 96) + 'vw';
     patch.style.top = (Math.random() * 84 + 8) + 'vh';
-    patch.style.animationDuration = (5 + Math.random() * 5) + 's';
+    patch.style.animationDuration = (7 + Math.random() * 4) + 's';
     layer.appendChild(patch);
     patch.addEventListener('animationend', () => patch.remove(), { once: true });
-  }
-
-  for (let i = 0; i < 28; i++) createFlake();
-  setInterval(createFlake, 420);
-  setInterval(createMeltPatch, 2600);
+  }, 1800);
 })();
 
 </script>
