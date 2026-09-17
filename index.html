@@ -413,6 +413,8 @@ footer { text-align: center; color: #ffffff; margin: 30px auto 10px auto; paddin
 </style>
 </head>
 <body class="is-day">
+<button id="christmas-snow-toggle" type="button" aria-pressed="false">❄️ Ενεργοποίηση χιονιού</button>
+
 <div id="christmas-snow-layer" aria-hidden="true"></div>
 
 <div id="constructionAlert" class="const-overlay">
@@ -499,6 +501,42 @@ footer { text-align: center; color: #ffffff; margin: 30px auto 10px auto; paddin
   45% { opacity: .9; transform: scale(1.15,.8); }
   75% { opacity: .55; transform: scale(1.65,.45); filter: blur(.7px); }
   100% { opacity: 0; transform: scale(2.5,.12); filter: blur(2.5px); }
+}
+
+
+/* Manual Christmas snow toggle */
+#christmas-snow-toggle {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  z-index: 10000;
+  border: 1px solid rgba(255,255,255,.55);
+  border-radius: 999px;
+  padding: 10px 15px;
+  background: rgba(20,55,80,.88);
+  color: #fff;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(0,0,0,.25);
+  backdrop-filter: blur(8px);
+  transition: transform .2s ease, background .2s ease;
+}
+#christmas-snow-toggle:hover {
+  transform: translateY(-2px);
+  background: rgba(35,90,120,.95);
+}
+#christmas-snow-toggle.is-on {
+  background: rgba(35,125,85,.92);
+}
+@media (max-width: 600px) {
+  #christmas-snow-toggle {
+    right: 10px;
+    bottom: 10px;
+    padding: 8px 12px;
+    font-size: 12px;
+  }
 }
 
 </style>
@@ -1754,11 +1792,127 @@ const showConstructionAlert = true;
   }, 1800);
 })();
 
+
+/* Manual control for the Christmas snow effect */
+(function setupChristmasSnowToggle() {
+  const button = document.getElementById('christmas-snow-toggle');
+  const layer = document.getElementById('christmas-snow-layer');
+  if (!button || !layer) return;
+
+  let snowTimer = null;
+  let meltTimer = null;
+  let enabled = false;
+
+  function makeFlake(initial = false) {
+    const flake = document.createElement('span');
+    flake.className = 'christmas-3d-flake';
+    const symbols = ['❄', '❅', '❆', '✼', '·'];
+    const depth = Math.random();
+    flake.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+    flake.style.left = (Math.random() * 105 - 2) + 'vw';
+    flake.style.fontSize = (depth < .3 ? 7 : depth < .7 ? 11 : 16) + Math.random() * 7 + 'px';
+    flake.style.opacity = (depth < .3 ? .35 : .65 + Math.random() * .35).toFixed(2);
+    flake.style.animationDuration = (8 + Math.random() * 8) + 's';
+    if (initial) flake.style.animationDelay = (-Math.random() * 12) + 's';
+    layer.appendChild(flake);
+    flake.addEventListener('animationend', () => flake.remove(), { once: true });
+  }
+
+  function makeMeltPatch() {
+    const patch = document.createElement('span');
+    patch.className = 'christmas-melt-patch';
+    patch.style.left = (Math.random() * 96) + 'vw';
+    patch.style.top = (Math.random() * 84 + 8) + 'vh';
+    patch.style.animationDuration = (7 + Math.random() * 4) + 's';
+    layer.appendChild(patch);
+    patch.addEventListener('animationend', () => patch.remove(), { once: true });
+  }
+
+  function setSnowState(state) {
+    enabled = state;
+    button.classList.toggle('is-on', enabled);
+    button.setAttribute('aria-pressed', String(enabled));
+    button.textContent = enabled ? '❄️ Απενεργοποίηση χιονιού' : '❄️ Ενεργοποίηση χιονιού';
+
+    if (snowTimer) clearInterval(snowTimer);
+    if (meltTimer) clearInterval(meltTimer);
+    layer.innerHTML = '';
+
+    if (enabled) {
+      for (let i = 0; i < 105; i++) makeFlake(true);
+      snowTimer = setInterval(() => makeFlake(false), 170);
+      meltTimer = setInterval(makeMeltPatch, 1800);
+    }
+  }
+
+  button.addEventListener('click', () => setSnowState(!enabled));
+  setSnowState(false);
+})();
+
 </script>
 
 
   
 <footer id="txt-footer">&copy; 2026 Agro Meteo Ls | Προγραμματισμός Χρήστος Τσαβαλάκογλου Iot System</footer>
+
+
+<style>
+  #privateSnowControl {
+    position: fixed;
+    right: 18px;
+    bottom: 18px;
+    z-index: 99999;
+    display: none;
+    padding: 10px 14px;
+    border: 1px solid rgba(255,255,255,.35);
+    border-radius: 12px;
+    background: rgba(20,30,40,.92);
+    color: #fff;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 4px 18px rgba(0,0,0,.3);
+  }
+</style>
+<button id="privateSnowControl" type="button">❄️ Ενεργοποίηση χιονιού</button>
+<script>
+(function () {
+  const ADMIN_PASSWORD = "agrometeols2026";
+  const control = document.getElementById("privateSnowControl");
+  let unlocked = false;
+
+  function askForAccess() {
+    const entered = window.prompt("Κωδικός διαχειριστή:");
+    if (entered === ADMIN_PASSWORD) {
+      unlocked = true;
+      control.style.display = "block";
+      alert("Το κρυφό χειριστήριο χιονιού ενεργοποιήθηκε.");
+    } else if (entered !== null) {
+      alert("Λάθος κωδικός.");
+    }
+  }
+
+  // Secret shortcut available only to the administrator.
+  document.addEventListener("keydown", function (event) {
+    if (event.ctrlKey && event.shiftKey && event.key.toLowerCase() === "x") {
+      event.preventDefault();
+      if (!unlocked) askForAccess();
+      else control.style.display = control.style.display === "none" ? "block" : "none";
+    }
+  });
+
+  control.addEventListener("click", function () {
+    if (typeof window.toggleChristmasSnow === "function") {
+      window.toggleChristmasSnow();
+      const active = document.body.classList.contains("christmas-snow-enabled");
+      control.textContent = active
+        ? "❄️ Απενεργοποίηση χιονιού"
+        : "❄️ Ενεργοποίηση χιονιού";
+    } else {
+      alert("Το χειριστήριο χιονιού δεν είναι διαθέσιμο σε αυτή την έκδοση.");
+    }
+  });
+})();
+</script>
 
 </body>
 </html>
