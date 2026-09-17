@@ -1341,6 +1341,59 @@ function updateLiveRainWeatherIcon(rainValue) {
     if (icon) icon.style.display = raining ? 'block' : 'none';
     if (typeof window.agroMeteoRain === 'function') window.agroMeteoRain(raining);
   }
+
+function updateLocalThreeDayForecast(feeds) {
+    const grid = document.getElementById('local-forecast-grid');
+    if (!grid || !feeds || !feeds.length) return;
+    const valid = feeds.map(f => ({
+        date: new Date(f.created_at),
+        temp: parseFloat(f.field1),
+        hum: parseFloat(f.field2),
+        press: parseFloat(f.field3),
+        rain: parseFloat(f.field4) || 0,
+        wind: parseFloat(f.field6) || 0
+    })).filter(x => Number.isFinite(x.temp) && !isNaN(x.date.getTime()));
+    if (!valid.length) return;
+    const recent = valid.slice(-24);
+    const avg = key => recent.reduce((sum, x) => sum + (Number.isFinite(x[key]) ? x[key] : 0), 0) / recent.length;
+    const last = valid[valid.length - 1];
+    const older = valid[Math.max(0, valid.length - Math.min(12, valid.length))];
+    const tempTrend = last.temp - older.temp;
+    const pressTrend = Number.isFinite(last.press) && Number.isFinite(older.press) ? last.press - older.press : 0;
+    const baseTemp = avg('temp');
+    const baseHum = avg('hum');
+    const baseWind = avg('wind');
+    const rainRecent = recent.reduce((sum, x) => sum + x.rain, 0);
+    const langNow = document.documentElement.lang || 'el';
+    const isEn = langNow === 'en';
+    const days = [];
+    for (let i = 1; i <= 3; i++) {
+        const d = new Date(); d.setDate(d.getDate() + i);
+        const center = baseTemp + tempTrend * (i * 0.12);
+        const spread = Math.max(2.5, Math.min(7, Math.abs(tempTrend) * 0.7 + 4));
+        const minT = center - spread / 2;
+        const maxT = center + spread / 2;
+        const h = Math.max(20, Math.min(100, baseHum - tempTrend * 0.5));
+        const windLow = Math.max(0, baseWind - 3);
+        const windHigh = Math.max(windLow, baseWind + (pressTrend < -1 ? 5 : 3));
+        const rainChance = Math.max(5, Math.min(80, Math.round((rainRecent > 0.5 ? 35 : 10) + (pressTrend < -2 ? 25 : 0))));
+        let icon = '🌤️';
+        let desc = isEn ? 'Partly cloudy' : 'Μερικές νεφώσεις';
+        if (rainChance >= 45) { icon = '🌦️'; desc = isEn ? 'Possible rain' : 'Πιθανότητα βροχής'; }
+        if (windHigh >= 25) { icon = '🌬️'; desc = isEn ? 'Windy' : 'Ενισχυμένοι άνεμοι'; }
+        if (maxT >= 32) { icon = '☀️'; desc = isEn ? 'Hot conditions' : 'Ζεστές συνθήκες'; }
+        if (minT <= 5) { icon = '❄️'; desc = isEn ? 'Cold conditions' : 'Ψυχρές συνθήκες'; }
+        days.push(`<div style="background:rgba(255,255,255,0.05); border:1px solid rgba(0,255,0,0.22); border-radius:10px; padding:12px; text-align:center;">
+            <div style="font-weight:bold; color:#00ff00;">${d.toLocaleDateString(isEn ? 'en-GB' : 'el-GR', {weekday:'long', day:'numeric', month:'short'})}</div>
+            <div style="font-size:2rem; margin:8px 0;">${icon}</div>
+            <div style="font-size:1.2rem; font-weight:bold;">${minT.toFixed(1)}°C – ${maxT.toFixed(1)}°C</div>
+            <div style="font-size:0.85rem; opacity:0.85; margin-top:5px;">${desc}</div>
+            <div style="font-size:0.8rem; margin-top:8px;">💧 ${h.toFixed(0)}% &nbsp; 🌬️ ${windLow.toFixed(0)}–${windHigh.toFixed(0)} km/h</div>
+            <div style="font-size:0.8rem; margin-top:5px;">🌧️ ${isEn ? 'Rain chance' : 'Πιθανότητα βροχής'}: ${rainChance}%</div>
+        </div>`);
+    }
+    grid.innerHTML = days.join('');
+}
 function update() {
 const d = new Date();
 const todayStr = d.toLocaleDateString('el-GR');
@@ -1681,324 +1734,182 @@ const showConstructionAlert = true;
 </script>
 
 
-<!-- =========================================================
-     🌧️ AGRO METEO LS — LIVE RAIN EFFECT
-     Ενεργοποιείται αυτόματα όταν το live βροχόμετρο δείχνει βροχή.
-     Περιλαμβάνει βροχή στο φόντο και σταγόνες που κυλούν στην οθόνη.
-     ========================================================= -->
-<style id="agro-meteo-rain-style">
-  #agro-rain-layer{
-    position:fixed;
-    inset:0;
-    pointer-events:none;
-    overflow:hidden;
-    z-index:9997;
-    display:none;
-    opacity:0;
-    transition:opacity 1.2s ease;
-  }
-  #agro-rain-layer.active{
-    display:block;
-    opacity:1;
-  }
-  #agro-rain-layer::before{
-    content:"";
-    position:absolute;
-    inset:0;
-    background:
-      linear-gradient(to bottom,rgba(15,35,55,.08),rgba(10,25,45,.20)),
-      repeating-linear-gradient(
-        105deg,
-        transparent 0,
-        transparent 13px,
-        rgba(190,225,255,.20) 14px,
-        rgba(190,225,255,.20) 15px,
-        transparent 16px,
-        transparent 31px
-      );
-    animation:agroRainSheet .55s linear infinite;
-    mix-blend-mode:screen;
-  }
-  .agro-rain-drop{
-    position:absolute;
-    top:-70px;
-    width:1.5px;
-    height:22px;
-    border-radius:999px;
-    background:linear-gradient(to bottom,transparent,rgba(210,235,255,.85));
-    box-shadow:0 0 4px rgba(170,220,255,.28);
-    transform:rotate(12deg);
-    animation:agroRainFall linear forwards;
-  }
-  .agro-rain-drop.heavy{
-    height:34px;
-    width:2px;
-    opacity:.65;
-  }
-  .agro-rain-glass-drop{
-    position:absolute;
-    top:-30px;
-    width:5px;
-    height:13px;
-    border-radius:70% 30% 65% 35%;
-    background:linear-gradient(135deg,rgba(255,255,255,.48),rgba(120,190,235,.12));
-    box-shadow:0 0 7px rgba(190,225,255,.18);
-    filter:blur(.15px);
-    animation:agroGlassSlide linear forwards;
-  }
-  @keyframes agroRainFall{
-    0%{transform:translate3d(0,-70px,0) rotate(12deg);opacity:0}
-    8%{opacity:.55}
-    100%{transform:translate3d(-95px,115vh,0) rotate(12deg);opacity:.12}
-  }
-  @keyframes agroGlassSlide{
-    0%{transform:translate3d(0,-30px,0);opacity:0}
-    12%{opacity:.5}
-    100%{transform:translate3d(35px,110vh,0);opacity:0}
-  }
-  @keyframes agroRainSheet{
-    from{background-position:0 0}
-    to{background-position:-30px 90px}
-  }
-  @media (prefers-reduced-motion:reduce){
-    #agro-rain-layer::before,
-    .agro-rain-drop,
-    .agro-rain-glass-drop{animation-duration:3s}
-  }
-</style>
-<div id="agro-rain-layer" aria-hidden="true"></div>
-<script>
-(function(){
-  const layer=document.getElementById('agro-rain-layer');
-  if(!layer)return;
-  let rainTimer=null;
-  let glassTimer=null;
-  const drops=[];
-  const glassDrops=[];
-
-  function makeRainDrop(){
-    if(!layer.classList.contains('active'))return;
-    const d=document.createElement('span');
-    d.className='agro-rain-drop'+(Math.random()>.78?' heavy':'');
-    d.style.left=(Math.random()*105)+'vw';
-    d.style.animationDuration=(.65+Math.random()*.7)+'s';
-    d.style.opacity=(.22+Math.random()*.5).toFixed(2);
-    d.addEventListener('animationend',function(){
-      d.remove();
-      const i=drops.indexOf(d);
-      if(i>-1)drops.splice(i,1);
-    });
-    layer.appendChild(d);
-    drops.push(d);
-  }
-
-  function makeGlassDrop(){
-    if(!layer.classList.contains('active'))return;
-    const d=document.createElement('span');
-    d.className='agro-rain-glass-drop';
-    d.style.left=(Math.random()*100)+'vw';
-    d.style.animationDuration=(4+Math.random()*7)+'s';
-    d.style.animationDelay=(Math.random()*.5)+'s';
-    d.style.transform='scale('+(0.55+Math.random()*1.1).toFixed(2)+')';
-    d.addEventListener('animationend',function(){
-      d.remove();
-      const i=glassDrops.indexOf(d);
-      if(i>-1)glassDrops.splice(i,1);
-    });
-    layer.appendChild(d);
-    glassDrops.push(d);
-  }
-
-  function startRain(){
-    if(layer.classList.contains('active'))return;
-    layer.classList.add('active');
-    for(let i=0;i<115;i++)setTimeout(makeRainDrop,i*12);
-    for(let i=0;i<18;i++)setTimeout(makeGlassDrop,i*180);
-    rainTimer=setInterval(makeRainDrop,35);
-    glassTimer=setInterval(makeGlassDrop,650);
-  }
-
-  function stopRain(){
-    layer.classList.remove('active');
-    if(rainTimer){clearInterval(rainTimer);rainTimer=null;}
-    if(glassTimer){clearInterval(glassTimer);glassTimer=null;}
-    drops.splice(0).forEach(d=>d.remove());
-    glassDrops.splice(0).forEach(d=>d.remove());
-  }
-
-  window.agroMeteoRain=function(enabled){
-    enabled?startRain():stopRain();
-  };
-})();
-</script>
-
-
 <!-- AGRO METEO REALISTIC RAIN EFFECT START -->
 <style>
+  /* Ρεαλιστική βροχή πάνω από όλη τη σελίδα */
   #agro-real-rain {
     position: fixed;
     inset: 0;
-    z-index: 9998;
+    z-index: 9997;
     pointer-events: none;
     overflow: hidden;
     display: none;
-    perspective: 900px;
+    background: linear-gradient(
+      115deg,
+      rgba(18, 35, 48, .04),
+      rgba(80, 110, 130, .10),
+      rgba(10, 20, 30, .04)
+    );
   }
-  #agro-real-rain .rain-streak {
+  #agro-real-rain .rain-drop {
     position: absolute;
     top: -12vh;
-    width: var(--w);
-    height: var(--h);
+    left: var(--left);
+    width: var(--width);
+    height: var(--height);
     border-radius: 999px;
+    opacity: var(--opacity);
+    filter: blur(var(--blur));
     background: linear-gradient(
       180deg,
-      rgba(235,248,255,0) 0%,
-      rgba(210,237,255,.25) 15%,
-      rgba(225,245,255,.9) 55%,
-      rgba(255,255,255,.15) 100%
+      rgba(255,255,255,0),
+      rgba(210,235,250,.35) 18%,
+      rgba(235,248,255,.95) 70%,
+      rgba(255,255,255,.05)
     );
-    filter: blur(var(--blur));
-    opacity: var(--opacity);
-    transform: rotate(13deg);
-    animation: agro-real-fall var(--duration) linear infinite;
+    transform: rotate(14deg);
+    animation: agro-rain-fall var(--duration) linear infinite;
     animation-delay: var(--delay);
   }
-  @keyframes agro-real-fall {
-    0% { transform: translate3d(0,-15vh,0) rotate(13deg); }
-    100% { transform: translate3d(var(--drift),125vh,0) rotate(13deg); }
+  @keyframes agro-rain-fall {
+    from { transform: translate3d(0,-15vh,0) rotate(14deg); }
+    to { transform: translate3d(var(--drift),125vh,0) rotate(14deg); }
   }
   #agro-real-rain .rain-splash {
     position: absolute;
     width: 2px;
     height: 2px;
     border-radius: 50%;
-    background: rgba(225,245,255,.8);
-    animation: agro-splash 700ms ease-out infinite;
+    background: rgba(220,245,255,.85);
+    animation: agro-rain-splash 900ms ease-out infinite;
     animation-delay: var(--delay);
   }
-  @keyframes agro-splash {
-    0%, 65% { opacity: 0; transform: scale(.2); }
-    75% { opacity: .7; transform: scale(1); }
-    100% { opacity: 0; transform: translateY(-7px) scale(2.5); }
+  @keyframes agro-rain-splash {
+    0%,70% { opacity:0; transform:scale(.2); }
+    78% { opacity:.8; transform:scale(1); }
+    100% { opacity:0; transform:translateY(-8px) scale(2.8); }
   }
+
+  /* Μεμονωμένες σταγόνες που κάθονται/κυλούν πάνω στα panels */
   #agro-panel-drops {
     position: fixed;
     inset: 0;
-    z-index: 10000;
+    z-index: 10001;
     pointer-events: none;
     display: none;
     overflow: hidden;
   }
-  #agro-panel-drops .glass-drop {
+  #agro-panel-drops .panel-drop {
     position: absolute;
+    left: var(--left);
+    top: var(--top);
     width: var(--size);
-    height: calc(var(--size) * 1.45);
-    border-radius: 55% 45% 58% 42% / 45% 48% 52% 55%;
+    height: calc(var(--size) * 1.48);
+    border-radius: 58% 42% 55% 45% / 45% 48% 52% 55%;
     background:
-      radial-gradient(ellipse at 32% 22%, rgba(255,255,255,.9) 0 7%, rgba(255,255,255,.18) 20%, transparent 42%),
-      radial-gradient(ellipse at 60% 70%, rgba(110,180,220,.13), rgba(255,255,255,.03) 65%, transparent 75%);
-    border: 1px solid rgba(225,245,255,.24);
+      radial-gradient(ellipse at 30% 18%,
+        rgba(255,255,255,.92) 0 7%,
+        rgba(255,255,255,.25) 20%,
+        transparent 44%),
+      linear-gradient(135deg,
+        rgba(225,247,255,.24),
+        rgba(105,170,210,.06) 60%,
+        rgba(255,255,255,.18));
+    border: 1px solid rgba(225,245,255,.32);
     box-shadow:
-      0 0 5px rgba(180,225,255,.12),
-      inset -2px -3px 5px rgba(40,90,125,.08),
-      inset 2px 2px 4px rgba(255,255,255,.2);
-    filter: blur(.05px);
-    opacity: var(--opacity);
-    animation: agro-glass-slide var(--duration) ease-in-out infinite;
+      inset -2px -3px 4px rgba(20,70,110,.10),
+      inset 2px 2px 4px rgba(255,255,255,.22),
+      0 0 5px rgba(180,225,255,.12);
+    opacity: 0;
+    animation: agro-panel-drop-slide var(--duration) ease-in-out infinite;
     animation-delay: var(--delay);
   }
-  #agro-panel-drops .glass-drop::after {
+  #agro-panel-drops .panel-drop::after {
     content: "";
     position: absolute;
-    left: 35%;
-    top: 8%;
-    width: 22%;
-    height: 35%;
+    left: 30%;
+    top: 7%;
+    width: 24%;
+    height: 38%;
     border-radius: 50%;
-    background: rgba(255,255,255,.55);
+    background: rgba(255,255,255,.62);
     filter: blur(1px);
   }
-  @keyframes agro-glass-slide {
-    0%, 18% { transform: translateY(0) translateX(0) scale(1); opacity: 0; }
-    25% { opacity: var(--opacity); }
-    70% { transform: translateY(var(--slide)) translateX(var(--side)) scale(1.03); opacity: var(--opacity); }
-    92%, 100% { transform: translateY(calc(var(--slide) + 12px)) translateX(var(--side)) scale(.92); opacity: 0; }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    #agro-real-rain .rain-streak,
-    #agro-real-rain .rain-splash,
-    #agro-panel-drops .glass-drop { animation-duration: 3s; }
+  @keyframes agro-panel-drop-slide {
+    0%,15% { opacity:0; transform:translate3d(0,0,0) scale(.85); }
+    23% { opacity:var(--opacity); }
+    72% { opacity:var(--opacity); transform:translate3d(var(--side),var(--slide),0) scale(1.03); }
+    91%,100% { opacity:0; transform:translate3d(calc(var(--side) + 3px),calc(var(--slide) + 15px),0) scale(.92); }
   }
 </style>
+
 <div id="agro-real-rain" aria-hidden="true"></div>
 <div id="agro-panel-drops" aria-hidden="true"></div>
+
 <script>
 (function () {
   const rainLayer = document.getElementById('agro-real-rain');
-  const dropsLayer = document.getElementById('agro-panel-drops');
-  if (!rainLayer || !dropsLayer) return;
+  const panelLayer = document.getElementById('agro-panel-drops');
+  if (!rainLayer || !panelLayer) return;
 
-  let active = false;
-  let built = false;
+  let initialized = false;
 
-  function makeRain() {
-    if (built) return;
-    built = true;
+  function buildRain() {
+    if (initialized) return;
+    initialized = true;
 
-    const fragment = document.createDocumentFragment();
+    const rainFrag = document.createDocumentFragment();
 
-    // Dense, layered rainfall: small sharp drops in the foreground and softer drops behind.
-    for (let i = 0; i < 185; i++) {
-      const d = document.createElement('i');
-      d.className = 'rain-streak';
+    // Πολλά επίπεδα σταγόνων: μακρινές, μεσαίες και κοντινές.
+    for (let i = 0; i < 240; i++) {
+      const drop = document.createElement('i');
+      drop.className = 'rain-drop';
       const depth = Math.random();
-      d.style.left = (Math.random() * 112 - 6) + '%';
-      d.style.setProperty('--w', (depth > .72 ? 1.5 : depth > .35 ? 1 : .7) + 'px');
-      d.style.setProperty('--h', (depth > .72 ? 34 : depth > .35 ? 23 : 15) + 'px');
-      d.style.setProperty('--blur', (depth > .72 ? 0 : depth > .35 ? .35 : 1) + 'px');
-      d.style.setProperty('--opacity', (depth > .72 ? .72 : depth > .35 ? .42 : .2) + '');
-      d.style.setProperty('--duration', (depth > .72 ? 430 : depth > .35 ? 650 : 900) + Math.random() * 330 + 'ms');
-      d.style.setProperty('--delay', (-Math.random() * 1600) + 'ms');
-      d.style.setProperty('--drift', (-35 + Math.random() * 70) + 'px');
-      fragment.appendChild(d);
-    }
-    // Occasional tiny splashes for a more natural storm-like look.
-    for (let i = 0; i < 32; i++) {
-      const s = document.createElement('i');
-      s.className = 'rain-splash';
-      s.style.left = Math.random() * 100 + '%';
-      s.style.top = (65 + Math.random() * 35) + '%';
-      s.style.setProperty('--delay', (-Math.random() * 1800) + 'ms');
-      fragment.appendChild(s);
-    }
-    rainLayer.appendChild(fragment);
 
-    // A few large droplets that appear to cling to and slide over the glass/panels.
-    const panelFragment = document.createDocumentFragment();
-    for (let i = 0; i < 18; i++) {
-      const g = document.createElement('i');
-      g.className = 'glass-drop';
-      g.style.left = (Math.random() * 96 + 2) + '%';
-      g.style.top = (Math.random() * 78 + 5) + '%';
-      g.style.setProperty('--size', (3 + Math.random() * 7) + 'px');
-      g.style.setProperty('--slide', (12 + Math.random() * 48) + 'px');
-      g.style.setProperty('--side', (-8 + Math.random() * 16) + 'px');
-      g.style.setProperty('--opacity', (.25 + Math.random() * .35) + '');
-      g.style.setProperty('--duration', (2600 + Math.random() * 3600) + 'ms');
-      g.style.setProperty('--delay', (-Math.random() * 5000) + 'ms');
-      panelFragment.appendChild(g);
+      drop.style.setProperty('--left', (Math.random() * 112 - 6) + '%');
+      drop.style.setProperty('--width', (depth > .72 ? 1.5 : depth > .35 ? 1.05 : .7) + 'px');
+      drop.style.setProperty('--height', (depth > .72 ? 42 : depth > .35 ? 28 : 18) + 'px');
+      drop.style.setProperty('--opacity', (depth > .72 ? .78 : depth > .35 ? .48 : .25) + '');
+      drop.style.setProperty('--blur', (depth > .72 ? 0 : depth > .35 ? .3 : 1) + 'px');
+      drop.style.setProperty('--duration', (depth > .72 ? 380 : depth > .35 ? 600 : 900) + Math.random() * 360 + 'ms');
+      drop.style.setProperty('--delay', (-Math.random() * 2200) + 'ms');
+      drop.style.setProperty('--drift', (-42 + Math.random() * 84) + 'px');
+      rainFrag.appendChild(drop);
     }
-    dropsLayer.appendChild(panelFragment);
+
+    for (let i = 0; i < 42; i++) {
+      const splash = document.createElement('i');
+      splash.className = 'rain-splash';
+      splash.style.left = Math.random() * 100 + '%';
+      splash.style.top = (70 + Math.random() * 28) + '%';
+      splash.style.setProperty('--delay', (-Math.random() * 1800) + 'ms');
+      rainFrag.appendChild(splash);
+    }
+    rainLayer.appendChild(rainFrag);
+
+    const panelFrag = document.createDocumentFragment();
+    for (let i = 0; i < 24; i++) {
+      const drop = document.createElement('i');
+      drop.className = 'panel-drop';
+      drop.style.setProperty('--left', (Math.random() * 94 + 3) + '%');
+      drop.style.setProperty('--top', (Math.random() * 78 + 5) + '%');
+      drop.style.setProperty('--size', (3 + Math.random() * 8) + 'px');
+      drop.style.setProperty('--opacity', (.28 + Math.random() * .38) + '');
+      drop.style.setProperty('--slide', (12 + Math.random() * 60) + 'px');
+      drop.style.setProperty('--side', (-9 + Math.random() * 18) + 'px');
+      drop.style.setProperty('--duration', (2800 + Math.random() * 3800) + 'ms');
+      drop.style.setProperty('--delay', (-Math.random() * 5500) + 'ms');
+      panelFrag.appendChild(drop);
+    }
+    panelLayer.appendChild(panelFrag);
   }
 
-  function setRain(enabled) {
-    makeRain();
-    active = !!enabled;
-    rainLayer.style.display = active ? 'block' : 'none';
-    dropsLayer.style.display = active ? 'block' : 'none';
-  }
-
-  window.agroMeteoRain = setRain;
+  window.agroMeteoRain = function (enabled) {
+    buildRain();
+    const show = !!enabled;
+    rainLayer.style.display = show ? 'block' : 'none';
+    panelLayer.style.display = show ? 'block' : 'none';
+  };
 })();
 </script>
 <!-- AGRO METEO REALISTIC RAIN EFFECT END -->
