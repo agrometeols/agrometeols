@@ -413,10 +413,6 @@ footer { text-align: center; color: #ffffff; margin: 30px auto 10px auto; paddin
 </style>
 </head>
 <body class="is-day">
-<button id="christmas-snow-toggle" type="button" aria-pressed="false">❄️ Ενεργοποίηση χιονιού</button>
-
-<div id="christmas-snow-layer" aria-hidden="true"></div>
-
 <div id="constructionAlert" class="const-overlay">
 <div class="const-modal">
 <h2 id="txt-const-title">⚠️ Προσοχή!</h2>
@@ -446,100 +442,7 @@ footer { text-align: center; color: #ffffff; margin: 30px auto 10px auto; paddin
     .cube-pulse { animation: cubeBreathe 3s ease-in-out infinite; transform-origin: center; }
     @keyframes cubeBreathe { 0% { transform: scale(1); filter: drop-shadow(0 0 5px rgba(0,255,0,0.4)); } 50% { transform: scale(1.15); filter: drop-shadow(0 0 20px rgba(0,255,0,0.8)); } 100% { transform: scale(1); filter: drop-shadow(0 0 5px rgba(0,255,0,0.4)); } }
     @media (max-width: 640px) { .logo-container { transform: scale(0.85); gap: 12px; padding: 10px 20px; margin: 20px auto; width: 95%; } .logo-svg.cube-pulse { width: 50px !important; height: 50px !important; } .logo-text-wrapper h1 { font-size: 24px !important; } .logo-text-wrapper span { font-size: 12px !important; letter-spacing: 2px !important; } }
-  
-/* Dense, more realistic 3D snowfall with depth and melting */
-#christmas-snow-layer {
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 9998;
-  overflow: hidden;
-  perspective: 900px;
-}
-.christmas-3d-flake {
-  position: absolute;
-  top: -45px;
-  left: 0;
-  color: #fff;
-  font-family: "Segoe UI Symbol", "Noto Sans Symbols", sans-serif;
-  line-height: 1;
-  text-shadow: 0 0 5px rgba(190,225,255,.9), 0 1px 2px rgba(90,125,155,.4);
-  will-change: transform, opacity;
-  animation: realisticSnowFall linear forwards;
-}
-@keyframes realisticSnowFall {
-  0% {
-    transform: translate3d(0,-45px,-180px) rotate(0deg) scale(.55);
-    opacity: 0;
-  }
-  8% { opacity: .15; }
-  18% { opacity: .9; }
-  48% {
-    transform: translate3d(45px,48vh,60px) rotate(170deg) scale(1.05);
-    opacity: .95;
-  }
-  76% {
-    transform: translate3d(-35px,78vh,150px) rotate(290deg) scale(1.2);
-    opacity: .9;
-  }
-  100% {
-    transform: translate3d(25px,108vh,40px) rotate(430deg) scale(.85);
-    opacity: 0;
-  }
-}
-.christmas-melt-patch {
-  position: absolute;
-  width: 26px;
-  height: 8px;
-  border-radius: 50%;
-  background: radial-gradient(ellipse, rgba(255,255,255,.95), rgba(215,238,249,.75) 52%, transparent 76%);
-  box-shadow: 0 1px 5px rgba(130,180,210,.35);
-  animation: snowMeltSlow 8s ease-in forwards;
-}
-@keyframes snowMeltSlow {
-  0% { opacity: .95; transform: scale(.8); filter: blur(0); }
-  45% { opacity: .9; transform: scale(1.15,.8); }
-  75% { opacity: .55; transform: scale(1.65,.45); filter: blur(.7px); }
-  100% { opacity: 0; transform: scale(2.5,.12); filter: blur(2.5px); }
-}
-
-
-/* Manual Christmas snow toggle */
-#christmas-snow-toggle {
-  position: fixed;
-  right: 18px;
-  bottom: 18px;
-  z-index: 10000;
-  border: 1px solid rgba(255,255,255,.55);
-  border-radius: 999px;
-  padding: 10px 15px;
-  background: rgba(20,55,80,.88);
-  color: #fff;
-  font: inherit;
-  font-size: 14px;
-  font-weight: 700;
-  cursor: pointer;
-  box-shadow: 0 4px 16px rgba(0,0,0,.25);
-  backdrop-filter: blur(8px);
-  transition: transform .2s ease, background .2s ease;
-}
-#christmas-snow-toggle:hover {
-  transform: translateY(-2px);
-  background: rgba(35,90,120,.95);
-}
-#christmas-snow-toggle.is-on {
-  background: rgba(35,125,85,.92);
-}
-@media (max-width: 600px) {
-  #christmas-snow-toggle {
-    right: 10px;
-    bottom: 10px;
-    padding: 8px 12px;
-    font-size: 12px;
-  }
-}
-
-</style>
+  </style>
   <div class="logo-svg cube-pulse" style="width: 80px; height: 80px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; position: relative;">
     <svg viewBox="0 0 100 100" style="width: 100%; height: 100%;">
       <path d="M50 5 L95 50 L50 95 L5 50 Z" fill="none" stroke="#ffffff" stroke-width="3"></path>
@@ -1757,98 +1660,6 @@ document.getElementById('clock').innerHTML = h + ':' + m + '<span class="seconds
 window.onload = () => { checkTime(); changeLang('el'); updateClock(); update(); setInterval(update, 20000); setInterval(updateClock, 1000); if (showConstructionAlert) { document.getElementById('constructionAlert').style.display = 'flex'; } }
 function closeConstModal() { document.getElementById('constructionAlert').style.display = 'none'; }
 const showConstructionAlert = true;
-
-/* Dense realistic snowfall */
-(function initDenseRealisticSnow() {
-  const layer = document.getElementById('christmas-snow-layer');
-  if (!layer || layer.dataset.ready) return;
-  layer.dataset.ready = 'true';
-
-  const symbols = ['❄', '❅', '❆', '✼', '·'];
-  function createFlake(initial = false) {
-    const flake = document.createElement('span');
-    flake.className = 'christmas-3d-flake';
-    const depth = Math.random();
-    flake.textContent = symbols[Math.floor(Math.random() * symbols.length)];
-    flake.style.left = (Math.random() * 105 - 2) + 'vw';
-    flake.style.fontSize = (depth < .3 ? 7 : depth < .7 ? 11 : 16) + Math.random() * 7 + 'px';
-    flake.style.opacity = (depth < .3 ? .35 : .65 + Math.random() * .35).toFixed(2);
-    flake.style.animationDuration = (initial ? 7 : 8 + Math.random() * 8) + 's';
-    flake.style.animationDelay = initial ? (-Math.random() * 14) + 's' : '0s';
-    layer.appendChild(flake);
-    flake.addEventListener('animationend', () => flake.remove(), { once: true });
-  }
-
-  for (let i = 0; i < 105; i++) createFlake(true);
-  setInterval(() => createFlake(false), 170);
-  setInterval(() => {
-    const patch = document.createElement('span');
-    patch.className = 'christmas-melt-patch';
-    patch.style.left = (Math.random() * 96) + 'vw';
-    patch.style.top = (Math.random() * 84 + 8) + 'vh';
-    patch.style.animationDuration = (7 + Math.random() * 4) + 's';
-    layer.appendChild(patch);
-    patch.addEventListener('animationend', () => patch.remove(), { once: true });
-  }, 1800);
-})();
-
-
-/* Manual control for the Christmas snow effect */
-(function setupChristmasSnowToggle() {
-  const button = document.getElementById('christmas-snow-toggle');
-  const layer = document.getElementById('christmas-snow-layer');
-  if (!button || !layer) return;
-
-  let snowTimer = null;
-  let meltTimer = null;
-  let enabled = false;
-
-  function makeFlake(initial = false) {
-    const flake = document.createElement('span');
-    flake.className = 'christmas-3d-flake';
-    const symbols = ['❄', '❅', '❆', '✼', '·'];
-    const depth = Math.random();
-    flake.textContent = symbols[Math.floor(Math.random() * symbols.length)];
-    flake.style.left = (Math.random() * 105 - 2) + 'vw';
-    flake.style.fontSize = (depth < .3 ? 7 : depth < .7 ? 11 : 16) + Math.random() * 7 + 'px';
-    flake.style.opacity = (depth < .3 ? .35 : .65 + Math.random() * .35).toFixed(2);
-    flake.style.animationDuration = (8 + Math.random() * 8) + 's';
-    if (initial) flake.style.animationDelay = (-Math.random() * 12) + 's';
-    layer.appendChild(flake);
-    flake.addEventListener('animationend', () => flake.remove(), { once: true });
-  }
-
-  function makeMeltPatch() {
-    const patch = document.createElement('span');
-    patch.className = 'christmas-melt-patch';
-    patch.style.left = (Math.random() * 96) + 'vw';
-    patch.style.top = (Math.random() * 84 + 8) + 'vh';
-    patch.style.animationDuration = (7 + Math.random() * 4) + 's';
-    layer.appendChild(patch);
-    patch.addEventListener('animationend', () => patch.remove(), { once: true });
-  }
-
-  function setSnowState(state) {
-    enabled = state;
-    button.classList.toggle('is-on', enabled);
-    button.setAttribute('aria-pressed', String(enabled));
-    button.textContent = enabled ? '❄️ Απενεργοποίηση χιονιού' : '❄️ Ενεργοποίηση χιονιού';
-
-    if (snowTimer) clearInterval(snowTimer);
-    if (meltTimer) clearInterval(meltTimer);
-    layer.innerHTML = '';
-
-    if (enabled) {
-      for (let i = 0; i < 105; i++) makeFlake(true);
-      snowTimer = setInterval(() => makeFlake(false), 170);
-      meltTimer = setInterval(makeMeltPatch, 1800);
-    }
-  }
-
-  button.addEventListener('click', () => setSnowState(!enabled));
-  setSnowState(false);
-})();
-
 </script>
 
 
@@ -1856,61 +1667,68 @@ const showConstructionAlert = true;
 <footer id="txt-footer">&copy; 2026 Agro Meteo Ls | Προγραμματισμός Χρήστος Τσαβαλάκογλου Iot System</footer>
 
 
-<style>
-  #privateSnowControl {
-    position: fixed;
-    right: 18px;
-    bottom: 18px;
-    z-index: 99999;
-    display: none;
-    padding: 10px 14px;
-    border: 1px solid rgba(255,255,255,.35);
-    border-radius: 12px;
-    background: rgba(20,30,40,.92);
-    color: #fff;
-    font-weight: 700;
-    cursor: pointer;
-    box-shadow: 0 4px 18px rgba(0,0,0,.3);
-  }
+<!-- =========================================================
+     ❄️ AGRO METEO LS — ΧΙΟΝΙ
+     ΕΝΕΡΓΟΠΟΙΗΣΗ: άλλαξε μόνο το SNOW_ENABLED σε true.
+     ========================================================= -->
+<style id="agro-meteo-snow-style">
+#agro-snow-layer{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:9998;display:none}
+#agro-snow-layer.active{display:block}
+.agro-snowflake{position:absolute;top:-30px;color:#fff;user-select:none;text-shadow:0 0 5px rgba(255,255,255,.9),0 0 12px rgba(180,220,255,.65);animation:agroSnowFall linear 1}
+@keyframes agroSnowFall{
+0%{transform:translate3d(0,-30px,0) rotate(0deg);opacity:0}
+8%{opacity:.95}
+100%{transform:translate3d(var(--snow-drift),110vh,0) rotate(360deg);opacity:.8}
+}
 </style>
-<button id="privateSnowControl" type="button">❄️ Ενεργοποίηση χιονιού</button>
+<div id="agro-snow-layer" aria-hidden="true"></div>
 <script>
-(function () {
-  const ADMIN_PASSWORD = "agrometeols2026";
-  const control = document.getElementById("privateSnowControl");
-  let unlocked = false;
+(function(){
+  // ❄️ ΑΛΛΑΞΕ ΜΟΝΟ ΤΗΝ ΕΠΟΜΕΝΗ ΓΡΑΜΜΗ:
+  // false = χιόνι κλειστό | true = χιόνι ενεργό
+  const SNOW_ENABLED = false;
 
-  function askForAccess() {
-    const entered = window.prompt("Κωδικός διαχειριστή:");
-    if (entered === ADMIN_PASSWORD) {
-      unlocked = true;
-      control.style.display = "block";
-      alert("Το κρυφό χειριστήριο χιονιού ενεργοποιήθηκε.");
-    } else if (entered !== null) {
-      alert("Λάθος κωδικός.");
-    }
+  const layer=document.getElementById('agro-snow-layer');
+  if(!layer)return;
+  let timer=null;
+  const flakes=[];
+
+  function createSnowflake(){
+    if(!layer.classList.contains('active'))return;
+    const flake=document.createElement('span');
+    flake.className='agro-snowflake';
+    flake.textContent=Math.random()>.45?'❄':'•';
+    flake.style.left=(Math.random()*100)+'vw';
+    flake.style.fontSize=(5+Math.random()*15)+'px';
+    flake.style.animationDuration=(7+Math.random()*10)+'s';
+    flake.style.setProperty('--snow-drift',((Math.random()*180)-90)+'px');
+    flake.style.opacity=(.35+Math.random()*.65).toFixed(2);
+    flake.addEventListener('animationend',function(){
+      flake.remove();
+      const i=flakes.indexOf(flake);
+      if(i!==-1)flakes.splice(i,1);
+    });
+    layer.appendChild(flake);
+    flakes.push(flake);
   }
 
-  // Secret shortcut available only to the administrator.
-  document.addEventListener("keydown", function (event) {
-    if (event.ctrlKey && event.shiftKey && event.key.toLowerCase() === "x") {
-      event.preventDefault();
-      if (!unlocked) askForAccess();
-      else control.style.display = control.style.display === "none" ? "block" : "none";
-    }
-  });
+  function startSnow(){
+    if(layer.classList.contains('active'))return;
+    layer.classList.add('active');
+    for(let i=0;i<100;i++)setTimeout(createSnowflake,i*40);
+    timer=setInterval(createSnowflake,170);
+  }
 
-  control.addEventListener("click", function () {
-    if (typeof window.toggleChristmasSnow === "function") {
-      window.toggleChristmasSnow();
-      const active = document.body.classList.contains("christmas-snow-enabled");
-      control.textContent = active
-        ? "❄️ Απενεργοποίηση χιονιού"
-        : "❄️ Ενεργοποίηση χιονιού";
-    } else {
-      alert("Το χειριστήριο χιονιού δεν είναι διαθέσιμο σε αυτή την έκδοση.");
-    }
-  });
+  function stopSnow(){
+    layer.classList.remove('active');
+    if(timer){clearInterval(timer);timer=null;}
+    flakes.splice(0).forEach(function(f){if(f&&f.remove)f.remove();});
+  }
+
+  // Προαιρετικός χειροκίνητος έλεγχος από την κονσόλα του κώδικα.
+  window.agroMeteoSnow=function(enabled){enabled?startSnow():stopSnow();};
+
+  if(SNOW_ENABLED)startSnow();
 })();
 </script>
 
